@@ -1,0 +1,9 @@
+titulo: "Web"
+orden: 5
+bajada: "Donde la marca cobra vida"
+items:
+  - "UI/UX"
+  - "Diseño de interfaces"
+  - "Desarrollo en Webflow y HubSpot"
+  - "Landing pages"
+descripcion: "Sitios web y landing pages diseñados para comunicar con claridad, convertir y mantener la coherencia de marca. Fáciles de gestionar por tu equipo."

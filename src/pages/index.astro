@@ -1,0 +1,17 @@
+---
+import Base from '../layouts/Base.astro';
+import Logo from '../components/Logo.astro';
+// Página temporal mientras se construye el sitio.
+---
+<Base title="Alan Marino Studio — Muy pronto" description="Alan Marino Studio. Branding, diseño web y comunicación. Nuevo sitio muy pronto.">
+  <div class="flex min-h-dvh flex-col justify-between bg-cyan p-[clamp(24px,5vw,64px)] text-navy">
+    <Logo class="block h-auto w-[clamp(160px,22vw,280px)]" />
+    <main>
+      <h1 class="m-0 text-[clamp(64px,15vw,220px)] leading-[.92] font-bold tracking-[-0.045em]">Muy pronto.</h1>
+      <p class="mt-[clamp(24px,3vw,48px)] max-w-[32ch] text-[clamp(17px,1.6vw,22px)] leading-normal">
+        Estamos preparando el nuevo sitio del estudio. Branding, diseño web y comunicación.
+      </p>
+    </main>
+    <footer class="text-sm font-bold">© {new Date().getFullYear()} Alan Marino Studio</footer>
+  </div>
+</Base>

@@ -1,0 +1,31 @@
+@import "tailwindcss";
+
+/* Tokens de marca (fuente: alan-marino-tokens.json). Usar solo estos valores. */
+@theme {
+  --color-navy: #183057;
+  --color-navy-dark: #0E2240;
+  --color-cyan: #00C0E8;
+  --color-cyan-hover: #33CDED;
+  --color-cyan-text: #00799E;
+  --color-cyan-tint: #E6F8FC;
+  --color-orange: #F43A01;
+  --color-orange-hover: #D63300;
+  --color-orange-text: #C42E00;
+  --color-slate-700: #3D4F6E;
+  --color-slate-500: #5B6B85;
+  --color-slate-200: #D9E6EC;
+  --color-slate-100: #EAF1F5;
+  --color-slate-50: #F3F7F9;
+
+  --font-sans: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-display: "Bowlby One", "Helvetica Neue", sans-serif;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+}
+
+@layer base {
+  html { color: var(--color-navy); font-family: var(--font-sans); }
+  body { margin: 0; background: #fff; }
+  :focus-visible { outline: 3px solid var(--color-orange); outline-offset: 3px; }
+}
