@@ -16,8 +16,34 @@ export async function getEquipo() {
 export async function getMarcas() {
   return (await reader.collections.marcas.all()).sort(byOrden);
 }
+// Proyectos: una colección por servicio (mismo orden que la home).
+export const SERVICIOS_PROYECTOS = [
+  { key: 'proyectosMarketing', servicio: 'marketing', titulo: 'Marketing' },
+  { key: 'proyectosMarca', servicio: 'marca', titulo: 'Marca' },
+  { key: 'proyectosSistemaVisual', servicio: 'sistema-visual', titulo: 'Sistema visual' },
+  { key: 'proyectosEditorial', servicio: 'editorial', titulo: 'Editorial' },
+  { key: 'proyectosWeb', servicio: 'web', titulo: 'Web' },
+] as const;
+
+/** Todos los proyectos publicados, cada uno con su servicio principal. */
 export async function getProyectos() {
-  return (await reader.collections.proyectos.all())
-    .filter((p) => p.entry.publicado)
-    .sort(byOrden);
+  const grupos = await Promise.all(
+    SERVICIOS_PROYECTOS.map(async ({ key, servicio, titulo }) =>
+      (await reader.collections[key].all()).map((p) => ({ ...p, servicio, servicioTitulo: titulo }))
+    )
+  );
+  return grupos.flat().filter((p) => p.entry.publicado).sort(byOrden);
+}
+
+/** Proyectos publicados de un servicio (incluye los que lo marcan en "También aparece en"). */
+export async function getProyectosDe(servicio: string) {
+  return (await getProyectos()).filter(
+    (p) => p.servicio === servicio || p.entry.otrosServicios.includes(servicio as never)
+  );
+}
+
+export async function getHistorias() {
+  return (await reader.collections.historias.all())
+    .filter((h) => h.entry.publicado)
+    .sort((a, b) => (b.entry.fecha ?? '').localeCompare(a.entry.fecha ?? ''));
 }

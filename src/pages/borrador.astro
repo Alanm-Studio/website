@@ -2,13 +2,14 @@
 // Vista interna (no indexada) para comprobar que el contenido de Keystatic llega al sitio.
 import Base from '../layouts/Base.astro';
 import Logo from '../components/Logo.astro';
-import { reader, getServicios, getEquipo, getMarcas, getProyectos } from '../lib/cms';
+import { reader, getServicios, getEquipo, getMarcas, getProyectos, getHistorias } from '../lib/cms';
 
 const inicio = await reader.singletons.inicio.read();
 const servicios = await getServicios();
 const equipo = await getEquipo();
 const marcas = await getMarcas();
 const proyectos = await getProyectos();
+const historias = await getHistorias();
 ---
 <Base title="Borrador" noindex>
   <header class="sticky top-0 z-10 border-b border-slate-200 bg-white">
@@ -74,7 +75,9 @@ const proyectos = await getProyectos();
       <h2 class="text-[28px] font-bold">Marcas ({marcas.length})</h2>
       <p class="mt-2 text-slate-200">{marcas.map((m) => m.entry.nombre).join(' · ')}</p>
       <h2 class="mt-10 text-[28px] font-bold">Proyectos publicados ({proyectos.length})</h2>
-      <p class="mt-2 text-slate-200">{proyectos.length ? proyectos.map((p) => p.entry.titulo).join(' · ') : 'Todavía no hay proyectos publicados.'}</p>
+      <p class="mt-2 text-slate-200">{proyectos.length ? proyectos.map((p) => `${p.entry.titulo} (${p.servicioTitulo})`).join(' · ') : 'Todavía no hay proyectos publicados.'}</p>
+      <h2 class="mt-10 text-[28px] font-bold">Historias ({historias.length})</h2>
+      <p class="mt-2 text-slate-200">{historias.length ? historias.map((h) => h.entry.titulo).join(' · ') : 'Todavía no hay historias cargadas.'}</p>
     </div>
   </section>
 </Base>

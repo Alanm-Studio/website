@@ -35,33 +35,15 @@ const seo = (carpeta: string) =>
     { label: 'SEO' }
   );
 
-export default config({
-  storage,
-  cloud: { project: 'aleagui/alanm-studio' },
-  ui: {
-    brand: { name: 'Alan Marino Studio' },
-    navigation: {
-      Contenido: ['proyectos', 'servicios', 'equipo', 'marcas'],
-      Sitio: ['inicio', 'ajustes'],
-    },
-  },
-
-  collections: {
-    proyectos: collection({
-      label: 'Proyectos',
-      slugField: 'titulo',
-      path: 'src/content/proyectos/*',
-      format: { contentField: 'contenido' },
-      entryLayout: 'content',
-      columns: ['titulo', 'cliente', 'anio'],
-      schema: {
+// Mismo formulario para los proyectos de cada servicio.
+const proyectoSchema = () => ({
         titulo: fields.slug({ name: { label: 'Título' } }),
         publicado: fields.checkbox({ label: 'Publicado', description: 'Si está apagado, el proyecto no aparece en el sitio.', defaultValue: false }),
         destacado: fields.checkbox({ label: 'Destacado en Inicio', defaultValue: false }),
         orden: fields.integer({ label: 'Orden', description: 'Menor número = aparece primero.', defaultValue: 100 }),
         cliente: fields.text({ label: 'Cliente' }),
         anio: fields.integer({ label: 'Año' }),
-        servicios: fields.multiselect({ label: 'Servicios', options: SERVICIOS }),
+        otrosServicios: fields.multiselect({ label: 'También aparece en', description: 'Otros servicios que se trabajaron en este proyecto (además de esta sección).', options: SERVICIOS }),
         bajada: fields.text({ label: 'Bajada', description: 'El desafío en una frase.', multiline: true }),
         equipo: fields.text({ label: 'Equipo que participó' }),
         portada: imagen('Portada (horizontal)', 'proyectos'),
@@ -87,6 +69,62 @@ export default config({
         presentacion: fields.url({ label: 'Presentación completa (PDF, opcional)' }),
         seo: seo('proyectos'),
         contenido: fields.markdoc({ label: 'Descripción del proyecto' }),
+});
+
+const proyectosDe = (servicio: string, label: string) =>
+  collection({
+    label,
+    slugField: 'titulo',
+    path: `src/content/proyectos/${servicio}/*`,
+    format: { contentField: 'contenido' },
+    entryLayout: 'content',
+    columns: ['titulo', 'cliente', 'anio'],
+    schema: proyectoSchema(),
+  });
+
+export default config({
+  storage,
+  cloud: { project: 'aleagui/alanm-studio' },
+  ui: {
+    brand: { name: 'Alan Marino Studio' },
+    navigation: {
+      Proyectos: ['proyectosMarketing', 'proyectosMarca', 'proyectosSistemaVisual', 'proyectosEditorial', 'proyectosWeb'],
+      Contenido: ['servicios', 'equipo', 'marcas', 'historias'],
+      Sitio: ['inicio', 'ajustes'],
+    },
+  },
+
+  collections: {
+    // Proyectos divididos por servicio, en el mismo orden que la home.
+    proyectosMarketing: proyectosDe('marketing', '01 · Marketing'),
+    proyectosMarca: proyectosDe('marca', '02 · Marca'),
+    proyectosSistemaVisual: proyectosDe('sistema-visual', '03 · Sistema visual'),
+    proyectosEditorial: proyectosDe('editorial', '04 · Editorial'),
+    proyectosWeb: proyectosDe('web', '05 · Web'),
+
+    historias: collection({
+      label: 'Historias de Instagram',
+      slugField: 'titulo',
+      path: 'src/content/historias/*',
+      format: 'yaml',
+      columns: ['titulo', 'fecha'],
+      schema: {
+        titulo: fields.slug({ name: { label: 'Título interno', description: 'Solo para encontrarla en el panel.' } }),
+        publicado: fields.checkbox({ label: 'Publicada', defaultValue: true }),
+        fecha: fields.date({ label: 'Fecha' }),
+        tipo: fields.select({
+          label: 'Tipo',
+          options: [
+            { label: 'Reel', value: 'reel' },
+            { label: 'Post', value: 'post' },
+            { label: 'Historia destacada', value: 'historia' },
+          ],
+          defaultValue: 'reel',
+        }),
+        portada: imagen('Portada vertical (9:16)', 'historias'),
+        alt: fields.text({ label: 'Texto alternativo de la portada' }),
+        texto: fields.text({ label: 'Texto (se muestran las primeras líneas)', multiline: true }),
+        link: fields.url({ label: 'Link a Instagram', validation: { isRequired: true } }),
       },
     }),
 
@@ -102,6 +140,7 @@ export default config({
         bajada: fields.text({ label: 'Bajada', description: 'Va entre corchetes, ej.: Donde todo comienza.' }),
         items: fields.array(fields.text({ label: 'Ítem' }), { label: 'Qué incluye', itemLabel: (p) => p.value }),
         descripcion: fields.text({ label: 'Descripción', multiline: true }),
+        seo: seo('servicios'),
       },
     }),
 

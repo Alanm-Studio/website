@@ -9,14 +9,17 @@ Sitio de alanmarino.com. Astro + Tailwind, con el contenido editable en Keystati
 
 | En Keystatic | Archivos |
 | --- | --- |
-| Proyectos | `src/content/proyectos/*.mdoc` |
-| Servicios | `src/content/servicios/*.yaml` |
+| Proyectos › 01 Marketing … 05 Web | `src/content/proyectos/<servicio>/*.mdoc` |
+| Historias de Instagram | `src/content/historias/*.yaml` |
+| Servicios (con SEO) | `src/content/servicios/*.yaml` |
 | Equipo | `src/content/equipo/*.yaml` |
 | Marcas (marquee) | `src/content/marcas/*.yaml` |
 | Inicio | `src/content/inicio.yaml` |
 | Ajustes generales | `src/content/ajustes.yaml` |
 
 Las imágenes que se suben desde Keystatic quedan en `public/images/`.
+
+Los proyectos se cargan dentro del servicio principal (mismo orden que la home). Si un proyecto también corresponde a otros servicios, se marcan en **También aparece en**.
 
 ## Desarrollo
 
