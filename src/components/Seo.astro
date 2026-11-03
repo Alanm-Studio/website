@@ -1,0 +1,58 @@
+---
+import { getAjustes } from '../lib/seo';
+
+interface Props {
+  title?: string;           // título de la página, sin el nombre del sitio
+  rawTitle?: string;        // título completo tal cual (para la portada)
+  description?: string | null;
+  image?: string | null;    // ruta (/images/…) o URL absoluta, idealmente 1200 × 630
+  imageAlt?: string;
+  type?: 'website' | 'article' | 'profile';
+  noindex?: boolean;
+  jsonLd?: object | object[];
+}
+
+const ajustes = await getAjustes();
+const sitio = ajustes?.seoSitio?.nombre || 'Alan Marino Studio';
+const {
+  title,
+  rawTitle,
+  description = ajustes?.seoSitio?.descripcion,
+  image = ajustes?.seoSitio?.imagen || '/og-default.png',
+  imageAlt = `${sitio}. Branding, diseño web y comunicación.`,
+  type = 'website',
+  noindex = false,
+  jsonLd,
+} = Astro.props;
+
+const site = Astro.site ?? new URL(Astro.url.origin);
+const fullTitle = rawTitle ?? (title ? `${title} — ${sitio}` : sitio);
+const canonical = new URL(Astro.url.pathname, site).href;
+const imageUrl = image ? new URL(image, site).href : undefined;
+const ld = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
+const verificacion = ajustes?.seoSitio?.googleVerificacion;
+---
+<title>{fullTitle}</title>
+{description && <meta name="description" content={description} />}
+<link rel="canonical" href={canonical} />
+<meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large'} />
+{verificacion && <meta name="google-site-verification" content={verificacion} />}
+
+<meta property="og:site_name" content={sitio} />
+<meta property="og:locale" content="es_AR" />
+<meta property="og:type" content={type} />
+<meta property="og:title" content={fullTitle} />
+{description && <meta property="og:description" content={description} />}
+<meta property="og:url" content={canonical} />
+{imageUrl && <meta property="og:image" content={imageUrl} />}
+{imageUrl && <meta property="og:image:width" content="1200" />}
+{imageUrl && <meta property="og:image:height" content="630" />}
+{imageUrl && <meta property="og:image:alt" content={imageAlt} />}
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={fullTitle} />
+{description && <meta name="twitter:description" content={description} />}
+{imageUrl && <meta name="twitter:image" content={imageUrl} />}
+
+<link rel="sitemap" href="/sitemap-index.xml" />
+{ld.map((d) => <script type="application/ld+json" set:html={JSON.stringify(d)} />)}

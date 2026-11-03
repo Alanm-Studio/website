@@ -1,9 +1,12 @@
 ---
 import Base from '../layouts/Base.astro';
 import Logo from '../components/Logo.astro';
+import { organizationJsonLd, websiteJsonLd } from '../lib/seo';
+const site = Astro.site!;
+const jsonLd = [await organizationJsonLd(site), websiteJsonLd(site, 'Alan Marino Studio')];
 // Página temporal mientras se construye el sitio.
 ---
-<Base title="Alan Marino Studio — Muy pronto" description="Alan Marino Studio. Branding, diseño web y comunicación. Nuevo sitio muy pronto.">
+<Base rawTitle="Alan Marino Studio — Branding, diseño web y comunicación" jsonLd={jsonLd}>
   <div class="flex min-h-dvh flex-col justify-between bg-cyan p-[clamp(24px,5vw,64px)] text-navy">
     <Logo class="block h-auto w-[clamp(160px,22vw,280px)]" />
     <main>

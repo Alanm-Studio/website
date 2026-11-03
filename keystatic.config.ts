@@ -22,6 +22,19 @@ const imagen = (label: string, carpeta: string, description?: string) =>
     publicPath: `/images/${carpeta}/`,
   });
 
+
+// Campos de SEO reutilizables (título y descripción para Google y redes, imagen para compartir).
+const seo = (carpeta: string) =>
+  fields.object(
+    {
+      titulo: fields.text({ label: 'Título para Google', description: 'Ideal: hasta 60 caracteres. Si queda vacío, se usa el título de la página.', validation: { length: { max: 70 } } }),
+      descripcion: fields.text({ label: 'Descripción para Google', description: 'Ideal: entre 120 y 160 caracteres.', multiline: true, validation: { length: { max: 180 } } }),
+      imagen: fields.image({ label: 'Imagen para compartir (1200 × 630)', description: 'La que aparece al compartir el link en WhatsApp, LinkedIn, etc.', directory: `public/images/${carpeta}`, publicPath: `/images/${carpeta}/` }),
+      noindex: fields.checkbox({ label: 'Ocultar de Google', defaultValue: false }),
+    },
+    { label: 'SEO' }
+  );
+
 export default config({
   storage,
   cloud: { project: 'aleagui/alanm-studio' },
@@ -72,6 +85,7 @@ export default config({
         ),
         video: fields.url({ label: 'Video (YouTube o Vimeo, opcional)' }),
         presentacion: fields.url({ label: 'Presentación completa (PDF, opcional)' }),
+        seo: seo('proyectos'),
         contenido: fields.markdoc({ label: 'Descripción del proyecto' }),
       },
     }),
@@ -131,6 +145,7 @@ export default config({
         intro: fields.text({ label: 'Texto de introducción', multiline: true }),
         serviciosTitulo: fields.text({ label: 'Título de la sección Servicios' }),
         serviciosIntro: fields.text({ label: 'Texto de la sección Servicios', multiline: true }),
+        seo: seo('seo'),
       },
     }),
     ajustes: singleton({
@@ -144,6 +159,15 @@ export default config({
         instagram: fields.url({ label: 'Instagram' }),
         behance: fields.url({ label: 'Behance' }),
         linkedin: fields.url({ label: 'LinkedIn' }),
+        seoSitio: fields.object(
+          {
+            nombre: fields.text({ label: 'Nombre del sitio', defaultValue: 'Alan Marino Studio' }),
+            descripcion: fields.text({ label: 'Descripción por defecto', multiline: true, defaultValue: 'Estudio de branding, diseño web y comunicación para marcas en crecimiento. Trenque Lauquen, Buenos Aires.' }),
+            imagen: fields.image({ label: 'Imagen para compartir por defecto (1200 × 630)', directory: 'public/images/seo', publicPath: '/images/seo/' }),
+            googleVerificacion: fields.text({ label: 'Código de verificación de Google Search Console', description: 'Solo el valor de content="…" de la etiqueta meta.' }),
+          },
+          { label: 'SEO del sitio' }
+        ),
         muyPronto: fields.checkbox({ label: 'Mostrar página "Muy pronto"', description: 'Mientras esté prendido, la portada muestra la página temporal.', defaultValue: true }),
       },
     }),

@@ -1,17 +1,22 @@
 ---
 import '../styles/global.css';
-interface Props { title: string; description?: string; noindex?: boolean }
-const { title, description = 'Alan Marino Studio. Branding, diseño web y comunicación para marcas en crecimiento.', noindex = false } = Astro.props;
+import Seo from '../components/Seo.astro';
+
+type SeoProps = import('astro/types').ComponentProps<typeof Seo>;
+interface Props extends SeoProps {}
+const props = Astro.props;
 ---
 <!doctype html>
-<html lang="es">
+<html lang="es-AR">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{title}</title>
-    <meta name="description" content={description} />
+    <Seo {...props} />
     <meta name="theme-color" content="#00C0E8" />
-    {noindex && <meta name="robots" content="noindex" />}
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Bowlby+One&display=swap" rel="stylesheet" />
