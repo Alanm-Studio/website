@@ -1,0 +1,49 @@
+---
+// Carrusel de proyectos destacados (debajo del hero de Inicio).
+import { getProyectos } from '../lib/cms';
+const proyectos = (await getProyectos()).filter((p) => p.entry.destacado && (p.entry.miniatura || p.entry.portada));
+---
+{proyectos.length > 0 && (
+<section aria-label="Proyectos destacados" class="pt-2 pb-24">
+  <div class="no-scrollbar mx-auto flex max-w-[1280px] snap-x snap-mandatory gap-5 overflow-x-auto scroll-smooth scroll-px-6 px-6 focus-visible:outline-3 focus-visible:outline-orange"
+    tabindex="0" aria-label="Proyectos destacados, desplazable" data-hc-track>
+    {proyectos.map((p) => (
+      <a href={`/proyectos/${p.slug}`} class="group flex flex-[0_0_78%] snap-start flex-col gap-3 text-navy sm:flex-[0_0_300px]" data-hc-card>
+        <div class="aspect-[4/5] overflow-hidden rounded-md bg-slate-100">
+          <img src={p.entry.miniatura || p.entry.portada} alt={p.entry.galeria[0]?.alt || p.entry.titulo} width="640" height="800" loading="lazy" decoding="async"
+            class="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.02] motion-reduce:transition-none" />
+        </div>
+        <span class="text-lg font-bold">{p.entry.titulo}</span>
+        <span class="-mt-2 text-sm text-slate-500">{p.servicioTitulo}</span>
+      </a>
+    ))}
+  </div>
+  <div class="mx-auto mt-5 flex max-w-[1280px] justify-end gap-2 px-6">
+    <button type="button" data-hc-prev aria-label="Proyecto anterior" class="flex h-12 w-12 items-center justify-center rounded-md border border-cyan bg-white text-navy disabled:cursor-default disabled:opacity-35">
+      <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+    <button type="button" data-hc-next aria-label="Proyecto siguiente" class="flex h-12 w-12 items-center justify-center rounded-md border border-cyan bg-white text-navy disabled:cursor-default disabled:opacity-35">
+      <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+    </button>
+  </div>
+</section>
+)}
+<script>
+  // Flechas: avanzan de a una tarjeta y se desactivan en los extremos.
+  const tr = document.querySelector<HTMLElement>('[data-hc-track]');
+  const prev = document.querySelector<HTMLButtonElement>('[data-hc-prev]');
+  const next = document.querySelector<HTMLButtonElement>('[data-hc-next]');
+  if (tr) {
+    const step = () => (tr.querySelector<HTMLElement>('[data-hc-card]')?.getBoundingClientRect().width ?? 300) + 20;
+    const upd = () => {
+      const max = tr.scrollWidth - tr.clientWidth;
+      if (prev) prev.disabled = tr.scrollLeft <= 2;
+      if (next) next.disabled = tr.scrollLeft >= max - 2;
+    };
+    prev?.addEventListener('click', () => tr.scrollBy({ left: -step() }));
+    next?.addEventListener('click', () => tr.scrollBy({ left: step() }));
+    tr.addEventListener('scroll', upd, { passive: true });
+    window.addEventListener('resize', upd);
+    upd();
+  }
+</script>

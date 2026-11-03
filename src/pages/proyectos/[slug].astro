@@ -1,0 +1,113 @@
+---
+import Markdoc from '@markdoc/markdoc';
+import Site from '../../layouts/Site.astro';
+import Arrow from '../../components/Arrow.astro';
+import { getProyectos } from '../../lib/cms';
+import { breadcrumbJsonLd } from '../../lib/seo';
+
+export async function getStaticPaths() {
+  const todos = await getProyectos();
+  return todos.map((p, i) => ({
+    params: { slug: p.slug },
+    props: { p, prev: todos[(i - 1 + todos.length) % todos.length], next: todos[(i + 1) % todos.length] },
+  }));
+}
+
+const { p, prev, next } = Astro.props;
+const e = p.entry;
+const contenido = await e.contenido();
+const html = Markdoc.renderers.html(Markdoc.transform(contenido.node));
+const SERV: Record<string, string> = { marketing: 'Marketing', marca: 'Marca', 'sistema-visual': 'Sistema visual', editorial: 'Editorial', web: 'Web' };
+const servicios = [p.servicioTitulo, ...e.otrosServicios.filter((s) => s !== p.servicio).map((s) => SERV[s])];
+const portada = e.portada;
+const galeria = e.galeria.filter((g) => g.imagen && g.imagen !== portada);
+
+function embed(url?: string | null) {
+  if (!url) return null;
+  const yt = url.match(/(?:youtu\.be\/|v=|shorts\/)([\w-]{11})/);
+  if (yt) return `https://www.youtube-nocookie.com/embed/${yt[1]}`;
+  const vm = url.match(/vimeo\.com\/(\d+)/);
+  if (vm) return `https://player.vimeo.com/video/${vm[1]}`;
+  return null;
+}
+const video = embed(e.video);
+const site = Astro.site!;
+const jsonLd = [
+  breadcrumbJsonLd(site, [{ nombre: 'Inicio', path: '/' }, { nombre: 'Proyectos', path: '/proyectos' }, { nombre: e.titulo, path: `/proyectos/${p.slug}` }]),
+  {
+    '@context': 'https://schema.org', '@type': 'CreativeWork', name: e.titulo, url: new URL(`/proyectos/${p.slug}`, site).href,
+    image: (portada || e.miniatura) ? new URL((portada || e.miniatura)!, site).href : undefined,
+    creator: { '@id': new URL('/#estudio', site).href }, dateCreated: e.anio ? String(e.anio) : undefined,
+    about: servicios, sourceOrganization: e.cliente ? { '@type': 'Organization', name: e.cliente } : undefined,
+  },
+];
+const col = (f: string) => (f === 'horizontal' ? 'md:col-span-2' : '');
+const ratio = (f: string) => (f === 'horizontal' ? 'aspect-[16/9]' : f === 'cuadrado' ? 'aspect-square' : 'aspect-[4/5]');
+---
+<Site title={e.seo?.titulo || e.titulo} description={e.seo?.descripcion || e.bajada || `${e.titulo}: proyecto de ${servicios.join(', ').toLowerCase()} de Alan Marino Studio.`}
+  image={e.seo?.imagen || portada || e.miniatura} type="article" noindex={e.seo?.noindex} jsonLd={jsonLd}>
+  <section class="mx-auto flex max-w-[1280px] flex-col gap-6 px-6 pt-12 pb-10">
+    <nav aria-label="Ruta" class="flex items-center gap-2 text-[15px] text-slate-500">
+      <a href="/proyectos" class="py-2 text-navy underline underline-offset-4 hover:text-cyan-text">Proyectos</a><span aria-hidden="true">/</span><span>{p.servicioTitulo}</span>
+    </nav>
+    <h1 class="m-0 text-[clamp(48px,7vw,96px)] leading-[.98] font-bold tracking-[-0.035em]">{e.titulo}</h1>
+    <div class="flex flex-wrap gap-2">{servicios.map((s) => <span class="rounded-md bg-cyan-tint px-3.5 py-2 text-sm font-bold">{s}</span>)}</div>
+  </section>
+
+  {portada && (
+    <div class="mx-auto max-w-[1280px] px-6">
+      <img src={portada} alt={`Portada del proyecto ${e.titulo}`} class="aspect-[16/8] w-full rounded-md object-cover" />
+    </div>
+  )}
+
+  <section class="mx-auto flex max-w-[1280px] flex-wrap gap-12 px-6 py-16">
+    <dl class="m-0 flex-[1_1_280px] border-t border-cyan">
+      {e.cliente && <div class="border-b border-slate-200 py-4"><dt class="text-sm text-slate-500">Cliente</dt><dd class="m-0 mt-1 text-[17px] font-bold">{e.cliente}</dd></div>}
+      {e.anio && <div class="border-b border-slate-200 py-4"><dt class="text-sm text-slate-500">Año</dt><dd class="m-0 mt-1 text-[17px] font-bold">{e.anio}</dd></div>}
+      <div class="border-b border-slate-200 py-4"><dt class="text-sm text-slate-500">Servicios</dt><dd class="m-0 mt-1 text-[17px] font-bold">{servicios.join(' · ')}</dd></div>
+      {e.equipo && <div class="border-b border-slate-200 py-4"><dt class="text-sm text-slate-500">Equipo</dt><dd class="m-0 mt-1 text-[17px] font-bold">{e.equipo}</dd></div>}
+    </dl>
+    <div class="flex flex-[2_1_560px] flex-col gap-5">
+      {e.bajada && <h2 class="m-0 text-[32px] leading-tight font-bold tracking-[-0.02em]">{e.bajada}</h2>}
+      <div class="prosa text-lg leading-relaxed text-slate-700" set:html={html} />
+      {e.presentacion && <a href={e.presentacion} class="self-start py-2.5 text-[17px] font-bold underline decoration-cyan decoration-2 underline-offset-4">Ver presentación completa (PDF)</a>}
+    </div>
+  </section>
+
+  {galeria.length > 0 && (
+    <section aria-label="Galería" class="mx-auto max-w-[1280px] px-6 pb-16">
+      <div class="grid grid-cols-1 gap-5 md:grid-cols-3">
+        {galeria.map((g) => <img src={g.imagen} alt={g.alt || ''} loading="lazy" decoding="async" class:list={['w-full rounded-md object-cover', ratio(g.formato), col(g.formato)]} />)}
+      </div>
+    </section>
+  )}
+
+  {video && (
+    <section aria-label="Video" class="mx-auto max-w-[1280px] px-6 pb-16">
+      <iframe src={video} title={`Video del proyecto ${e.titulo}`} class="aspect-video w-full rounded-md" loading="lazy" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+    </section>
+  )}
+
+  {prev && next && prev.slug !== p.slug && (
+    <nav aria-label="Otros proyectos" class="border-t border-slate-200">
+      <div class="mx-auto flex max-w-[1280px] flex-wrap items-center justify-between gap-6 px-6 py-10">
+        <a href={`/proyectos/${prev.slug}`} class="flex flex-col gap-1 py-2 text-navy"><span class="text-sm text-slate-500">Anterior</span><span class="text-[22px] font-bold">{prev.entry.titulo}</span></a>
+        <a href="/proyectos" class="py-3 font-bold text-navy underline underline-offset-4">Todos los proyectos</a>
+        <a href={`/proyectos/${next.slug}`} class="flex flex-col items-end gap-1 py-2 text-navy"><span class="text-sm text-slate-500">Siguiente</span><span class="text-[22px] font-bold">{next.entry.titulo}</span></a>
+      </div>
+    </nav>
+  )}
+
+  <section class="bg-cyan">
+    <div class="mx-auto flex max-w-[1280px] flex-wrap items-center justify-between gap-8 px-6 py-20">
+      <h2 class="m-0 max-w-[720px] text-[clamp(32px,4vw,52px)] leading-[1.05] font-bold tracking-[-0.03em]">¿Necesitás algo así para tu marca?</h2>
+      <a href="/contacto" data-fx="fill" data-fx-arrow class="rounded-md bg-navy px-[30px] py-[18px] text-lg font-bold text-white" style="--fx-fill:#FFFFFF;--fx-text:#183057">Hablemos<Arrow /></a>
+    </div>
+  </section>
+</Site>
+<style is:global>
+  .prosa p { margin: 0 0 1em; }
+  .prosa a { color: #183057; text-decoration: underline; text-decoration-color: #00C0E8; text-underline-offset: 4px; }
+  .prosa h2, .prosa h3 { color: #183057; letter-spacing: -0.02em; margin: 1.4em 0 .5em; }
+  .prosa ul { padding-left: 1.2em; list-style: disc; }
+</style>

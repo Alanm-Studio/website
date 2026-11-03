@@ -1,0 +1,207 @@
+---
+// Proyectos: pantalla dividida. Izquierda: lista que scrollea; derecha: carrusel ambiental fijo.
+import Base from '../../layouts/Base.astro';
+import Logo from '../../components/Logo.astro';
+import { getProyectos, getServicios } from '../../lib/cms';
+import { breadcrumbJsonLd } from '../../lib/seo';
+
+const proyectos = await getProyectos();
+const servicios = await getServicios();
+const pool = proyectos.flatMap((p) => {
+  const imgs = [p.entry.portada, p.entry.miniatura, ...p.entry.galeria.map((g) => g.imagen)].filter(Boolean) as string[];
+  return [...new Set(imgs)].map((src) => ({ src, titulo: p.entry.titulo }));
+});
+const initials = (t: string) => t.split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0]).join('').toUpperCase();
+const site = Astro.site!;
+---
+<Base title="Proyectos" description="Proyectos de branding, diseño web, editorial, sistema visual y marketing de Alan Marino Studio."
+  jsonLd={breadcrumbJsonLd(site, [{ nombre: 'Inicio', path: '/' }, { nombre: 'Proyectos', path: '/proyectos' }])}>
+  <a href="#lista" class="skip-link">Saltar a la lista de proyectos</a>
+  <div class="min-h-screen bg-[#0D1830] text-[#F3F6FB]">
+    <div class="flex flex-col md:flex-row">
+      <!-- Izquierda -->
+      <div class="order-2 min-w-0 px-5 pt-8 pb-24 md:order-1 md:basis-[45%] md:px-8">
+        <div class="mb-14 flex items-center justify-between gap-4">
+          <a href="/" aria-label="Alan Marino, inicio" class="flex py-2 text-white"><Logo class="h-6 w-auto" /></a>
+          <button type="button" class="pi-btn flex min-h-11 items-center gap-3 rounded-full border border-[#2A4170] bg-[#15264A] py-2.5 pr-3 pl-[18px] text-[15px] font-bold" aria-haspopup="dialog" data-all-open>
+            Ver todos los proyectos
+            <span aria-hidden="true" class="relative inline-block h-5 w-[34px] rounded-full bg-[#2A4170]"><span class="absolute top-[3px] left-[3px] h-3.5 w-3.5 rounded-full bg-cyan"></span></span>
+          </button>
+        </div>
+        <p class="m-0 mb-10 text-[15px] text-[#A9B6CC]"><span class="font-bold text-cyan" data-city>Trenque Lauquen</span> · <span data-clock>--:--</span></p>
+
+        <section aria-labelledby="about-t" data-stack class="mb-10 rounded-[14px] bg-[#15264A] p-6">
+          <h2 id="about-t" class="m-0 mb-2.5 text-sm font-bold text-cyan">Sobre nosotros</h2>
+          <p class="m-0 mb-3.5 text-[26px] leading-tight font-bold tracking-[-0.02em]">Un pequeño estudio, con grandes ideas.</p>
+          <p class="m-0 text-base leading-relaxed text-[#C9D3E3]">Branding, diseño web y comunicación para marcas en crecimiento. Una estructura con equipo base y una red de profesionales que se suman según las necesidades de cada proyecto.</p>
+        </section>
+
+        <h1 id="lista" class="m-0 mb-4 text-sm font-bold text-[#A9B6CC]">Proyectos · {proyectos.length}</h1>
+        <nav aria-label="Proyectos" class="flex flex-col gap-4">
+          {proyectos.map((p) => (
+            <a href={`/proyectos/${p.slug}`} class="pcard flex items-center gap-[18px] rounded-[14px] bg-[#15264A] px-5 py-[18px]" data-stack>
+              <span aria-hidden="true" class="flex h-16 w-16 flex-none items-center justify-center overflow-hidden rounded-[10px] bg-[#1C305A]">
+                {p.entry.logo ? <img src={p.entry.logo} alt="" class="max-h-[34px] max-w-[46px]" />
+                  : p.entry.miniatura ? <img src={p.entry.miniatura} alt="" class="h-full w-full object-cover" loading="lazy" />
+                  : <span class="text-base font-bold">{initials(p.entry.titulo)}</span>}
+              </span>
+              <span class="flex min-w-0 flex-col gap-1">
+                <span class="text-[19px] font-bold tracking-[-0.01em]">{p.entry.titulo}</span>
+                <span class="truncate text-[15px] text-[#A9B6CC]">{[p.servicioTitulo, p.entry.cliente].filter(Boolean).join(' · ')}</span>
+              </span>
+            </a>
+          ))}
+        </nav>
+      </div>
+
+      <!-- Derecha -->
+      <div class="order-1 flex min-w-0 flex-col gap-4 px-5 pt-5 md:sticky md:top-0 md:order-2 md:h-screen md:max-h-[1000px] md:min-h-[560px] md:basis-[55%] md:py-6 md:pr-6 md:pl-0">
+        <div class="relative h-[70vw] min-h-[260px] overflow-hidden rounded-[18px] bg-[#15264A] md:h-auto md:flex-1"
+          role="region" aria-roledescription="carrusel" aria-label="Trabajos del estudio" data-pool>
+          {pool.map((s, i) => (
+            <img src={s.src} alt="" loading={i < 2 ? 'eager' : 'lazy'} decoding="async"
+              class="pool-img absolute inset-0 h-full w-full object-cover" style={i === 0 ? 'opacity:1' : 'opacity:0'} data-title={s.titulo} />
+          ))}
+          <p class="absolute bottom-4 left-4 z-[2] m-0 rounded-full bg-[#0D1830]/80 px-3.5 py-2 text-[13px] font-bold" aria-live="off" data-pool-title>{pool[0]?.titulo}</p>
+          <button type="button" class="pi-btn absolute right-4 bottom-4 z-[2] flex h-11 w-11 items-center justify-center rounded-full bg-[#0D1830]" aria-label="Pausar el carrusel" data-pool-toggle>
+            <svg aria-hidden="true" class="ic-pause" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>
+            <svg aria-hidden="true" class="ic-play hidden" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4v16l13-8z"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ver todos -->
+    <dialog class="m-0 h-full max-h-none w-full max-w-none bg-[#0D1830] p-0 text-[#F3F6FB] backdrop:bg-[#0D1830]" aria-label="Todos los proyectos" data-all>
+      <div class="px-5 pt-7 pb-16 md:px-8">
+        <div class="mb-6 flex flex-wrap items-center gap-4">
+          <label for="q" class="sr-only">Buscar proyectos</label>
+          <input id="q" type="search" placeholder="Quiero ver…" autocomplete="off" data-q
+            class="min-w-0 flex-1 rounded-xl border border-[#2A4170] bg-[#15264A] px-[18px] py-3.5 text-[22px] text-[#F3F6FB] placeholder:text-[#8D9BB5] focus:outline-2 focus:outline-cyan md:max-w-[560px]" />
+          <span aria-live="polite" class="text-[15px] text-[#A9B6CC]" data-count></span>
+          <button type="button" class="pi-btn ml-auto flex h-[52px] w-[52px] flex-none items-center justify-center rounded-full border border-[#2A4170] bg-[#15264A]" aria-label="Cerrar y volver" data-all-close>
+            <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+          </button>
+        </div>
+        <div class="mb-8 flex flex-wrap gap-2" role="group" aria-label="Filtrar por servicio">
+          <button type="button" class="chip" aria-pressed="true" data-chip="">Todos</button>
+          {servicios.map((s) => <button type="button" class="chip" aria-pressed="false" data-chip={s.slug}>{s.entry.titulo}</button>)}
+        </div>
+        <p class="my-12 hidden text-[22px] text-[#C9D3E3]" data-empty>No encontramos proyectos. Probá con marca, editorial o un nombre.</p>
+        <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
+          {proyectos.map((p) => (
+            <a href={`/proyectos/${p.slug}`} class="tile flex flex-col gap-3.5"
+              data-text={[p.entry.titulo, p.entry.cliente, p.servicioTitulo].join(' ')}
+              data-srv={[p.servicio, ...p.entry.otrosServicios].join(' ')}>
+              <span class="block aspect-[4/3] overflow-hidden rounded-[14px] bg-[#15264A]">
+                {(p.entry.portada || p.entry.miniatura) && <img src={p.entry.portada || p.entry.miniatura} alt="" loading="lazy" class="tile-img h-full w-full object-cover" />}
+              </span>
+              <span class="flex flex-col gap-1">
+                <span class="text-2xl font-bold tracking-[-0.02em]">{p.entry.titulo}</span>
+                {p.entry.cliente && <span class="text-base text-[#A9B6CC]">{p.entry.cliente}</span>}
+                <span class="mt-0.5 text-[13px] font-bold text-cyan">{p.servicioTitulo}</span>
+              </span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </dialog>
+  </div>
+</Base>
+
+<style>
+  [data-stack] { position: relative; transform-origin: 50% 0; box-shadow: 0 -1px 0 rgba(255,255,255,.04), 0 -14px 28px rgba(5,12,26,.45); }
+  .pcard:focus-visible, .pi-btn:focus-visible, .tile:focus-visible, .chip:focus-visible { outline: 2px solid #00C0E8; outline-offset: 3px; }
+  .pi-btn:hover { background: #1C305A; }
+  .pool-img { transition: opacity 900ms ease; }
+  .tile-img { transition: transform 600ms cubic-bezier(.23,1,.32,1); }
+  .tile:hover .tile-img { transform: scale(1.03); }
+  .chip { border: 1px solid #2A4170; background: #15264A; border-radius: 999px; padding: 8px 16px; font-size: 15px; font-weight: 700; color: #F3F6FB; }
+  .chip[aria-pressed="true"] { background: #00C0E8; border-color: #00C0E8; color: #183057; }
+  @media (prefers-reduced-motion: reduce) { .pool-img, .tile-img { transition: none; } }
+</style>
+
+<script>
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Reloj del estudio (Argentina), alterna la ciudad cada 5 s.
+  const clock = document.querySelector('[data-clock]');
+  const city = document.querySelector('[data-city]');
+  const cities = ['Trenque Lauquen', 'Buenos Aires'];
+  let ci = 0, ticks = 0;
+  const fmt = new Intl.DateTimeFormat('es-AR', { hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: 'America/Argentina/Buenos_Aires' });
+  const tick = () => { if (clock) clock.textContent = fmt.format(new Date()); if (++ticks % 5 === 0 && city) city.textContent = cities[(ci = 1 - ci)]; };
+  tick(); setInterval(tick, 1000);
+
+  // Carrusel ambiental: fundido entre imágenes; se pausa con el botón.
+  const imgs = [...document.querySelectorAll<HTMLImageElement>('.pool-img')];
+  const title = document.querySelector('[data-pool-title]');
+  const toggle = document.querySelector<HTMLButtonElement>('[data-pool-toggle]');
+  let idx = 0, paused = reduce, timer: number | undefined;
+  const show = (n: number) => {
+    imgs[idx].style.opacity = '0'; idx = (n + imgs.length) % imgs.length; imgs[idx].style.opacity = '1';
+    if (title) title.textContent = imgs[idx].dataset.title ?? '';
+  };
+  const setPaused = (p: boolean) => {
+    paused = p; clearInterval(timer);
+    if (!p && imgs.length > 1) timer = window.setInterval(() => show(idx + 1), 2200);
+    toggle?.setAttribute('aria-label', p ? 'Reanudar el carrusel' : 'Pausar el carrusel');
+    toggle?.querySelector('.ic-pause')?.classList.toggle('hidden', p);
+    toggle?.querySelector('.ic-play')?.classList.toggle('hidden', !p);
+  };
+  toggle?.addEventListener('click', () => setPaused(!paused));
+  setPaused(paused);
+
+  // Efecto de apilado al scrollear: las tarjetas que llegan arriba se achican y oscurecen.
+  if (!reduce) {
+    const stack = [...document.querySelectorAll<HTMLElement>('[data-stack]')];
+    const ZONE = 240, SCALE = 0.14, PULL = 0.78;
+    let raf = 0;
+    const upd = () => {
+      raf = 0;
+      for (const el of stack) {
+        const t = el.getBoundingClientRect().top;
+        const p = Math.min(1, Math.max(0, (ZONE - t) / ZONE));
+        el.style.transform = p ? `translateY(${p * ZONE * PULL * 0.25}px) scale(${1 - p * SCALE})` : '';
+        el.style.filter = p ? `brightness(${1 - p * 0.45})` : '';
+      }
+    };
+    addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(upd); }, { passive: true });
+    upd();
+  }
+
+  // Ver todos: diálogo con buscador y filtros por servicio.
+  const dlg = document.querySelector<HTMLDialogElement>('[data-all]');
+  const openBtn = document.querySelector<HTMLButtonElement>('[data-all-open]');
+  const q = document.querySelector<HTMLInputElement>('[data-q]');
+  const tiles = [...document.querySelectorAll<HTMLElement>('.tile')];
+  const chips = [...document.querySelectorAll<HTMLButtonElement>('[data-chip]')];
+  const count = document.querySelector('[data-count]');
+  const empty = document.querySelector('[data-empty]');
+  let srv = '';
+  const norm = (s: string) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+  const filter = () => {
+    const term = norm(q?.value.trim() ?? '');
+    let n = 0;
+    for (const t of tiles) {
+      const ok = (!term || norm(t.dataset.text ?? '').includes(term)) && (!srv || (t.dataset.srv ?? '').split(' ').includes(srv));
+      t.hidden = !ok; if (ok) n++;
+    }
+    if (count) count.textContent = `${n} ${n === 1 ? 'proyecto' : 'proyectos'}`;
+    empty?.classList.toggle('hidden', n > 0);
+  };
+  chips.forEach((c) => c.addEventListener('click', () => {
+    srv = c.dataset.chip ?? '';
+    chips.forEach((x) => x.setAttribute('aria-pressed', String(x === c)));
+    filter();
+  }));
+  q?.addEventListener('input', filter);
+  const open = () => { dlg?.showModal(); filter(); q?.focus(); };
+  openBtn?.addEventListener('click', open);
+  document.querySelector('[data-all-close]')?.addEventListener('click', () => dlg?.close());
+  dlg?.addEventListener('close', () => openBtn?.focus());
+
+  // /proyectos?servicio=marca abre la grilla filtrada (links desde Servicios en Inicio).
+  const pre = new URLSearchParams(location.search).get('servicio');
+  if (pre) { const c = chips.find((x) => x.dataset.chip === pre); if (c) { c.click(); open(); } }
+</script>

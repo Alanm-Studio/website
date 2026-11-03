@@ -1,20 +1,45 @@
 ---
 import Base from '../layouts/Base.astro';
-import Logo from '../components/Logo.astro';
-import { organizationJsonLd, websiteJsonLd } from '../lib/seo';
+import Site from '../layouts/Site.astro';
+import MuyPronto from '../components/MuyPronto.astro';
+import HeroCarousel from '../components/HeroCarousel.astro';
+import Marquee from '../components/Marquee.astro';
+import Servicios from '../components/Servicios.astro';
+import Historias from '../components/Historias.astro';
+import Arrow from '../components/Arrow.astro';
+import { reader } from '../lib/cms';
+import { getAjustes, organizationJsonLd, websiteJsonLd } from '../lib/seo';
+
 const site = Astro.site!;
-const jsonLd = [await organizationJsonLd(site), websiteJsonLd(site, 'Alan Marino Studio')];
-// Página temporal mientras se construye el sitio.
+const ajustes = await getAjustes();
+const inicio = await reader.singletons.inicio.read();
+const jsonLd = [await organizationJsonLd(site), websiteJsonLd(site, ajustes?.seoSitio?.nombre || 'Alan Marino Studio')];
+const seo = {
+  rawTitle: inicio?.seo?.titulo || 'Alan Marino Studio — Branding, diseño web y comunicación',
+  description: inicio?.seo?.descripcion || undefined,
+  image: inicio?.seo?.imagen || undefined,
+  noindex: inicio?.seo?.noindex || false,
+  jsonLd,
+};
 ---
-<Base rawTitle="Alan Marino Studio — Branding, diseño web y comunicación" jsonLd={jsonLd}>
-  <div class="flex min-h-dvh flex-col justify-between bg-cyan p-[clamp(24px,5vw,64px)] text-navy">
-    <Logo class="block h-auto w-[clamp(160px,22vw,280px)]" />
-    <main>
-      <h1 class="m-0 text-[clamp(64px,15vw,220px)] leading-[.92] font-bold tracking-[-0.045em]">Muy pronto.</h1>
-      <p class="mt-[clamp(24px,3vw,48px)] max-w-[32ch] text-[clamp(17px,1.6vw,22px)] leading-normal">
-        Estamos preparando el nuevo sitio del estudio. Branding, diseño web y comunicación.
-      </p>
-    </main>
-    <footer class="text-sm font-bold">© {new Date().getFullYear()} Alan Marino Studio</footer>
-  </div>
-</Base>
+{ajustes?.muyPronto ? (
+  <Base {...seo}><MuyPronto /></Base>
+) : (
+  <Site {...seo}>
+    <section class="mx-auto flex max-w-[1280px] flex-col gap-7 px-6 pt-22 pb-14">
+      <p class="m-0 text-[15px] font-bold tracking-[0.04em] text-cyan-text">{inicio?.etiqueta}</p>
+      <h1 class="m-0 max-w-[1080px] text-[clamp(48px,7.4vw,104px)] leading-[.98] font-bold tracking-[-0.035em]">{inicio?.titulo}</h1>
+      <div class="flex flex-wrap items-end justify-between gap-8">
+        <p class="m-0 max-w-[620px] text-xl leading-normal text-slate-700">{inicio?.intro}</p>
+        <div class="flex flex-wrap gap-3">
+          <a href="/proyectos" data-fx="fill" data-fx-arrow class="rounded-md bg-cyan px-[26px] py-4 text-[17px] font-bold text-navy hover:bg-cyan-hover" style="--fx-fill:#183057;--fx-text:#FFFFFF">Ver proyectos<Arrow /></a>
+          <a href="/contacto" data-fx="fill" data-fx-arrow class="rounded-md border border-navy px-[25px] py-[15px] text-[17px] font-bold text-navy" style="--fx-fill:#183057;--fx-text:#FFFFFF">Hablemos<Arrow /></a>
+        </div>
+      </div>
+    </section>
+    <HeroCarousel />
+    <Marquee />
+    <Servicios />
+    <Historias />
+  </Site>
+)}

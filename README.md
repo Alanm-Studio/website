@@ -32,8 +32,15 @@ En local, Keystatic guarda en los archivos de tu compu; en producción guarda co
 
 ## Páginas
 
-- `/` — página temporal "Muy pronto".
-- `/borrador` — vista interna (no indexada) que muestra el contenido cargado en Keystatic.
+- `/` — Inicio (hero, proyectos destacados, marcas, servicios apilados, historias). Si **Ajustes › Mostrar página "Muy pronto"** está prendido, muestra la página temporal.
+- `/proyectos` — pantalla dividida con carrusel ambiental, buscador y filtros por servicio (`/proyectos?servicio=marca`).
+- `/proyectos/<slug>` — entrada de cada proyecto.
+- `/equipo`, `/contacto`, `404`.
+
+## Ramas y deploy
+
+- `staging` → Vercel crea un **preview** con link propio en cada push. Ahí se revisa todo antes de publicar.
+- `main` → **producción** (alanmarino.com). Para publicar, se mergea `staging` en `main`.
 
 ## Tokens de diseño
 

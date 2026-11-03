@@ -1,0 +1,37 @@
+---
+// Servicios como fichas que se apilan al scrollear y dejan visible su pestaña (número + título).
+import { reader, getServicios } from '../lib/cms';
+const inicio = await reader.singletons.inicio.read();
+const servicios = await getServicios();
+const TOP = 96, TAB = 84, H = 700; // todas las fichas terminan a la misma altura: se sueltan juntas
+---
+<div class="bg-slate-50">
+  <section id="servicios" aria-labelledby="serv-t" class="mx-auto max-w-[1312px] scroll-mt-20 px-6 md:px-16">
+    <div class="flex flex-wrap items-start justify-between gap-12 pt-24 pb-18">
+      <h2 id="serv-t" class="m-0 max-w-[680px] text-[clamp(36px,4vw,56px)] leading-[1.02] font-bold tracking-[-0.03em]">{inicio?.serviciosTitulo}</h2>
+      <p class="m-0 mt-2 max-w-[400px] text-[17px] leading-normal font-bold text-orange-text">{inicio?.serviciosIntro}</p>
+    </div>
+    {servicios.map(({ slug, entry }, i) => (
+      <article aria-labelledby={`svc-${slug}`} class="svc grid grid-cols-1 gap-x-8 gap-y-4 border-t border-cyan bg-slate-50 pt-[22px] pb-10 md:grid-cols-[140px_minmax(0,1fr)_400px]"
+        style={`--top:${TOP + i * TAB}px;--h:${H - TAB * i}px`}>
+        <span class="text-4xl leading-none font-bold tracking-[-0.02em]">{String(i + 1).padStart(2, '0')}</span>
+        <div class="flex flex-col gap-2.5">
+          <h3 id={`svc-${slug}`} class="m-0 text-[38px] leading-none font-bold tracking-[-0.025em] text-orange">
+            <a href={`/proyectos?servicio=${slug}`} class="hover:underline">{entry.titulo}</a>
+          </h3>
+          <span class="mt-4 text-[13px] text-orange-text">[ {entry.bajada} ]</span>
+          <ul class="m-0 flex list-none flex-col gap-1.5 p-0">
+            {entry.items.map((it) => <li class="text-lg leading-snug text-slate-700">{it}</li>)}
+          </ul>
+        </div>
+        <p class="m-0 text-base leading-normal font-bold md:mt-[74px]">{entry.descripcion}</p>
+      </article>
+    ))}
+  </section>
+</div>
+<style>
+  /* El apilado solo en pantallas grandes; en celular las fichas van una debajo de otra. */
+  @media (min-width: 768px) {
+    .svc { position: sticky; top: var(--top); height: var(--h); }
+  }
+</style>

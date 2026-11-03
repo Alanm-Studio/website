@@ -1,0 +1,42 @@
+---
+import Site from '../layouts/Site.astro';
+import Arrow from '../components/Arrow.astro';
+import { getEquipo } from '../lib/cms';
+import { breadcrumbJsonLd } from '../lib/seo';
+const equipo = await getEquipo();
+const site = Astro.site!;
+const jsonLd = [
+  breadcrumbJsonLd(site, [{ nombre: 'Inicio', path: '/' }, { nombre: 'Equipo', path: '/equipo' }]),
+  ...equipo.map(({ entry }) => ({ '@context': 'https://schema.org', '@type': 'Person', name: entry.nombre, jobTitle: entry.rol, worksFor: { '@id': new URL('/#estudio', site).href } })),
+];
+const tint = ['bg-[#DDF4FA]', 'bg-slate-100'];
+---
+<Site title="Equipo" description="Un pequeño estudio, con grandes ideas: el equipo base de Alan Marino Studio y su red de profesionales." jsonLd={jsonLd}>
+  <section class="mx-auto flex max-w-[1280px] flex-wrap items-end justify-between gap-x-16 gap-y-8 px-6 pt-22 pb-16">
+    <h1 class="m-0 max-w-[820px] text-[clamp(48px,7vw,96px)] leading-[.98] font-bold tracking-[-0.035em]">Un pequeño estudio, con grandes ideas.</h1>
+    <p class="m-0 max-w-[400px] text-xl leading-normal text-slate-700">Una estructura con equipo base y una red de profesionales que se suman según las necesidades de cada proyecto.</p>
+  </section>
+  <section aria-label="Integrantes" class="mx-auto max-w-[1280px] px-6 pb-24">
+    <div class="grid grid-cols-1 gap-x-8 gap-y-18 md:grid-cols-2">
+      {equipo.map(({ entry }, i) => (
+        <article class="flex flex-col gap-4">
+          {entry.foto
+            ? <img src={entry.foto} alt={`Retrato de ${entry.nombre}`} loading="lazy" decoding="async" class="aspect-[3/4] w-full rounded-md object-cover" />
+            : <div class:list={['aspect-[3/4] rounded-md', tint[i % 2]]} aria-hidden="true"></div>}
+          <div class="flex flex-col gap-1">
+            <h2 class="m-0 text-2xl font-bold tracking-[-0.01em]">{entry.nombre}</h2>
+            <span class="text-[15px] font-bold text-cyan-text">{entry.rol}</span>
+          </div>
+          <p class="m-0 text-lg leading-snug font-bold">{entry.frase}</p>
+          <p class="m-0 text-base leading-relaxed text-slate-700">{entry.bio}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+  <section class="bg-cyan">
+    <div class="mx-auto flex max-w-[1280px] flex-wrap items-center justify-between gap-8 px-6 py-22">
+      <h2 class="m-0 max-w-[720px] text-[clamp(32px,4vw,52px)] leading-[1.05] font-bold tracking-[-0.03em]">Y una red que crece con cada proyecto.</h2>
+      <a href="/contacto" data-fx="fill" data-fx-arrow class="rounded-md bg-navy px-[30px] py-[18px] text-lg font-bold text-white" style="--fx-fill:#FFFFFF;--fx-text:#183057">Trabajemos juntos<Arrow /></a>
+    </div>
+  </section>
+</Site>

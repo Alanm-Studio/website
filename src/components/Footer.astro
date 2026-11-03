@@ -1,0 +1,47 @@
+---
+import Logo from './Logo.astro';
+import Arrow from './Arrow.astro';
+import { getAjustes } from '../lib/seo';
+const a = await getAjustes();
+const wa = a?.whatsapp ? `https://wa.me/${a.whatsapp.replace(/\D/g, '')}` : null;
+const redes = [
+  { label: 'Instagram', href: a?.instagram },
+  { label: 'Behance', href: a?.behance },
+  { label: 'LinkedIn', href: a?.linkedin },
+].filter((r) => r.href);
+---
+<footer class="bg-navy text-white">
+  <div class="mx-auto flex min-h-[860px] max-w-[1440px] flex-col justify-between gap-16 px-6 pt-24 pb-10 md:px-16">
+    <div class="flex flex-wrap items-end justify-between gap-12">
+      <h2 class="m-0 max-w-[760px] text-[clamp(44px,6vw,72px)] leading-[.98] font-bold tracking-[-0.035em]">¿Tenés un proyecto en mente?</h2>
+      <a href="/contacto" data-fx="fill" data-fx-arrow class="rounded-md bg-orange px-[30px] py-[18px] text-xl font-bold text-white hover:bg-orange-hover" style="--fx-fill:#00C0E8;--fx-text:#183057">Hablemos<Arrow /></a>
+    </div>
+
+    <div class="grid grid-cols-1 gap-8 border-t border-[#34507A] pt-8 sm:grid-cols-2 lg:grid-cols-4">
+      <div class="flex flex-col gap-2"><span class="text-sm font-bold text-cyan">Estudio</span><span class="text-[17px] leading-normal text-[#D5DEEA]">Branding, diseño web y comunicación para marcas en crecimiento.</span></div>
+      <nav aria-label="Pie" class="flex flex-col"><span class="mb-1.5 text-sm font-bold text-cyan">Navegación</span>
+        <a href="/proyectos" class="py-1.5 text-[17px] text-white hover:text-cyan">Proyectos</a>
+        <a href="/equipo" class="py-1.5 text-[17px] text-white hover:text-cyan">Equipo</a>
+        <a href="/contacto" class="py-1.5 text-[17px] text-white hover:text-cyan">Contacto</a>
+      </nav>
+      <div class="flex flex-col"><span class="mb-1.5 text-sm font-bold text-cyan">Contacto</span>
+        {a?.email && <a href={`mailto:${a.email}`} class="py-1.5 text-[17px] text-white hover:text-cyan">{a.email}</a>}
+        {wa && <a href={wa} class="py-1.5 text-[17px] text-white hover:text-cyan">WhatsApp</a>}
+        <span class="py-1.5 text-[17px] text-[#D5DEEA]">{a?.ubicacion || 'Trenque Lauquen, Buenos Aires'}</span>
+      </div>
+      {redes.length > 0 && (
+        <div class="flex flex-col"><span class="mb-1.5 text-sm font-bold text-cyan">Redes</span>
+          {redes.map((r) => <a href={r.href} class="py-1.5 text-[17px] text-white hover:text-cyan">{r.label}</a>)}
+        </div>
+      )}
+    </div>
+
+    <div class="flex flex-col gap-5">
+      <Logo class="block h-auto w-full text-cyan" />
+      <div class="flex flex-wrap justify-between gap-3 text-sm text-[#C9D3E0]">
+        <span>© {new Date().getFullYear()} Alan Marino — Un pequeño estudio, con grandes ideas.</span>
+        <a href="#top" class="py-1 text-[#C9D3E0] hover:text-cyan">Volver arriba</a>
+      </div>
+    </div>
+  </div>
+</footer>

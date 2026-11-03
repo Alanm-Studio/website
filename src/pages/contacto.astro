@@ -1,0 +1,45 @@
+---
+import Site from '../layouts/Site.astro';
+import Logo from '../components/Logo.astro';
+import { getAjustes, breadcrumbJsonLd } from '../lib/seo';
+const a = await getAjustes();
+const mail = a?.email ? `mailto:${a.email}` : '/contacto';
+const wa = a?.whatsapp ? `https://wa.me/${a.whatsapp.replace(/\D/g, '')}` : null;
+const redes = [
+  { label: 'Instagram', href: a?.instagram },
+  { label: 'Behance', href: a?.behance },
+  { label: 'LinkedIn', href: a?.linkedin },
+].filter((r) => r.href);
+const site = Astro.site!;
+---
+<Site title="Contacto" description="¿Tenés un proyecto en mente? Escribinos y armamos la propuesta a medida." footer={false}
+  jsonLd={breadcrumbJsonLd(site, [{ nombre: 'Inicio', path: '/' }, { nombre: 'Contacto', path: '/contacto' }])}>
+  <div class="flex min-h-[calc(100dvh-77px)] flex-col justify-between gap-12 bg-cyan px-6 pt-20 pb-10 text-navy md:px-16">
+    <h1 class="m-0 text-[22px] font-bold">¿Tenés un proyecto en mente?</h1>
+    <a href={mail} class="big-link flex items-center justify-between gap-8 border-b-4 border-navy pb-6 text-navy" aria-label="Hablemos: escribinos un email">
+      <span class="font-display text-[clamp(64px,13vw,184px)] leading-[.95] tracking-[-0.01em]" aria-hidden="true">HABLEMOS</span>
+      <span class="arrow flex h-[clamp(72px,10vw,152px)] w-[clamp(72px,10vw,152px)] flex-none items-center justify-center rounded-full bg-orange text-white" aria-hidden="true">
+        <svg class="h-1/2 w-1/2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M8 7h9v9"/></svg>
+      </span>
+    </a>
+    <div class="grid grid-cols-1 gap-8 md:grid-cols-3">
+      <div class="flex flex-col gap-2"><span class="text-sm font-bold">Escribinos</span>
+        {a?.email ? <a href={mail} class="py-1 text-[28px] font-bold tracking-[-0.02em] text-navy underline underline-offset-4">{a.email}</a> : <span class="text-lg">Email a confirmar</span>}
+        {wa && <a href={wa} class="py-1 text-lg font-bold text-navy underline underline-offset-4">WhatsApp</a>}
+      </div>
+      <nav aria-label="Navegación" class="flex flex-col"><span class="mb-1.5 text-sm font-bold">Navegación</span>
+        <a href="/proyectos" class="py-1.5 text-lg text-navy">Proyectos</a><a href="/equipo" class="py-1.5 text-lg text-navy">Equipo</a><a href="/" class="py-1.5 text-lg text-navy">Inicio</a>
+      </nav>
+      {redes.length > 0 && <div class="flex flex-col"><span class="mb-1.5 text-sm font-bold">Redes</span>{redes.map((r) => <a href={r.href} class="py-1.5 text-lg text-navy">{r.label}</a>)}</div>}
+    </div>
+    <div class="flex flex-wrap items-end justify-between gap-4 border-t border-navy pt-6">
+      <Logo class="h-12 w-auto" />
+      <span class="text-sm">© {new Date().getFullYear()} Alan Marino · {a?.ubicacion || 'Trenque Lauquen, Buenos Aires'}</span>
+    </div>
+  </div>
+</Site>
+<style>
+  .big-link:hover .arrow { transform: rotate(45deg); }
+  .arrow { transition: transform .3s ease; }
+  @media (prefers-reduced-motion: reduce) { .arrow { transition: none; } }
+</style>

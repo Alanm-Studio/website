@@ -19,7 +19,7 @@ export default defineConfig({
     keystatic(),
     sitemap({
       // Fuera del sitemap: vistas internas y el panel del CMS.
-      filter: (page) => !/\/(borrador|keystatic)(\/|$)/.test(page),
+      filter: (page) => !/\/(keystatic)(\/|$)/.test(page),
     }),
   ],
   adapter: vercel(),
