@@ -15,7 +15,8 @@ const site = Astro.site!;
 ---
 <Site title="Contacto" description="¿Tenés un proyecto en mente? Escribinos y armamos la propuesta a medida." footer={false}
   jsonLd={breadcrumbJsonLd(site, [{ nombre: 'Inicio', path: '/' }, { nombre: 'Contacto', path: '/contacto' }])}>
-  <div class="flex min-h-[calc(100dvh-77px)] flex-col justify-between gap-12 bg-cyan px-6 pt-20 pb-10 text-navy md:px-16">
+  <div class="bg-cyan text-navy">
+  <div class="mx-auto flex min-h-[calc(100dvh-77px)] max-w-[1280px] flex-col justify-between gap-12 px-6 pt-20 pb-10">
     <h1 class="m-0 text-[22px] font-bold">¿Tenés un proyecto en mente?</h1>
     <a href={hablar} {...(wa ? { target: '_blank', rel: 'noreferrer' } : {})} class="big-link flex items-center justify-between gap-8 border-b-4 border-navy pb-6 text-navy" aria-label={wa ? 'Hablemos por WhatsApp (se abre en otra pestaña)' : 'Hablemos: escribinos un email'}>
       <span class="font-display text-[clamp(64px,13vw,184px)] leading-[.95] tracking-[-0.01em]" aria-hidden="true">HABLEMOS</span>
@@ -40,6 +41,7 @@ const site = Astro.site!;
       <Wordmark class="text-5xl" />
       <span class="text-sm">© {new Date().getFullYear()} Alan Marino · {a?.ubicacion || 'Trenque Lauquen, Buenos Aires'}</span>
     </div>
+  </div>
   </div>
 </Site>
 <style>
