@@ -1,5 +1,5 @@
 ---
-import Logo from './Logo.astro';
+import Wordmark from './Wordmark.astro';
 import Arrow from './Arrow.astro';
 import { getAjustes } from '../lib/seo';
 const a = await getAjustes();
@@ -37,7 +37,7 @@ const redes = [
     </div>
 
     <div class="flex flex-col gap-5">
-      <Logo class="block h-auto w-full text-cyan" />
+      <Wordmark fit class="block h-auto w-full text-cyan" />
       <div class="flex flex-wrap justify-between gap-3 text-sm text-[#C9D3E0]">
         <span>© {new Date().getFullYear()} Alan Marino — Un pequeño estudio, con grandes ideas.</span>
         <a href="#top" class="py-1 text-[#C9D3E0] hover:text-cyan">Volver arriba</a>

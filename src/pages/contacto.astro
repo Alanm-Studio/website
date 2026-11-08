@@ -1,6 +1,6 @@
 ---
 import Site from '../layouts/Site.astro';
-import Logo from '../components/Logo.astro';
+import Wordmark from '../components/Wordmark.astro';
 import { getAjustes, breadcrumbJsonLd } from '../lib/seo';
 const a = await getAjustes();
 const mail = a?.email ? `mailto:${a.email}` : '/contacto';
@@ -33,7 +33,7 @@ const site = Astro.site!;
       {redes.length > 0 && <div class="flex flex-col"><span class="mb-1.5 text-sm font-bold">Redes</span>{redes.map((r) => <a href={r.href} class="py-1.5 text-lg text-navy">{r.label}</a>)}</div>}
     </div>
     <div class="flex flex-wrap items-end justify-between gap-4 border-t border-navy pt-6">
-      <Logo class="h-12 w-auto" />
+      <Wordmark class="text-5xl" />
       <span class="text-sm">© {new Date().getFullYear()} Alan Marino · {a?.ubicacion || 'Trenque Lauquen, Buenos Aires'}</span>
     </div>
   </div>

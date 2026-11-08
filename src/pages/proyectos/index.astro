@@ -1,7 +1,7 @@
 ---
 // Proyectos: pantalla dividida. Izquierda: lista que scrollea; derecha: carrusel ambiental fijo.
 import Base from '../../layouts/Base.astro';
-import Logo from '../../components/Logo.astro';
+import Wordmark from '../../components/Wordmark.astro';
 import { getProyectos, getServicios } from '../../lib/cms';
 import { breadcrumbJsonLd } from '../../lib/seo';
 
@@ -27,7 +27,7 @@ const site = Astro.site!;
       <!-- Izquierda -->
       <div class="left-col order-2 min-w-0 px-5 pt-8 pb-24 md:sticky md:top-0 md:order-1 md:h-screen md:max-h-[1000px] md:min-h-[640px] md:basis-[40%] lg:basis-[30%] md:self-start md:overflow-y-auto md:px-8 md:pb-12" data-left>
         <div class="mb-14 flex items-center justify-between gap-4">
-          <a href="/" aria-label="Alan Marino, inicio" class="flex py-2 text-white"><Logo class="h-6 w-auto" /></a>
+          <a href="/" aria-label="Alan Marino, inicio" class="flex py-2 text-white"><Wordmark class="text-[26px]" /></a>
           <button type="button" class="pi-btn flex min-h-11 flex-none items-center gap-3 whitespace-nowrap rounded-full border border-[#2A4170] bg-[#15264A] py-2.5 pr-3 pl-[18px] text-[15px] font-bold" aria-haspopup="dialog" data-all-open>
             Ver todos<span class="sr-only"> los proyectos</span>
             <span aria-hidden="true" class="relative inline-block h-5 w-[34px] rounded-full bg-[#2A4170]"><span class="absolute top-[3px] left-[3px] h-3.5 w-3.5 rounded-full bg-cyan"></span></span>
