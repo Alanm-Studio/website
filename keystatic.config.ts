@@ -44,6 +44,7 @@ const proyectoSchema = () => ({
         cliente: fields.text({ label: 'Cliente' }),
         anio: fields.integer({ label: 'Año' }),
         otrosServicios: fields.multiselect({ label: 'También aparece en', description: 'Otros servicios que se trabajaron en este proyecto (además de esta sección).', options: SERVICIOS }),
+        descripcionCorta: fields.text({ label: 'Descripción corta', description: 'Una línea para las tarjetas (ej.: Sistema visual y piezas gráficas). Máx. 80 caracteres.', validation: { length: { max: 80 } } }),
         bajada: fields.text({ label: 'Bajada', description: 'El desafío en una frase.', multiline: true }),
         equipo: fields.text({ label: 'Equipo que participó' }),
         portada: imagen('Portada (horizontal)', 'proyectos'),

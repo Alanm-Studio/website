@@ -49,7 +49,7 @@ const site = Astro.site!;
               </span>
               <span class="flex min-w-0 flex-col gap-1">
                 <span class="text-[19px] font-bold tracking-[-0.01em]">{p.entry.titulo}</span>
-                <span class="truncate text-[15px] text-[#A9B6CC]">{[p.servicioTitulo, p.entry.cliente].filter(Boolean).join(' · ')}</span>
+                <span class="truncate text-[15px] text-[#A9B6CC]">{p.entry.descripcionCorta || [p.servicioTitulo, p.entry.cliente].filter(Boolean).join(' · ')}</span>
               </span>
             </a>
           ))}
@@ -76,13 +76,14 @@ const site = Astro.site!;
           <h2 id="otros-t" class="m-0 text-sm font-bold text-[#A9B6CC]">Otros proyectos</h2>
           <div class="grid grid-cols-2 gap-3 md:grid-cols-4">
             {otros.map((p) => (
-              <a href={`/proyectos/${p.slug}`} class="ocard flex min-w-0 flex-col gap-2.5">
-                <span class="block aspect-[4/3] overflow-hidden rounded-xl bg-[#15264A]">
+              <a href={`/proyectos/${p.slug}`} class="ocard flex min-w-0 flex-col gap-2.5 rounded-[14px] border border-white/8 bg-white/6 px-2 pt-2 pb-3">
+                <span class="block aspect-[4/3] overflow-hidden rounded-[10px] bg-[#15264A]">
                   <img src={p.entry.miniatura || p.entry.portada} alt={p.entry.galeria[0]?.alt || p.entry.titulo} loading="lazy" decoding="async" class="oimg h-full w-full object-cover" />
                 </span>
-                <span class="flex min-w-0 flex-col gap-0.5">
-                  <span class="truncate text-[15px] leading-tight font-bold tracking-[-0.01em]">{p.entry.titulo}</span>
+                <span class="flex min-w-0 flex-col gap-[3px] px-1">
                   <span class="truncate text-xs font-bold text-cyan">{p.servicioTitulo}</span>
+                  <span class="truncate text-[15px] leading-tight font-bold tracking-[-0.01em]">{p.entry.titulo}</span>
+                  <span class="line-clamp-2 text-[13px] leading-snug text-[#C9D3E3]">{p.entry.descripcionCorta || p.entry.cliente || p.servicioTitulo}</span>
                 </span>
               </a>
             ))}
@@ -135,8 +136,10 @@ const site = Astro.site!;
   .pi-btn:hover { background: #1C305A; }
   .pool-img { transition: opacity 900ms ease; }
   .oimg { transition: transform 500ms cubic-bezier(.23,1,.32,1); }
+  .ocard { transition: background .2s ease, border-color .2s ease; }
+  .ocard:hover { background: rgb(255 255 255 / .1); border-color: rgb(0 192 232 / .5); }
   .ocard:hover .oimg { transform: scale(1.04); }
-  .ocard:focus-visible { outline: 2px solid #00C0E8; outline-offset: 3px; border-radius: 12px; }
+  .ocard:focus-visible { outline: 2px solid #00C0E8; outline-offset: 3px; }
   @media (prefers-reduced-motion: reduce) { .oimg { transition: none; } }
   .tile-img { transition: transform 600ms cubic-bezier(.23,1,.32,1); }
   .tile:hover .tile-img { transform: scale(1.03); }
