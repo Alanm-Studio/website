@@ -11,6 +11,8 @@ const pool = proyectos.flatMap((p) => {
   const imgs = [p.entry.portada, p.entry.miniatura, ...p.entry.galeria.map((g) => g.imagen)].filter(Boolean) as string[];
   return [...new Set(imgs)].map((src) => ({ src, titulo: p.entry.titulo }));
 });
+// 4 proyectos para las tarjetas bajo el carrusel (los últimos de la lista, con imagen)
+const otros = proyectos.filter((p) => p.entry.miniatura || p.entry.portada).slice(-4);
 const initials = (t: string) => t.split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0]).join('').toUpperCase();
 const site = Astro.site!;
 ---
@@ -63,38 +65,24 @@ const site = Astro.site!;
               class="pool-img absolute inset-0 h-full w-full object-cover" style={i === 0 ? 'opacity:1' : 'opacity:0'} data-title={s.titulo} />
           ))}
           <p class="absolute bottom-4 left-4 z-[2] m-0 rounded-full bg-[#0D1830]/80 px-3.5 py-2 text-[13px] font-bold" aria-live="off" data-pool-title>{pool[0]?.titulo}</p>
-          <button type="button" class="pi-btn absolute right-4 bottom-4 z-[2] flex h-11 w-11 items-center justify-center rounded-full bg-[#0D1830]" aria-label="Pausar imágenes y proyectos" data-pool-toggle>
+          <button type="button" class="pi-btn absolute right-4 bottom-4 z-[2] flex h-11 w-11 items-center justify-center rounded-full bg-[#0D1830]" aria-label="Pausar imágenes" data-pool-toggle>
             <svg aria-hidden="true" class="ic-pause" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>
             <svg aria-hidden="true" class="ic-play hidden" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4v16l13-8z"/></svg>
           </button>
         </div>
 
-        <!-- Otros proyectos: tira que avanza sola debajo del carrusel -->
+        <!-- Otros proyectos: 4 tarjetas fijas con foto -->
         <section aria-labelledby="otros-t" class="flex flex-none flex-col gap-3 pb-6 md:pb-0">
-          <div class="flex items-center justify-between gap-3">
-            <h2 id="otros-t" class="m-0 text-sm font-bold text-[#A9B6CC]">Otros proyectos</h2>
-            <div class="flex gap-2">
-              <button type="button" class="pi-btn flex h-10 w-10 items-center justify-center rounded-full border border-[#2A4170] bg-[#15264A]" aria-label="Proyectos anteriores" data-otros-prev>
-                <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
-              </button>
-              <button type="button" class="pi-btn flex h-10 w-10 items-center justify-center rounded-full border border-[#2A4170] bg-[#15264A]" aria-label="Más proyectos" data-otros-next>
-                <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
-              </button>
-            </div>
-          </div>
-          <div class="no-scrollbar flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-smooth motion-reduce:scroll-auto" data-otros>
-            {proyectos.map((p) => (
-              <a href={`/proyectos/${p.slug}`} class="ocard box-border flex flex-[0_0_272px] snap-start items-start gap-3.5 rounded-[14px] border border-[#22385F] bg-[#15264A] p-4" data-ocard>
-                <span aria-hidden="true" class="flex h-12 w-12 flex-none items-center justify-center overflow-hidden rounded-[10px] bg-[#1C305A] text-cyan">
-                  {p.entry.logo ? <img src={p.entry.logo} alt="" class="max-h-[26px] max-w-9" />
-                    : p.entry.miniatura ? <img src={p.entry.miniatura} alt="" class="h-full w-full object-cover" loading="lazy" />
-                    : <span class="text-sm font-bold">{initials(p.entry.titulo)}</span>}
+          <h2 id="otros-t" class="m-0 text-sm font-bold text-[#A9B6CC]">Otros proyectos</h2>
+          <div class="grid grid-cols-2 gap-3 md:grid-cols-4">
+            {otros.map((p) => (
+              <a href={`/proyectos/${p.slug}`} class="ocard flex min-w-0 flex-col gap-2.5">
+                <span class="block aspect-[4/3] overflow-hidden rounded-xl bg-[#15264A]">
+                  <img src={p.entry.miniatura || p.entry.portada} alt={p.entry.galeria[0]?.alt || p.entry.titulo} loading="lazy" decoding="async" class="oimg h-full w-full object-cover" />
                 </span>
-                <span class="flex min-w-0 flex-col gap-1">
-                  <span class="text-xs font-bold text-cyan">{[p.servicioTitulo, ...p.entry.otrosServicios.map((x) => servicios.find((s) => s.slug === x)?.entry.titulo).filter((t) => t && t !== p.servicioTitulo)].join(' · ')}</span>
-                  <span class="text-[17px] leading-tight font-bold tracking-[-0.01em]">{p.entry.titulo}</span>
-                  {(p.entry.bajada || p.entry.cliente) && <span class="line-clamp-2 text-sm leading-snug text-[#A9B6CC]">{p.entry.bajada || p.entry.cliente}</span>}
-                  <span class="mt-1 text-[13px] font-bold underline decoration-cyan underline-offset-[3px]">Ver proyecto →</span>
+                <span class="flex min-w-0 flex-col gap-0.5">
+                  <span class="truncate text-[15px] leading-tight font-bold tracking-[-0.01em]">{p.entry.titulo}</span>
+                  <span class="truncate text-xs font-bold text-cyan">{p.servicioTitulo}</span>
                 </span>
               </a>
             ))}
@@ -146,9 +134,10 @@ const site = Astro.site!;
   .pcard:focus-visible, .pi-btn:focus-visible, .tile:focus-visible, .chip:focus-visible { outline: 2px solid #00C0E8; outline-offset: 3px; }
   .pi-btn:hover { background: #1C305A; }
   .pool-img { transition: opacity 900ms ease; }
-  .ocard { transition: border-color .2s ease, background .2s ease; }
-  .ocard:hover { border-color: #00C0E8; background: #1C305A; }
-  .ocard:focus-visible { outline: 2px solid #00C0E8; outline-offset: 3px; }
+  .oimg { transition: transform 500ms cubic-bezier(.23,1,.32,1); }
+  .ocard:hover .oimg { transform: scale(1.04); }
+  .ocard:focus-visible { outline: 2px solid #00C0E8; outline-offset: 3px; border-radius: 12px; }
+  @media (prefers-reduced-motion: reduce) { .oimg { transition: none; } }
   .tile-img { transition: transform 600ms cubic-bezier(.23,1,.32,1); }
   .tile:hover .tile-img { transform: scale(1.03); }
   .chip { border: 1px solid #2A4170; background: #15264A; border-radius: 999px; padding: 8px 16px; font-size: 15px; font-weight: 700; color: #F3F6FB; }
@@ -180,7 +169,7 @@ const site = Astro.site!;
   const setPaused = (p: boolean) => {
     paused = p; clearInterval(timer);
     if (!p && imgs.length > 1) timer = window.setInterval(() => show(idx + 1), 2200);
-    toggle?.setAttribute('aria-label', p ? 'Reanudar imágenes y proyectos' : 'Pausar imágenes y proyectos');
+    toggle?.setAttribute('aria-label', p ? 'Reanudar imágenes' : 'Pausar imágenes');
     toggle?.querySelector('.ic-pause')?.classList.toggle('hidden', p);
     toggle?.querySelector('.ic-play')?.classList.toggle('hidden', !p);
   };
@@ -215,21 +204,6 @@ const site = Astro.site!;
     addEventListener('resize', measure);
     addEventListener('load', measure);
     measure();
-  }
-
-  // Otros proyectos: avanza de a una tarjeta cada 4,5 s; se frena con el botón de pausa, al pasar el mouse o con foco.
-  const otros = document.querySelector<HTMLElement>('[data-otros]');
-  if (otros) {
-    const stepOtros = (d: number) => {
-      const w = (otros.querySelector<HTMLElement>('[data-ocard]')?.getBoundingClientRect().width ?? 272) + 12;
-      const max = otros.scrollWidth - otros.clientWidth;
-      let x = otros.scrollLeft + d * w;
-      if (x > max + 2) x = 0; if (x < -2) x = max;
-      otros.scrollTo({ left: x });
-    };
-    document.querySelector('[data-otros-prev]')?.addEventListener('click', () => stepOtros(-1));
-    document.querySelector('[data-otros-next]')?.addEventListener('click', () => stepOtros(1));
-    if (!reduce) setInterval(() => { if (!paused && !document.hidden && !otros.matches(':hover, :focus-within')) stepOtros(1); }, 4500);
   }
 
   // Ver todos: diálogo con buscador y filtros por servicio.
