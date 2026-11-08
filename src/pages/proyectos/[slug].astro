@@ -1,7 +1,6 @@
 ---
 import Markdoc from '@markdoc/markdoc';
 import Site from '../../layouts/Site.astro';
-import Arrow from '../../components/Arrow.astro';
 import { getProyectos } from '../../lib/cms';
 import { breadcrumbJsonLd } from '../../lib/seo';
 
@@ -119,12 +118,6 @@ const imgCls = (f: string) => ['w-full rounded-md', f === 'completo' ? 'mx-auto 
     </nav>
   )}
 
-  <section class="bg-cyan">
-    <div class="mx-auto flex max-w-[1280px] flex-wrap items-center justify-between gap-8 px-6 py-20">
-      <h2 class="m-0 max-w-[720px] text-[clamp(32px,4vw,52px)] leading-[1.05] font-bold tracking-[-0.03em]">¿Necesitás algo así para tu marca?</h2>
-      <a href="/contacto" data-fx="fill" data-fx-arrow class="rounded-md bg-navy px-[30px] py-[18px] text-lg font-bold text-white" style="--fx-fill:#FFFFFF;--fx-text:#183057">Hablemos<Arrow /></a>
-    </div>
-  </section>
 </Site>
 <style is:global>
   .prosa p { margin: 0 0 1em; }
