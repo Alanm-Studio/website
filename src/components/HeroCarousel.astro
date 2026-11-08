@@ -5,7 +5,7 @@ const proyectos = (await getProyectos()).filter((p) => p.entry.destacado && (p.e
 ---
 {proyectos.length > 0 && (
 <section aria-label="Proyectos destacados" class="pt-2 pb-24">
-  <div class="no-scrollbar mx-auto flex max-w-[1280px] snap-x snap-mandatory gap-5 overflow-x-auto scroll-smooth scroll-px-6 px-6 focus-visible:outline-3 focus-visible:outline-orange"
+  <div class="no-scrollbar relative mx-auto flex max-w-[1280px] snap-x snap-mandatory gap-5 overflow-x-auto scroll-smooth scroll-px-6 px-6 focus-visible:outline-3 focus-visible:outline-orange"
     tabindex="0" aria-label="Proyectos destacados, desplazable" data-hc-track>
     {proyectos.map((p) => (
       <a href={`/proyectos/${p.slug}`} class="group flex flex-[0_0_78%] snap-start flex-col gap-3 text-navy sm:flex-[0_0_300px]" data-hc-card>

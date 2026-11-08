@@ -18,7 +18,7 @@ const TIPO = { reel: 'Reel', post: 'Post', historia: 'Destacada' } as const;
       <a href={ig} target="_blank" rel="noreferrer" class="inline-flex items-center gap-2.5 rounded-md bg-orange px-6 py-[15px] text-lg font-bold text-white hover:bg-orange-hover">Seguinos en Instagram<span class="sr-only"> (se abre en otra pestaña)</span><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M8 7h9v9"/></svg></a>
     </div>
   </div>
-  <ul class="no-scrollbar mx-auto mt-12 flex max-w-[1280px] list-none snap-x snap-mandatory gap-6 overflow-x-auto scroll-smooth scroll-px-6 px-6 pt-2.5 pb-1.5" data-ig-track tabindex="0" aria-label="Publicaciones de Instagram">
+  <ul class="no-scrollbar relative mx-auto mt-12 flex max-w-[1280px] list-none snap-x snap-mandatory gap-6 overflow-x-auto scroll-smooth scroll-px-6 px-6 pt-2.5 pb-1.5" data-ig-track tabindex="0" aria-label="Publicaciones de Instagram">
     {historias.map(({ entry }) => (
       <li class="flex-[0_0_72%] snap-start sm:flex-[0_0_330px]">
         <a class="ig-card flex flex-col gap-4 text-navy" href={entry.link} target="_blank" rel="noreferrer">

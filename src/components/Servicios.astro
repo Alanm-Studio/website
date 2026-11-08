@@ -12,19 +12,24 @@ const TOP = 96, TAB = 84, H = 700; // todas las fichas terminan a la misma altur
       <p class="m-0 mt-2 max-w-[400px] text-[17px] leading-normal font-bold text-orange-text">{inicio?.serviciosIntro}</p>
     </div>
     {servicios.map(({ slug, entry }, i) => (
-      <article aria-labelledby={`svc-${slug}`} class="svc grid grid-cols-1 gap-x-8 gap-y-4 border-t border-cyan bg-slate-50 pt-[22px] pb-10 md:grid-cols-[140px_minmax(0,1fr)_400px]"
+      <article aria-labelledby={`svc-${slug}`} data-svc data-open={i === 0 ? '' : undefined}
+        class="svc relative grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-4 border-t border-cyan bg-slate-50 pt-5 pb-5 md:grid-cols-[140px_minmax(0,1fr)_400px] md:gap-x-8 md:pt-[22px] md:pb-10"
         style={`--top:${TOP + i * TAB}px;--h:${H - TAB * i}px`}>
-        <span class="text-4xl leading-none font-bold tracking-[-0.02em]">{String(i + 1).padStart(2, '0')}</span>
-        <div class="flex flex-col gap-2.5">
-          <h3 id={`svc-${slug}`} class="m-0 text-[38px] leading-none font-bold tracking-[-0.025em] text-orange">
+        <span class="svc-num pt-1.5 text-[13px] leading-none font-bold tracking-[-0.02em] text-cyan-text md:pt-0 md:text-4xl md:text-navy">{String(i + 1).padStart(2, '0')}</span>
+        <div class="flex flex-col gap-2.5 pr-12 md:pr-0">
+          <h3 id={`svc-${slug}`} class="m-0 text-[22px] leading-none font-bold tracking-[-0.025em] text-navy md:text-[38px] md:text-orange">
             <a href={`/servicios/${slug}`} class="hover:underline">{entry.titulo}</a>
           </h3>
-          <span class="mt-4 text-[13px] text-orange-text">[ {entry.bajada} ]</span>
-          <ul class="m-0 flex list-none flex-col gap-1.5 p-0">
+          <span class="svc-body mt-4 text-[13px] text-orange-text">[ {entry.bajada} ]</span>
+          <ul class="svc-body m-0 flex list-none flex-col gap-1.5 p-0">
             {entry.items.map((it) => <li class="text-lg leading-snug text-slate-700">{it}</li>)}
           </ul>
         </div>
-        <p class="m-0 text-base leading-normal font-bold md:mt-[74px]">{entry.descripcion}</p>
+        <p class="svc-body col-span-2 m-0 text-base leading-normal font-bold md:col-span-1 md:mt-[74px]">{entry.descripcion}</p>
+        <button type="button" class="svc-toggle absolute top-2.5 right-0 flex h-11 w-11 items-center justify-center text-navy md:hidden" aria-expanded={i === 0 ? 'true' : 'false'} aria-controls={`svc-b-${slug}`} data-svc-toggle>
+          <span class="sr-only">Ver detalle de {entry.titulo}</span>
+          <svg aria-hidden="true" class="svc-plus" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+        </button>
       </article>
     ))}
   </section>
@@ -34,4 +39,36 @@ const TOP = 96, TAB = 84, H = 700; // todas las fichas terminan a la misma altur
   @media (min-width: 768px) {
     .svc { position: sticky; top: var(--top); height: var(--h); }
   }
+  /* Números: crecen al entrar cada ficha en pantalla (solo con JS y sin "reducir movimiento"). */
+  [data-grow] .svc-num { display: inline-block; transform-origin: 0 100%; transform: scale(.2); opacity: 0;
+    transition: transform .9s cubic-bezier(.34,1.56,.64,1), opacity .4s ease; }
+  [data-grow] .svc.is-in .svc-num { transform: none; opacity: 1; }
+  @media (prefers-reduced-motion: reduce) { [data-grow] .svc-num { transform: none; opacity: 1; transition: none; } }
+  /* En celular: acordeón (como el diseño mobile). Solo se pliega si hay JS. */
+  @media (max-width: 767px) {
+    [data-acc] .svc:not([data-open]) .svc-body { display: none; }
+    .svc[data-open] { padding-bottom: 28px; }
+    .svc-plus { transition: transform .22s cubic-bezier(.23,1,.32,1); }
+    .svc[data-open] .svc-plus { transform: rotate(45deg); }
+  }
 </style>
+<script>
+  const sec = document.getElementById('servicios');
+  if (sec) {
+    sec.setAttribute('data-acc', '');
+    if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      sec.setAttribute('data-grow', '');
+      const io = new IntersectionObserver((entries) => entries.forEach((en) => {
+        if (en.isIntersecting) { en.target.classList.add('is-in'); io.unobserve(en.target); }
+      }), { threshold: 0.35 });
+      sec.querySelectorAll('[data-svc]').forEach((a) => io.observe(a));
+    }
+    sec.querySelectorAll<HTMLButtonElement>('[data-svc-toggle]').forEach((b) => b.addEventListener('click', () => {
+      const art = b.closest<HTMLElement>('[data-svc]');
+      if (!art) return;
+      const open = !art.hasAttribute('data-open');
+      art.toggleAttribute('data-open', open);
+      b.setAttribute('aria-expanded', String(open));
+    }));
+  }
+</script>

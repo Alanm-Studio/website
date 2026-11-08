@@ -52,4 +52,6 @@
 .skip-link{position:absolute;left:16px;top:-60px;z-index:100;background:var(--color-navy);color:#fff;padding:10px 16px;border-radius:8px;font-weight:700}
 .skip-link:focus{top:12px}
 html{scroll-behavior:smooth}
+/* Nunca scroll horizontal en mobile (clip no rompe el header sticky). */
+html,body{overflow-x:clip}
 @media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}

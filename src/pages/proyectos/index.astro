@@ -23,10 +23,17 @@ const site = Astro.site!;
   jsonLd={breadcrumbJsonLd(site, [{ nombre: 'Inicio', path: '/' }, { nombre: 'Proyectos', path: '/proyectos' }])}>
   <a href="#lista" class="skip-link">Saltar a la lista de proyectos</a>
   <div class="min-h-screen bg-[#0D1830] text-[#F3F6FB]">
+    <div class="flex items-center justify-between gap-4 px-5 pt-4 pb-1 md:hidden">
+      <a href="/" aria-label="Alan Marino, inicio" class="flex py-2 text-white"><Wordmark short class="text-[25px]" /></a>
+      <button type="button" class="pi-btn flex min-h-11 flex-none items-center gap-3 whitespace-nowrap rounded-full border border-[#2A4170] bg-[#15264A] py-2.5 pr-3 pl-[18px] text-[15px] font-bold" aria-haspopup="dialog" data-all-open-2>
+        Ver todos<span class="sr-only"> los proyectos</span>
+        <span aria-hidden="true" class="relative inline-block h-5 w-[34px] rounded-full bg-[#2A4170]"><span class="absolute top-[3px] left-[3px] h-3.5 w-3.5 rounded-full bg-cyan"></span></span>
+      </button>
+    </div>
     <div class="flex flex-col md:flex-row">
       <!-- Izquierda -->
       <div class="left-col order-2 min-w-0 px-5 pt-8 pb-24 md:sticky md:top-0 md:order-1 md:h-screen md:max-h-[1000px] md:min-h-[640px] md:basis-[40%] lg:basis-[30%] md:self-start md:overflow-y-auto md:px-8 md:pb-12" data-left>
-        <div class="mb-14 flex items-center justify-between gap-4">
+        <div class="mb-14 hidden items-center justify-between gap-4 md:flex">
           <a href="/" aria-label="Alan Marino, inicio" class="flex py-2 text-white"><Wordmark short class="text-[26px]" /></a>
           <button type="button" class="pi-btn flex min-h-11 flex-none items-center gap-3 whitespace-nowrap rounded-full border border-[#2A4170] bg-[#15264A] py-2.5 pr-3 pl-[18px] text-[15px] font-bold" aria-haspopup="dialog" data-all-open>
             Ver todos<span class="sr-only"> los proyectos</span>
@@ -196,8 +203,10 @@ const site = Astro.site!;
     const vh = () => (own() ? box!.clientHeight : innerHeight);
     const origin = () => (own() ? box!.getBoundingClientRect().top : 0);
     let els: HTMLElement[] = [], tops: number[] = [], heights: number[] = [], raf = 0;
+    const desk = matchMedia('(min-width: 768px)');
     const update = () => {
       raf = 0;
+      if (!desk.matches) { els.forEach((el) => { el.style.transform = ''; el.style.filter = ''; }); return; }
       const start = vh() - ZONE, y = st();
       els.forEach((el, i) => {
         const p = Math.min(1, Math.max(0, (tops[i] - y - start) / ZONE));
@@ -254,7 +263,7 @@ const site = Astro.site!;
   openBtn?.addEventListener('click', open);
   let opener: HTMLElement | null = null;
   document.querySelectorAll<HTMLElement>('[data-all-open], [data-all-open-2]').forEach((b) => b.addEventListener('click', () => { opener = b; }));
-  document.querySelector('[data-all-open-2]')?.addEventListener('click', open);
+  document.querySelectorAll('[data-all-open-2]').forEach((b) => b.addEventListener('click', open));
   document.querySelector('[data-all-close]')?.addEventListener('click', () => dlg?.close());
   dlg?.addEventListener('close', () => (opener ?? openBtn)?.focus());
 
