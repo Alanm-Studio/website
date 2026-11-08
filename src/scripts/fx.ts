@@ -7,6 +7,14 @@ function place(el: HTMLElement, e: PointerEvent) {
   el.style.setProperty('--fx-y', `${y}px`);
   el.style.setProperty('--fx-r', `${Math.ceil(Math.hypot(dx, dy)) + 2}px`);
 }
+// Envuelve el texto de los botones con flecha para poder desplazarlo sin cambiar el ancho del botón.
+document.querySelectorAll<HTMLElement>('[data-fx-arrow]').forEach((el) => {
+  if (el.querySelector('.fx-label')) return;
+  const label = document.createElement('span');
+  label.className = 'fx-label';
+  [...el.childNodes].filter((n) => !(n instanceof Element && n.classList.contains('fx-arrow'))).forEach((n) => label.appendChild(n));
+  el.insertBefore(label, el.firstChild);
+});
 const find = (e: Event) => (e.target as Element | null)?.closest?.<HTMLElement>('[data-fx="fill"]') ?? null;
 document.addEventListener('pointerover', (e) => {
   const el = find(e);
