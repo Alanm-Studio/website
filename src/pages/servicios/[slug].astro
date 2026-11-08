@@ -1,0 +1,74 @@
+---
+// Página propia por servicio: URL, título y descripción únicos para que Google pueda mostrarlos como enlaces del sitio.
+import Site from '../../layouts/Site.astro';
+import Arrow from '../../components/Arrow.astro';
+import { getServicios, getProyectosDe } from '../../lib/cms';
+import { breadcrumbJsonLd } from '../../lib/seo';
+
+export async function getStaticPaths() {
+  const servicios = await getServicios();
+  return servicios.map((s, i) => ({ params: { slug: s.slug }, props: { s, n: i + 1, todos: servicios } }));
+}
+const { s, n, todos } = Astro.props;
+const e = s.entry;
+const proyectos = (await getProyectosDe(s.slug)).filter((p) => p.entry.miniatura || p.entry.portada);
+const site = Astro.site!;
+const url = new URL(`/servicios/${s.slug}`, site).href;
+const jsonLd = [
+  breadcrumbJsonLd(site, [{ nombre: 'Inicio', path: '/' }, { nombre: 'Servicios', path: '/servicios' }, { nombre: e.titulo, path: `/servicios/${s.slug}` }]),
+  {
+    '@context': 'https://schema.org', '@type': 'Service', name: e.titulo, description: e.descripcion, url,
+    provider: { '@id': new URL('/#estudio', site).href }, areaServed: 'AR',
+    hasOfferCatalog: { '@type': 'OfferCatalog', name: e.titulo, itemListElement: e.items.map((it) => ({ '@type': 'Offer', itemOffered: { '@type': 'Service', name: it } })) },
+  },
+];
+---
+<Site title={e.seo?.titulo || e.titulo} description={e.seo?.descripcion || e.descripcion} image={e.seo?.imagen || proyectos[0]?.entry.portada}
+  noindex={e.seo?.noindex} jsonLd={jsonLd}>
+  <section class="mx-auto flex max-w-[1280px] flex-col gap-10 px-6 pt-12 pb-16">
+    <nav aria-label="Ruta" class="flex items-center gap-2 text-[15px] text-slate-500">
+      <a href="/servicios" class="py-2 text-navy underline underline-offset-4 hover:text-cyan-text">Servicios</a><span aria-hidden="true">/</span><span>{e.titulo}</span>
+    </nav>
+    <div class="grid grid-cols-1 gap-x-12 gap-y-8 border-t border-cyan pt-8 md:grid-cols-[140px_minmax(0,1fr)_400px]">
+      <span class="text-4xl leading-none font-bold tracking-[-0.02em]">{String(n).padStart(2, '0')}</span>
+      <div class="flex flex-col gap-4">
+        <h1 class="m-0 text-[clamp(48px,7vw,96px)] leading-[.98] font-bold tracking-[-0.035em] text-orange">{e.titulo}</h1>
+        {e.bajada && <span class="text-[15px] text-orange-text">[ {e.bajada} ]</span>}
+        <ul class="m-0 mt-2 flex list-none flex-col gap-2 p-0">
+          {e.items.map((it) => <li class="text-xl leading-snug text-slate-700">{it}</li>)}
+        </ul>
+      </div>
+      <p class="m-0 text-lg leading-relaxed font-bold md:mt-4">{e.descripcion}</p>
+    </div>
+  </section>
+
+  {proyectos.length > 0 && (
+    <section aria-labelledby="pj-t" class="mx-auto max-w-[1280px] px-6 pb-24">
+      <div class="mb-8 flex flex-wrap items-end justify-between gap-4">
+        <h2 id="pj-t" class="m-0 text-[clamp(28px,3vw,40px)] font-bold tracking-[-0.02em]">Proyectos de {e.titulo.toLowerCase()}</h2>
+        <a href={`/proyectos?servicio=${s.slug}`} class="py-2 font-bold text-navy underline underline-offset-4">Ver en Proyectos</a>
+      </div>
+      <ul class="m-0 grid list-none grid-cols-1 gap-6 p-0 sm:grid-cols-2 lg:grid-cols-3">
+        {proyectos.map((p) => (
+          <li>
+            <a href={`/proyectos/${p.slug}`} class="group flex flex-col gap-3 text-navy">
+              <span class="block overflow-hidden rounded-md bg-slate-100">
+                <img src={p.entry.miniatura || p.entry.portada} alt="" loading="lazy" decoding="async" class="aspect-[4/5] w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
+              </span>
+              <span class="text-[22px] leading-tight font-bold tracking-[-0.01em] group-hover:underline">{p.entry.titulo}</span>
+              {p.entry.descripcionCorta && <span class="text-base text-slate-600">{p.entry.descripcionCorta}</span>}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
+
+  <nav aria-label="Otros servicios" class="border-t border-slate-200">
+    <div class="mx-auto flex max-w-[1280px] flex-wrap items-center gap-x-8 gap-y-3 px-6 py-10">
+      <span class="text-sm font-bold text-slate-500">Otros servicios</span>
+      {todos.filter((t) => t.slug !== s.slug).map((t) => <a href={`/servicios/${t.slug}`} class="py-2 text-[20px] font-bold text-navy hover:text-orange">{t.entry.titulo}</a>)}
+      <a href="/contacto" data-fx="fill" data-fx-arrow class="ml-auto rounded-md bg-orange px-6 py-3.5 text-lg font-bold text-white" style="--fx-fill:#183057;--fx-text:#FFFFFF">Hablemos<Arrow /></a>
+    </div>
+  </nav>
+</Site>

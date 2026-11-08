@@ -1,0 +1,32 @@
+---
+import Site from '../../layouts/Site.astro';
+import { getServicios } from '../../lib/cms';
+import { reader } from '../../lib/cms';
+import { breadcrumbJsonLd } from '../../lib/seo';
+const servicios = await getServicios();
+const inicio = await reader.singletons.inicio.read();
+const site = Astro.site!;
+const jsonLd = [
+  breadcrumbJsonLd(site, [{ nombre: 'Inicio', path: '/' }, { nombre: 'Servicios', path: '/servicios' }]),
+  { '@context': 'https://schema.org', '@type': 'ItemList', itemListElement: servicios.map((s, i) => ({ '@type': 'ListItem', position: i + 1, name: s.entry.titulo, url: new URL(`/servicios/${s.slug}`, site).href })) },
+];
+---
+<Site title="Servicios" description="Marketing, marca, sistema visual, editorial y web: los servicios de diseño y comunicación de Alan Marino Studio." jsonLd={jsonLd}>
+  <section class="mx-auto flex max-w-[1280px] flex-wrap items-end justify-between gap-x-16 gap-y-8 px-6 pt-22 pb-12">
+    <h1 class="m-0 max-w-[820px] text-[clamp(48px,7vw,96px)] leading-[.98] font-bold tracking-[-0.035em]">{inicio?.serviciosTitulo || 'Servicios'}</h1>
+    {inicio?.serviciosIntro && <p class="m-0 max-w-[400px] text-xl leading-normal text-slate-700">{inicio.serviciosIntro}</p>}
+  </section>
+  <section aria-label="Servicios" class="mx-auto max-w-[1280px] px-6 pb-24">
+    <ul class="m-0 list-none p-0">
+      {servicios.map(({ slug, entry }, i) => (
+        <li class="border-t border-cyan">
+          <a href={`/servicios/${slug}`} class="group grid grid-cols-1 gap-x-8 gap-y-3 py-8 text-navy md:grid-cols-[140px_minmax(0,1fr)_440px]">
+            <span class="text-4xl leading-none font-bold tracking-[-0.02em]">{String(i + 1).padStart(2, '0')}</span>
+            <span class="text-[clamp(36px,4vw,56px)] leading-none font-bold tracking-[-0.025em] text-orange group-hover:underline">{entry.titulo}</span>
+            <span class="text-base leading-normal font-bold">{entry.descripcion}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+</Site>

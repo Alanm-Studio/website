@@ -2,8 +2,10 @@
 import Wordmark from './Wordmark.astro';
 import Arrow from './Arrow.astro';
 import { getAjustes } from '../lib/seo';
+import { getServicios } from '../lib/cms';
 const { cta = true } = Astro.props as { cta?: boolean };
 const a = await getAjustes();
+const servicios = await getServicios();
 const wa = a?.whatsapp ? `https://wa.me/${a.whatsapp.replace(/\D/g, '')}` : null;
 const redes = [
   { label: 'Instagram', href: a?.instagram },
@@ -20,12 +22,15 @@ const redes = [
       </div>
     )}
 
-    <div class="grid grid-cols-1 gap-8 border-t border-[#34507A] pt-8 sm:grid-cols-2 lg:grid-cols-4">
+    <div class="grid grid-cols-1 gap-8 border-t border-[#34507A] pt-8 sm:grid-cols-2 lg:grid-cols-5">
       <div class="flex flex-col gap-2"><span class="text-sm font-bold text-cyan">Estudio</span><span class="text-[17px] leading-normal text-[#D5DEEA]">Branding, diseño web y comunicación para marcas en crecimiento.</span></div>
       <nav aria-label="Pie" class="flex flex-col"><span class="mb-1.5 text-sm font-bold text-cyan">Navegación</span>
         <a href="/proyectos" class="py-1.5 text-[17px] text-white hover:text-cyan">Proyectos</a>
         <a href="/equipo" class="py-1.5 text-[17px] text-white hover:text-cyan">Equipo</a>
         <a href="/contacto" class="py-1.5 text-[17px] text-white hover:text-cyan">Contacto</a>
+      </nav>
+      <nav aria-label="Servicios" class="flex flex-col"><span class="mb-1.5 text-sm font-bold text-cyan">Servicios</span>
+        {servicios.map((s) => <a href={`/servicios/${s.slug}`} class="py-1.5 text-[17px] text-white hover:text-cyan">{s.entry.titulo}</a>)}
       </nav>
       <div class="flex flex-col"><span class="mb-1.5 text-sm font-bold text-cyan">Contacto</span>
         {a?.email && <a href={`mailto:${a.email}`} class="py-1.5 text-[17px] text-white hover:text-cyan">{a.email}</a>}
