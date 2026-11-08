@@ -11,8 +11,11 @@ const pool = proyectos.flatMap((p) => {
   const imgs = [p.entry.portada, p.entry.miniatura, ...p.entry.galeria.map((g) => g.imagen)].filter(Boolean) as string[];
   return [...new Set(imgs)].map((src) => ({ src, titulo: p.entry.titulo }));
 });
-// Tarjetas bajo el carrusel: hasta 20 proyectos con imagen
-const otros = proyectos.filter((p) => p.entry.miniatura || p.entry.portada).slice(0, 20);
+// Tarjetas bajo el carrusel: solo proyectos de Marketing ("Ver todos" muestra todo)
+const otros = proyectos
+  .filter((p) => p.servicio === 'marketing' || p.entry.otrosServicios.includes('marketing'))
+  .filter((p) => p.entry.miniatura || p.entry.portada)
+  .slice(0, 20);
 const initials = (t: string) => t.split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0]).join('').toUpperCase();
 const site = Astro.site!;
 ---
@@ -22,11 +25,11 @@ const site = Astro.site!;
   <div class="min-h-screen bg-[#0D1830] text-[#F3F6FB]">
     <div class="flex flex-col md:flex-row">
       <!-- Izquierda -->
-      <div class="left-col order-2 min-w-0 px-5 pt-8 pb-24 md:sticky md:top-0 md:order-1 md:h-screen md:max-h-[1000px] md:min-h-[640px] md:basis-[45%] md:self-start md:overflow-y-auto md:px-8 md:pb-12" data-left>
+      <div class="left-col order-2 min-w-0 px-5 pt-8 pb-24 md:sticky md:top-0 md:order-1 md:h-screen md:max-h-[1000px] md:min-h-[640px] md:basis-[40%] lg:basis-[30%] md:self-start md:overflow-y-auto md:px-8 md:pb-12" data-left>
         <div class="mb-14 flex items-center justify-between gap-4">
           <a href="/" aria-label="Alan Marino, inicio" class="flex py-2 text-white"><Logo class="h-6 w-auto" /></a>
-          <button type="button" class="pi-btn flex min-h-11 items-center gap-3 rounded-full border border-[#2A4170] bg-[#15264A] py-2.5 pr-3 pl-[18px] text-[15px] font-bold" aria-haspopup="dialog" data-all-open>
-            Ver todos los proyectos
+          <button type="button" class="pi-btn flex min-h-11 flex-none items-center gap-3 whitespace-nowrap rounded-full border border-[#2A4170] bg-[#15264A] py-2.5 pr-3 pl-[18px] text-[15px] font-bold" aria-haspopup="dialog" data-all-open>
+            Ver todos<span class="sr-only"> los proyectos</span>
             <span aria-hidden="true" class="relative inline-block h-5 w-[34px] rounded-full bg-[#2A4170]"><span class="absolute top-[3px] left-[3px] h-3.5 w-3.5 rounded-full bg-cyan"></span></span>
           </button>
         </div>
@@ -57,7 +60,7 @@ const site = Astro.site!;
       </div>
 
       <!-- Derecha -->
-      <div class="order-1 flex min-w-0 flex-col gap-6 px-5 pt-5 md:order-2 md:basis-[55%] md:pt-6 md:pr-6 md:pb-24 md:pl-0">
+      <div class="order-1 flex min-w-0 flex-col gap-6 px-5 pt-5 md:order-2 md:basis-[60%] lg:basis-[70%] md:pt-6 md:pr-6 md:pb-24 md:pl-0">
         <div class="relative h-[70vw] min-h-[260px] flex-none overflow-hidden rounded-[18px] bg-[#15264A] md:h-[640px]"
           role="region" aria-roledescription="carrusel" aria-label="Trabajos del estudio" data-pool>
           {pool.map((s, i) => (
@@ -73,7 +76,10 @@ const site = Astro.site!;
 
         <!-- Otros proyectos: 4 tarjetas fijas con foto -->
         <section aria-labelledby="otros-t" class="flex flex-none flex-col gap-3 pb-6 md:pb-0">
-          <h2 id="otros-t" class="m-0 text-sm font-bold text-[#A9B6CC]">Otros proyectos</h2>
+          <div class="flex items-baseline justify-between gap-4">
+            <h2 id="otros-t" class="m-0 text-sm font-bold text-[#A9B6CC]">Proyectos de marketing · {otros.length}</h2>
+            <button type="button" class="py-2 text-sm font-bold text-[#F3F6FB] underline decoration-cyan underline-offset-4" aria-haspopup="dialog" data-all-open-2>Ver todos los proyectos</button>
+          </div>
           <div class="grid grid-cols-2 gap-x-3 gap-y-4 md:grid-cols-4">
             {otros.map((p) => (
               <a href={`/proyectos/${p.slug}`} class="ocard flex min-w-0 flex-col gap-2.5 rounded-[14px] border border-white/8 bg-white/6 px-2 pt-2 pb-3">
@@ -246,8 +252,11 @@ const site = Astro.site!;
   q?.addEventListener('input', filter);
   const open = () => { dlg?.showModal(); filter(); q?.focus(); };
   openBtn?.addEventListener('click', open);
+  let opener: HTMLElement | null = null;
+  document.querySelectorAll<HTMLElement>('[data-all-open], [data-all-open-2]').forEach((b) => b.addEventListener('click', () => { opener = b; }));
+  document.querySelector('[data-all-open-2]')?.addEventListener('click', open);
   document.querySelector('[data-all-close]')?.addEventListener('click', () => dlg?.close());
-  dlg?.addEventListener('close', () => openBtn?.focus());
+  dlg?.addEventListener('close', () => (opener ?? openBtn)?.focus());
 
   // /proyectos?servicio=marca abre la grilla filtrada (links desde Servicios en Inicio).
   const pre = new URLSearchParams(location.search).get('servicio');
