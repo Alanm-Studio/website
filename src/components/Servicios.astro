@@ -39,11 +39,8 @@ const TOP = 96, TAB = 84, H = 700; // todas las fichas terminan a la misma altur
   @media (min-width: 768px) {
     .svc { position: sticky; top: var(--top); height: var(--h); }
   }
-  /* Números: crecen al entrar cada ficha en pantalla (solo con JS y sin "reducir movimiento"). */
-  [data-grow] .svc-num { display: inline-block; transform-origin: 0 100%; transform: scale(.2); opacity: 0;
-    transition: transform .9s cubic-bezier(.34,1.56,.64,1), opacity .4s ease; }
-  [data-grow] .svc.is-in .svc-num { transform: none; opacity: 1; }
-  @media (prefers-reduced-motion: reduce) { [data-grow] .svc-num { transform: none; opacity: 1; transition: none; } }
+  /* Números: cuentan de 00 a su valor al entrar cada ficha en pantalla. */
+  .svc-num { font-variant-numeric: tabular-nums; }
   /* En celular: acordeón (como el diseño mobile). Solo se pliega si hay JS. */
   @media (max-width: 767px) {
     [data-acc] .svc:not([data-open]) .svc-body { display: none; }
@@ -57,9 +54,22 @@ const TOP = 96, TAB = 84, H = 700; // todas las fichas terminan a la misma altur
   if (sec) {
     sec.setAttribute('data-acc', '');
     if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      sec.setAttribute('data-grow', '');
+      const count = (el: HTMLElement) => {
+        const fin = parseInt(el.dataset.n ?? '0', 10), dur = 500 + fin * 150, t0 = performance.now();
+        const tick = (t: number) => {
+          const k = Math.min(1, (t - t0) / dur);
+          el.textContent = String(Math.round(fin * (1 - Math.pow(1 - k, 3)))).padStart(2, '0');
+          if (k < 1) requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+      };
+      const nums = sec.querySelectorAll<HTMLElement>('.svc-num');
+      nums.forEach((n) => { n.dataset.n = n.textContent?.trim() ?? '0'; n.textContent = '00'; });
       const io = new IntersectionObserver((entries) => entries.forEach((en) => {
-        if (en.isIntersecting) { en.target.classList.add('is-in'); io.unobserve(en.target); }
+        if (!en.isIntersecting) return;
+        const n = en.target.querySelector<HTMLElement>('.svc-num');
+        if (n) count(n);
+        io.unobserve(en.target);
       }), { threshold: 0.35 });
       sec.querySelectorAll('[data-svc]').forEach((a) => io.observe(a));
     }
