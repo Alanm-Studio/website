@@ -1,6 +1,5 @@
 ---
 import Site from '../layouts/Site.astro';
-import Arrow from '../components/Arrow.astro';
 import { getEquipo } from '../lib/cms';
 import { breadcrumbJsonLd } from '../lib/seo';
 const equipo = await getEquipo();
@@ -31,12 +30,6 @@ const tint = ['bg-[#DDF4FA]', 'bg-slate-100'];
           <p class="m-0 text-base leading-relaxed text-slate-700">{entry.bio}</p>
         </article>
       ))}
-    </div>
-  </section>
-  <section class="bg-cyan">
-    <div class="mx-auto flex max-w-[1280px] flex-wrap items-center justify-between gap-8 px-6 py-22">
-      <h2 class="m-0 max-w-[720px] text-[clamp(32px,4vw,52px)] leading-[1.05] font-bold tracking-[-0.03em]">Y una red que crece con cada proyecto.</h2>
-      <a href="/contacto" data-fx="fill" data-fx-arrow class="rounded-md bg-navy px-[30px] py-[18px] text-lg font-bold text-white" style="--fx-fill:#FFFFFF;--fx-text:#183057">Trabajemos juntos<Arrow /></a>
     </div>
   </section>
 </Site>
