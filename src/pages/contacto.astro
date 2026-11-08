@@ -1,13 +1,11 @@
 ---
 import Site from '../layouts/Site.astro';
+import Icon from '../components/Icon.astro';
 import { getAjustes, breadcrumbJsonLd } from '../lib/seo';
 const a = await getAjustes();
 const mail = a?.email ? `mailto:${a.email}` : '/contacto';
 const wa = a?.whatsapp ? `https://wa.me/${a.whatsapp.replace(/\D/g, '')}?text=${encodeURIComponent('¡Hola! Quiero hablar sobre un proyecto.')}` : null;
 const hablar = wa ?? mail;
-// +5491162299127 → +54 9 11 6229-9127
-const d = (a?.whatsapp || '').replace(/\D/g, '');
-const telefono = d.length === 13 ? `+${d.slice(0, 2)} ${d[2]} ${d.slice(3, 5)} ${d.slice(5, 9)}-${d.slice(9)}` : a?.whatsapp;
 const site = Astro.site!;
 ---
 <Site title="Contacto" description="¿Tenés un proyecto en mente? Escribinos y armamos la propuesta a medida." footerCta={false}
@@ -28,14 +26,12 @@ const site = Astro.site!;
         </span>
       </a>
       <div class="grid grid-cols-1 gap-8 md:grid-cols-3">
-        {a?.email && (
-          <div class="flex flex-col gap-2.5"><span class="text-[13px] font-bold tracking-[.08em] text-slate-500 uppercase">Escribinos</span>
-            <a href={mail} class="text-[22px] md:text-[26px] leading-tight font-bold tracking-[-0.02em] [overflow-wrap:anywhere] text-orange underline decoration-2 underline-offset-[6px]">{a.email}</a></div>
-        )}
-        {wa && (
-          <div class="flex flex-col gap-2.5"><span class="text-[13px] font-bold tracking-[.08em] text-slate-500 uppercase">WhatsApp</span>
-            <a href={wa} target="_blank" rel="noreferrer" class="text-[22px] md:text-[26px] leading-tight font-bold tracking-[-0.02em] text-orange">{telefono}</a></div>
-        )}
+        <div class="flex flex-col gap-3 md:col-span-2"><span class="text-[13px] font-bold tracking-[.08em] text-slate-500 uppercase">Escribinos</span>
+          <div class="flex flex-wrap gap-3">
+            {wa && <a href={wa} target="_blank" rel="noreferrer" class="flex min-h-12 items-center gap-2.5 rounded-full border border-navy py-2.5 pr-5 pl-4 text-[17px] font-bold text-navy transition-colors hover:border-orange hover:bg-orange hover:text-white"><Icon name="whatsapp" class="h-5 w-5" />WhatsApp<span class="sr-only"> (se abre en otra pestaña)</span></a>}
+            {a?.email && <a href={mail} class="flex min-h-12 items-center gap-2.5 rounded-full border border-navy py-2.5 pr-5 pl-4 text-[17px] font-bold text-navy transition-colors hover:border-orange hover:bg-orange hover:text-white"><Icon name="mail" class="h-5 w-5" />Email</a>}
+          </div>
+        </div>
         <div class="flex flex-col gap-2.5"><span class="text-[13px] font-bold tracking-[.08em] text-slate-500 uppercase">Estudio</span>
           <span class="text-[22px] md:text-[26px] leading-tight font-bold tracking-[-0.02em]">{a?.ubicacion || 'Trenque Lauquen, Buenos Aires'}</span></div>
       </div>
