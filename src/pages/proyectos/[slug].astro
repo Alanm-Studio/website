@@ -28,8 +28,11 @@ function embed(url?: string | null) {
   if (yt) return `https://www.youtube-nocookie.com/embed/${yt[1]}`;
   const vm = url.match(/vimeo\.com\/(\d+)/);
   if (vm) return `https://player.vimeo.com/video/${vm[1]}`;
+  const ig = url.match(/instagram\.com\/(?:reel|p)\/([\w-]+)/);
+  if (ig) return `https://www.instagram.com/reel/${ig[1]}/embed`;
   return null;
 }
+const esReel = !!e.video && /instagram\.com/.test(e.video);
 const video = embed(e.video);
 const site = Astro.site!;
 const jsonLd = [
@@ -41,8 +44,12 @@ const jsonLd = [
     about: servicios, sourceOrganization: e.cliente ? { '@type': 'Organization', name: e.cliente } : undefined,
   },
 ];
-const col = (f: string) => (f === 'horizontal' ? 'md:col-span-2' : '');
-const ratio = (f: string) => (f === 'horizontal' ? 'aspect-[16/9]' : f === 'cuadrado' ? 'aspect-square' : 'aspect-[4/5]');
+// Como en el board: primeras 3 imágenes en 3 columnas, video, y el resto en 2 columnas.
+const galeriaA = galeria.slice(0, 3);
+const galeriaB = galeria.slice(3);
+const col = (f: string) => (f === 'completo' ? 'col-span-full' : f === 'horizontal' ? 'md:col-span-2' : '');
+const ratio = (f: string) => (f === 'completo' ? 'h-auto' : f === 'horizontal' ? 'aspect-[16/9]' : f === 'cuadrado' ? 'aspect-square' : 'aspect-[4/5]');
+const imgCls = (f: string) => ['w-full rounded-md', f === 'completo' ? 'mx-auto max-w-[1040px]' : 'object-cover', ratio(f), col(f)];
 ---
 <Site title={e.seo?.titulo || e.titulo} description={e.seo?.descripcion || e.bajada || `${e.titulo}: proyecto de ${servicios.join(', ').toLowerCase()} de Alan Marino Studio.`}
   image={e.seo?.imagen || portada || e.miniatura} type="article" noindex={e.seo?.noindex} jsonLd={jsonLd}>
@@ -74,17 +81,31 @@ const ratio = (f: string) => (f === 'horizontal' ? 'aspect-[16/9]' : f === 'cuad
     </div>
   </section>
 
-  {galeria.length > 0 && (
+  {galeriaA.length > 0 && (
     <section aria-label="Galería" class="mx-auto max-w-[1280px] px-6 pb-16">
       <div class="grid grid-cols-1 gap-5 md:grid-cols-3">
-        {galeria.map((g) => <img src={g.imagen} alt={g.alt || ''} loading="lazy" decoding="async" class:list={['w-full rounded-md object-cover', ratio(g.formato), col(g.formato)]} />)}
+        {galeriaA.map((g) => <img src={g.imagen} alt={g.alt || ''} loading="lazy" decoding="async" class:list={imgCls(g.formato)} />)}
       </div>
     </section>
   )}
 
   {video && (
     <section aria-label="Video" class="mx-auto max-w-[1280px] px-6 pb-16">
-      <iframe src={video} title={`Video del proyecto ${e.titulo}`} class="aspect-video w-full rounded-md" loading="lazy" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+      {esReel ? (
+        <div class="flex justify-center rounded-md bg-navy px-4 py-10">
+          <iframe src={video} title={`Reel del proyecto ${e.titulo}`} class="h-[720px] w-full max-w-[400px] rounded-md bg-white" loading="lazy" allowfullscreen></iframe>
+        </div>
+      ) : (
+        <iframe src={video} title={`Video del proyecto ${e.titulo}`} class="aspect-video w-full rounded-md" loading="lazy" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+      )}
+    </section>
+  )}
+
+  {galeriaB.length > 0 && (
+    <section aria-label="Más imágenes" class="mx-auto max-w-[1280px] px-6 pb-24">
+      <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
+        {galeriaB.map((g) => <img src={g.imagen} alt={g.alt || ''} loading="lazy" decoding="async" class:list={imgCls(g.formato)} />)}
+      </div>
     </section>
   )}
 
