@@ -8,7 +8,7 @@ const isCurrent = (href: string) => !href.includes('#') && (path === href || pat
 <header class="sticky top-0 z-40 border-b border-slate-200 bg-white">
   <div class="mx-auto flex max-w-[1280px] items-center justify-between gap-4 px-6 py-[18px]">
     <a href="/" aria-label="Alan Marino, inicio" class="flex items-center text-navy">
-      <Wordmark class="text-[30px]" />
+      <Wordmark short class="text-[30px]" />
     </a>
     <nav aria-label="Principal" class="hidden items-center gap-1 text-base font-medium md:flex">
       {NAV.map((n) => (
@@ -31,7 +31,7 @@ const isCurrent = (href: string) => !href.includes('#') && (path === href || pat
 
   <div id="menu-mobile" class="fixed inset-0 z-50 hidden flex-col bg-navy text-white" role="dialog" aria-modal="true" aria-label="Menú" data-menu>
     <div class="flex items-center justify-between px-6 py-[18px]">
-      <a href="/" aria-label="Alan Marino, inicio" class="text-cyan"><Wordmark class="text-[30px]" /></a>
+      <a href="/" aria-label="Alan Marino, inicio" class="text-cyan"><Wordmark short class="text-[30px]" /></a>
       <button type="button" class="flex h-12 w-12 items-center justify-center rounded-md border border-cyan" data-menu-close>
         <span class="sr-only">Cerrar menú</span>
         <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
