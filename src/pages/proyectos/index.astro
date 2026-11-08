@@ -11,8 +11,8 @@ const pool = proyectos.flatMap((p) => {
   const imgs = [p.entry.portada, p.entry.miniatura, ...p.entry.galeria.map((g) => g.imagen)].filter(Boolean) as string[];
   return [...new Set(imgs)].map((src) => ({ src, titulo: p.entry.titulo }));
 });
-// 4 proyectos para las tarjetas bajo el carrusel (los últimos de la lista, con imagen)
-const otros = proyectos.filter((p) => p.entry.miniatura || p.entry.portada).slice(-4);
+// Tarjetas bajo el carrusel: hasta 10 proyectos con imagen
+const otros = proyectos.filter((p) => p.entry.miniatura || p.entry.portada).slice(0, 10);
 const initials = (t: string) => t.split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0]).join('').toUpperCase();
 const site = Astro.site!;
 ---
@@ -57,8 +57,8 @@ const site = Astro.site!;
       </div>
 
       <!-- Derecha -->
-      <div class="order-1 flex min-w-0 flex-col gap-4 px-5 pt-5 md:sticky md:top-0 md:order-2 md:h-screen md:max-h-[1000px] md:min-h-[560px] md:basis-[55%] md:py-6 md:pr-6 md:pl-0">
-        <div class="relative h-[70vw] min-h-[260px] overflow-hidden rounded-[18px] bg-[#15264A] md:h-auto md:flex-1"
+      <div class="order-1 flex min-w-0 flex-col gap-6 px-5 pt-5 md:order-2 md:basis-[55%] md:pt-6 md:pr-6 md:pb-24 md:pl-0">
+        <div class="relative h-[70vw] min-h-[260px] flex-none overflow-hidden rounded-[18px] bg-[#15264A] md:h-[640px]"
           role="region" aria-roledescription="carrusel" aria-label="Trabajos del estudio" data-pool>
           {pool.map((s, i) => (
             <img src={s.src} alt="" loading={i < 2 ? 'eager' : 'lazy'} decoding="async"
@@ -74,7 +74,7 @@ const site = Astro.site!;
         <!-- Otros proyectos: 4 tarjetas fijas con foto -->
         <section aria-labelledby="otros-t" class="flex flex-none flex-col gap-3 pb-6 md:pb-0">
           <h2 id="otros-t" class="m-0 text-sm font-bold text-[#A9B6CC]">Otros proyectos</h2>
-          <div class="grid grid-cols-2 gap-3 md:grid-cols-4">
+          <div class="grid grid-cols-2 gap-x-3 gap-y-4 md:grid-cols-4">
             {otros.map((p) => (
               <a href={`/proyectos/${p.slug}`} class="ocard flex min-w-0 flex-col gap-2.5 rounded-[14px] border border-white/8 bg-white/6 px-2 pt-2 pb-3">
                 <span class="block aspect-[4/3] overflow-hidden rounded-[10px] bg-[#15264A]">
