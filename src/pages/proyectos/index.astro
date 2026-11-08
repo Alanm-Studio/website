@@ -11,8 +11,8 @@ const pool = proyectos.flatMap((p) => {
   const imgs = [p.entry.portada, p.entry.miniatura, ...p.entry.galeria.map((g) => g.imagen)].filter(Boolean) as string[];
   return [...new Set(imgs)].map((src) => ({ src, titulo: p.entry.titulo }));
 });
-// Tarjetas bajo el carrusel: hasta 10 proyectos con imagen
-const otros = proyectos.filter((p) => p.entry.miniatura || p.entry.portada).slice(0, 10);
+// Tarjetas bajo el carrusel: hasta 20 proyectos con imagen
+const otros = proyectos.filter((p) => p.entry.miniatura || p.entry.portada).slice(0, 20);
 const initials = (t: string) => t.split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0]).join('').toUpperCase();
 const site = Astro.site!;
 ---
@@ -22,7 +22,7 @@ const site = Astro.site!;
   <div class="min-h-screen bg-[#0D1830] text-[#F3F6FB]">
     <div class="flex flex-col md:flex-row">
       <!-- Izquierda -->
-      <div class="order-2 min-w-0 px-5 pt-8 pb-24 md:order-1 md:basis-[45%] md:px-8">
+      <div class="left-col order-2 min-w-0 px-5 pt-8 pb-24 md:sticky md:top-0 md:order-1 md:h-screen md:max-h-[1000px] md:min-h-[640px] md:basis-[45%] md:self-start md:overflow-y-auto md:px-8 md:pb-12" data-left>
         <div class="mb-14 flex items-center justify-between gap-4">
           <a href="/" aria-label="Alan Marino, inicio" class="flex py-2 text-white"><Logo class="h-6 w-auto" /></a>
           <button type="button" class="pi-btn flex min-h-11 items-center gap-3 rounded-full border border-[#2A4170] bg-[#15264A] py-2.5 pr-3 pl-[18px] text-[15px] font-bold" aria-haspopup="dialog" data-all-open>
@@ -131,6 +131,7 @@ const site = Astro.site!;
 </Base>
 
 <style>
+  .left-col { scrollbar-width: thin; scrollbar-color: #2A4170 transparent; }
   [data-stack] { position: relative; transform-origin: 50% 0; box-shadow: 0 -1px 0 rgba(255,255,255,.04), 0 -14px 28px rgba(5,12,26,.45); }
   .pcard:focus-visible, .pi-btn:focus-visible, .tile:focus-visible, .chip:focus-visible { outline: 2px solid #00C0E8; outline-offset: 3px; }
   .pi-btn:hover { background: #1C305A; }
@@ -179,14 +180,19 @@ const site = Astro.site!;
   toggle?.addEventListener('click', () => setPaused(!paused));
   setPaused(paused);
 
-  // Pila en el borde inferior (igual que el canvas): las tarjetas que llegan al fondo de la pantalla
-  // se achican, suben sobre la anterior y se oscurecen; al scrollear se despegan a tamaño completo.
+  // Pila en el borde inferior (igual que el canvas). En escritorio la lista vive en una barra lateral
+  // con scroll propio; en celular usa el scroll de la página.
   if (!reduce) {
     const ZONE = 240, SCALE = 0.14, PULL = 0.78;
+    const box = document.querySelector<HTMLElement>('[data-left]');
+    const own = () => !!box && box.scrollHeight > box.clientHeight + 1 && getComputedStyle(box).overflowY !== 'visible';
+    const st = () => (own() ? box!.scrollTop : scrollY);
+    const vh = () => (own() ? box!.clientHeight : innerHeight);
+    const origin = () => (own() ? box!.getBoundingClientRect().top : 0);
     let els: HTMLElement[] = [], tops: number[] = [], heights: number[] = [], raf = 0;
     const update = () => {
       raf = 0;
-      const start = innerHeight - ZONE, y = scrollY;
+      const start = vh() - ZONE, y = st();
       els.forEach((el, i) => {
         const p = Math.min(1, Math.max(0, (tops[i] - y - start) / ZONE));
         if (!p) { el.style.transform = ''; el.style.filter = ''; return; }
@@ -198,12 +204,15 @@ const site = Astro.site!;
     const measure = () => {
       els = [...document.querySelectorAll<HTMLElement>('[data-stack]')];
       els.forEach((el) => (el.style.transform = ''));
-      tops = els.map((el) => el.getBoundingClientRect().top + scrollY);
+      const y = st(), o = origin();
+      tops = els.map((el) => el.getBoundingClientRect().top - o + y);
       heights = els.map((el) => el.offsetHeight);
       els.forEach((el, i) => (el.style.zIndex = String(els.length - i)));
       update();
     };
-    addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(update); }, { passive: true });
+    const onScroll = () => { if (!raf) raf = requestAnimationFrame(update); };
+    box?.addEventListener('scroll', onScroll, { passive: true });
+    addEventListener('scroll', onScroll, { passive: true });
     addEventListener('resize', measure);
     addEventListener('load', measure);
     measure();
