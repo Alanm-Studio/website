@@ -2,6 +2,7 @@
 import Wordmark from './Wordmark.astro';
 import Arrow from './Arrow.astro';
 import { getAjustes } from '../lib/seo';
+const { cta = true } = Astro.props as { cta?: boolean };
 const a = await getAjustes();
 const wa = a?.whatsapp ? `https://wa.me/${a.whatsapp.replace(/\D/g, '')}` : null;
 const redes = [
@@ -11,11 +12,13 @@ const redes = [
 ].filter((r) => r.href);
 ---
 <footer class="bg-navy text-white">
-  <div class="mx-auto flex min-h-[860px] max-w-[1280px] flex-col justify-between gap-16 px-6 pt-24 pb-10">
+  <div class:list={['mx-auto flex max-w-[1280px] flex-col justify-between gap-16 px-6 pb-10', cta ? 'min-h-[860px] pt-24' : 'min-h-[520px] pt-16']}>
+    {cta && (
     <div class="flex flex-wrap items-end justify-between gap-12">
-      <h2 class="m-0 max-w-[760px] text-[clamp(44px,6vw,72px)] leading-[.98] font-bold tracking-[-0.035em]">¿Tenés un proyecto en mente?</h2>
-      <a href="/contacto" data-fx="fill" data-fx-arrow class="rounded-md bg-orange px-[30px] py-[18px] text-xl font-bold text-white hover:bg-orange-hover" style="--fx-fill:#00C0E8;--fx-text:#183057">Hablemos<Arrow /></a>
-    </div>
+        <h2 class="m-0 max-w-[760px] text-[clamp(44px,6vw,72px)] leading-[.98] font-bold tracking-[-0.035em]">¿Tenés un proyecto en mente?</h2>
+        <a href="/contacto" data-fx="fill" data-fx-arrow class="rounded-md bg-orange px-[30px] py-[18px] text-xl font-bold text-white hover:bg-orange-hover" style="--fx-fill:#00C0E8;--fx-text:#183057">Hablemos<Arrow /></a>
+      </div>
+    )}
 
     <div class="grid grid-cols-1 gap-8 border-t border-[#34507A] pt-8 sm:grid-cols-2 lg:grid-cols-4">
       <div class="flex flex-col gap-2"><span class="text-sm font-bold text-cyan">Estudio</span><span class="text-[17px] leading-normal text-[#D5DEEA]">Branding, diseño web y comunicación para marcas en crecimiento.</span></div>

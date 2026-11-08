@@ -3,8 +3,8 @@ import Base from './Base.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import type { ComponentProps } from 'astro/types';
-type Props = ComponentProps<typeof Base> & { footer?: boolean };
-const { footer = true, ...seo } = Astro.props;
+type Props = ComponentProps<typeof Base> & { footer?: boolean; footerCta?: boolean };
+const { footer = true, footerCta = true, ...seo } = Astro.props;
 ---
 <Base {...seo}>
   <a href="#contenido" class="skip-link">Saltar al contenido</a>
@@ -13,5 +13,5 @@ const { footer = true, ...seo } = Astro.props;
   <main id="contenido">
     <slot />
   </main>
-  {footer && <Footer />}
+  {footer && <Footer cta={footerCta} />}
 </Base>
