@@ -55,3 +55,6 @@ html{scroll-behavior:smooth}
 /* Nunca scroll horizontal en mobile (clip no rompe el header sticky). */
 html,body{overflow-x:clip}
 @media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+
+/* Reveal de textos (scripts/motion.ts): ocultos hasta que GSAP los anima; a los 3 s se muestran igual. */
+.motion:not(.motion-ready) main :is(h1, h2, h3, p):not(dialog *):not(.svc-body):not(.truncate):not([class*="line-clamp"]):not([data-no-reveal]) { visibility: hidden; }

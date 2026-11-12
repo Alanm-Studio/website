@@ -20,7 +20,7 @@ const tint = ['bg-[#DDF4FA]', 'bg-slate-100'];
       {equipo.map(({ entry }, i) => (
         <article class="flex flex-col gap-4">
           {entry.foto
-            ? <img src={entry.foto} alt={`Retrato de ${entry.nombre}`} loading="lazy" decoding="async" class="aspect-square w-full rounded-md object-cover" />
+            ? <div class="overflow-hidden rounded-md" data-zoom><img src={entry.foto} alt={`Retrato de ${entry.nombre}`} loading="lazy" decoding="async" class="aspect-square w-full object-cover will-change-transform" /></div>
             : <div class:list={['aspect-square rounded-md', tint[i % 2]]} aria-hidden="true"></div>}
           <div class="flex flex-col gap-1">
             <h2 class="m-0 text-2xl font-bold tracking-[-0.01em]">{entry.nombre}</h2>
