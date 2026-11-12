@@ -68,6 +68,14 @@ const proyectoSchema = () => ({
           { label: 'Galería', itemLabel: (p) => p.fields.alt.value || 'Imagen' }
         ),
         video: fields.url({ label: 'Video (YouTube, Vimeo o reel de Instagram, opcional)' }),
+        reels: fields.array(
+          fields.object({
+            titulo: fields.text({ label: 'Título del reel' }),
+            portada: imagen('Portada (vertical 4:5)', 'proyectos'),
+            link: fields.url({ label: 'Link al reel (Instagram)' }),
+          }),
+          { label: 'Reels (slider, mismo formato que el de Inicio)', itemLabel: (p) => p.fields.titulo.value || 'Reel' }
+        ),
         presentacion: fields.url({ label: 'Presentación completa (PDF, opcional)' }),
         seo: seo('proyectos'),
         contenido: fields.markdoc({ label: 'Descripción del proyecto' }),

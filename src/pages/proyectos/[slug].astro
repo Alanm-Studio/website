@@ -32,6 +32,7 @@ function embed(url?: string | null) {
   return null;
 }
 const esReel = !!e.video && /instagram\.com/.test(e.video);
+const reels = e.reels ?? [];
 const video = embed(e.video);
 const site = Astro.site!;
 const jsonLd = [
@@ -80,6 +81,38 @@ const imgCls = (f: string) => ['w-full rounded-md', f === 'completo' ? 'mx-auto 
     </div>
   </section>
 
+  {reels.length > 0 && (
+    <section aria-labelledby="reels-t" class="pb-16">
+      <div class="mx-auto flex max-w-[1280px] items-end justify-between gap-4 px-6 pb-6">
+        <h2 id="reels-t" class="m-0 text-[clamp(26px,3vw,36px)] font-bold tracking-[-0.02em]">Reels</h2>
+        <div class="flex gap-2">
+          <button type="button" data-rl-prev aria-label="Reel anterior" class="flex h-12 w-12 items-center justify-center rounded-md border border-cyan bg-white text-navy disabled:cursor-default disabled:opacity-35">
+            <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+          </button>
+          <button type="button" data-rl-next aria-label="Reel siguiente" class="flex h-12 w-12 items-center justify-center rounded-md border border-cyan bg-white text-navy disabled:cursor-default disabled:opacity-35">
+            <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+          </button>
+        </div>
+      </div>
+      <ul class="no-scrollbar relative mx-auto m-0 flex max-w-[1280px] list-none snap-x snap-mandatory gap-5 overflow-x-auto scroll-smooth scroll-px-6 p-0 px-6" tabindex="0" aria-label="Reels del proyecto, desplazable" data-rl-track>
+        {reels.map((r) => (
+          <li class="flex flex-[0_0_78%] snap-start sm:flex-[0_0_300px]" data-rl-card>
+            <a href={r.link || undefined} target="_blank" rel="noreferrer" class="group flex w-full flex-col gap-3 text-navy">
+              <span class="relative block aspect-[4/5] overflow-hidden rounded-md bg-slate-100">
+                {r.portada && <img src={r.portada} alt="" width="800" height="1000" loading="lazy" decoding="async" class="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.02] motion-reduce:transition-none" />}
+                <span aria-hidden="true" class="absolute right-3 bottom-3 flex h-11 w-11 items-center justify-center rounded-full bg-white/90 text-navy transition-transform group-hover:scale-110">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                </span>
+              </span>
+              <span class="text-lg font-bold">{r.titulo}</span>
+              <span class="-mt-2 text-sm text-slate-500">Ver reel en Instagram<span class="sr-only"> (se abre en otra pestaña)</span></span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
+
   {galeriaA.length > 0 && (
     <section aria-label="Galería" class="mx-auto max-w-[1280px] px-6 pb-16">
       <div class="grid grid-cols-1 gap-5 md:grid-cols-3">
@@ -125,3 +158,23 @@ const imgCls = (f: string) => ['w-full rounded-md', f === 'completo' ? 'mx-auto 
   .prosa h2, .prosa h3 { color: #183057; letter-spacing: -0.02em; margin: 1.4em 0 .5em; }
   .prosa ul { padding-left: 1.2em; list-style: disc; }
 </style>
+
+<script>
+  // Slider de reels: mismas flechas que el carrusel de Inicio.
+  const tr = document.querySelector<HTMLElement>('[data-rl-track]');
+  const prev = document.querySelector<HTMLButtonElement>('[data-rl-prev]');
+  const next = document.querySelector<HTMLButtonElement>('[data-rl-next]');
+  if (tr) {
+    const step = () => (tr.querySelector<HTMLElement>('[data-rl-card]')?.getBoundingClientRect().width ?? 300) + 20;
+    const upd = () => {
+      const max = tr.scrollWidth - tr.clientWidth;
+      if (prev) prev.disabled = tr.scrollLeft <= 2;
+      if (next) next.disabled = tr.scrollLeft >= max - 2;
+    };
+    prev?.addEventListener('click', () => tr.scrollBy({ left: -step() }));
+    next?.addEventListener('click', () => tr.scrollBy({ left: step() }));
+    tr.addEventListener('scroll', upd, { passive: true });
+    window.addEventListener('resize', upd);
+    upd();
+  }
+</script>
