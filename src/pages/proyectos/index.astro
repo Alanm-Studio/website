@@ -11,9 +11,13 @@ const pool = proyectos.flatMap((p) => {
   const imgs = [p.entry.portada, p.entry.miniatura, ...p.entry.galeria.map((g) => g.imagen)].filter(Boolean) as string[];
   return [...new Set(imgs)].map((src) => ({ src, titulo: p.entry.titulo }));
 });
-// Lista lateral: solo Marketing. A la derecha, una sección por servicio. "Ver todos" muestra todo.
+// Aside: todos los proyectos por servicio. Tarjetas de la derecha: solo Marketing. "Ver todos" muestra todo.
 const marketing = proyectos.filter((p) => p.servicio === 'marketing' || p.entry.otrosServicios.includes('marketing'));
-const porServicio = servicios.map((s) => ({ s, items: proyectos.filter((p) => p.servicio === s.slug && (p.entry.miniatura || p.entry.portada)) }));
+// Aside: proyectos agrupados por servicio (pastilla naranja + lema + tarjetas)
+const grupos = servicios.map((s) => ({ s, items: proyectos.filter((p) => p.servicio === s.slug) }));
+const otros = marketing
+  .filter((p) => p.entry.miniatura || p.entry.portada)
+  .slice(0, 20);
 const initials = (t: string) => t.split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0]).join('').toUpperCase();
 const site = Astro.site!;
 ---
@@ -46,20 +50,28 @@ const site = Astro.site!;
           <p class="m-0 text-base leading-relaxed text-[#C9D3E3]">Branding, diseño web y comunicación para marcas en crecimiento. Una estructura con equipo base y una red de profesionales que se suman según las necesidades de cada proyecto.</p>
         </section>
 
-        <h1 id="lista" class="m-0 mb-4 text-sm font-bold text-[#A9B6CC]">Proyectos · {marketing.length}</h1>
-        <nav aria-label="Proyectos" class="flex flex-col gap-4">
-          {marketing.map((p) => (
-            <a href={`/proyectos/${p.slug}`} class="pcard flex items-center gap-[18px] rounded-[14px] bg-[#15264A] px-5 py-[18px]" data-stack>
-              <span aria-hidden="true" class="flex h-16 w-16 flex-none items-center justify-center overflow-hidden rounded-[10px] bg-[#1C305A]">
-                {p.entry.logo ? <img src={p.entry.logo} alt="" class="max-h-[34px] max-w-[46px]" />
-                  : p.entry.miniatura ? <img src={p.entry.miniatura} alt="" class="h-full w-full object-cover" loading="lazy" />
-                  : <span class="text-base font-bold">{initials(p.entry.titulo)}</span>}
-              </span>
-              <span class="flex min-w-0 flex-col gap-1">
-                <span class="text-[19px] font-bold tracking-[-0.01em]">{p.entry.titulo}</span>
-                <span class="truncate text-[15px] text-[#A9B6CC]">{p.entry.descripcionCorta || [p.servicioTitulo, p.entry.cliente].filter(Boolean).join(' · ')}</span>
-              </span>
-            </a>
+        <h1 id="lista" class="m-0 mb-6 text-sm font-bold text-[#A9B6CC]">Proyectos · {proyectos.length}</h1>
+        <nav aria-label="Proyectos" class="flex flex-col gap-10">
+          {grupos.map(({ s, items }) => (
+            <section aria-labelledby={`g-${s.slug}`} class="flex flex-col gap-4">
+              <div class="flex flex-col items-start gap-2.5">
+                <span class="rounded-full bg-orange px-3.5 py-1.5 text-xs font-bold tracking-[.08em] text-white uppercase">{s.entry.titulo}</span>
+                <h2 id={`g-${s.slug}`} class="m-0 text-[26px] leading-tight font-bold tracking-[-0.02em] text-white">{s.entry.lema || s.entry.bajada}</h2>
+              </div>
+              {items.length > 0 ? items.map((p) => (
+                <a href={`/proyectos/${p.slug}`} class="pcard flex items-center gap-[18px] rounded-[14px] bg-[#15264A] px-5 py-[18px]" data-stack>
+                  <span aria-hidden="true" class="flex h-16 w-16 flex-none items-center justify-center overflow-hidden rounded-[10px] bg-[#1C305A]">
+                    {p.entry.logo ? <img src={p.entry.logo} alt="" class="max-h-[34px] max-w-[46px]" />
+                      : p.entry.miniatura ? <img src={p.entry.miniatura} alt="" class="h-full w-full object-cover" loading="lazy" />
+                      : <span class="text-base font-bold">{initials(p.entry.titulo)}</span>}
+                  </span>
+                  <span class="flex min-w-0 flex-col gap-1">
+                    <span class="text-[19px] font-bold tracking-[-0.01em]">{p.entry.titulo}</span>
+                    <span class="truncate text-[15px] text-[#A9B6CC]">{p.entry.descripcionCorta || [p.servicioTitulo, p.entry.cliente].filter(Boolean).join(' · ')}</span>
+                  </span>
+                </a>
+              )) : <p class="m-0 text-[15px] text-[#A9B6CC]">Próximamente.</p>}
+            </section>
           ))}
         </nav>
       </div>
@@ -79,36 +91,27 @@ const site = Astro.site!;
           </button>
         </div>
 
-        <!-- Proyectos por servicio: pastilla naranja (tema), lema, pastilla azul y tarjetas -->
-        <div class="flex flex-none flex-col gap-16 pb-6 md:pb-0">
-          <div class="flex justify-end">
+        <!-- Otros proyectos: 4 tarjetas fijas con foto -->
+        <section aria-labelledby="otros-t" class="flex flex-none flex-col gap-3 pb-6 md:pb-0">
+          <div class="flex items-baseline justify-between gap-4">
+            <h2 id="otros-t" class="m-0 text-sm font-bold text-[#A9B6CC]">Proyectos de marketing · {otros.length}</h2>
             <button type="button" class="py-2 text-sm font-bold text-[#F3F6FB] underline decoration-cyan underline-offset-4" aria-haspopup="dialog" data-all-open-2>Ver todos los proyectos</button>
           </div>
-          {porServicio.map(({ s, items }) => (
-            <section aria-labelledby={`sv-${s.slug}`} class="flex flex-col gap-4">
-              <span class="self-start rounded-full bg-orange px-3.5 py-1.5 text-xs font-bold tracking-[.08em] text-white uppercase">{s.entry.titulo}</span>
-              <h2 id={`sv-${s.slug}`} class="m-0 text-[clamp(30px,3.2vw,44px)] leading-[1.02] font-bold tracking-[-0.03em] text-white">{s.entry.lema || s.entry.bajada}</h2>
-              <span class="mt-2 self-start rounded-full bg-[#2A4170] px-3.5 py-1.5 text-xs font-bold text-[#DCE6F5]">Presentación de proyectos</span>
-              {items.length > 0 ? (
-                <div class="grid grid-cols-2 gap-x-3 gap-y-4 md:grid-cols-4">
-                  {items.map((p) => (
-                    <a href={`/proyectos/${p.slug}`} class="ocard flex min-w-0 flex-col gap-2.5 rounded-[14px] border border-white/8 bg-white/6 px-2 pt-2 pb-3">
-                      <span class="block aspect-[4/3] overflow-hidden rounded-[10px] bg-[#15264A]">
-                        <img src={p.entry.miniatura || p.entry.portada} alt={p.entry.galeria[0]?.alt || p.entry.titulo} loading="lazy" decoding="async" class="oimg h-full w-full object-cover" />
-                      </span>
-                      <span class="flex min-w-0 flex-col gap-[3px] px-1">
-                        <span class="truncate text-[15px] leading-tight font-bold tracking-[-0.01em]">{p.entry.titulo}</span>
-                        <span class="line-clamp-2 text-[13px] leading-snug text-[#C9D3E3]">{p.entry.descripcionCorta || p.entry.cliente || p.servicioTitulo}</span>
-                      </span>
-                    </a>
-                  ))}
-                </div>
-              ) : (
-                <p class="m-0 text-[15px] text-[#A9B6CC]">Próximamente.</p>
-              )}
-            </section>
-          ))}
-        </div>
+          <div class="grid grid-cols-2 gap-x-3 gap-y-4 md:grid-cols-4">
+            {otros.map((p) => (
+              <a href={`/proyectos/${p.slug}`} class="ocard flex min-w-0 flex-col gap-2.5 rounded-[14px] border border-white/8 bg-white/6 px-2 pt-2 pb-3">
+                <span class="block aspect-[4/3] overflow-hidden rounded-[10px] bg-[#15264A]">
+                  <img src={p.entry.miniatura || p.entry.portada} alt={p.entry.galeria[0]?.alt || p.entry.titulo} loading="lazy" decoding="async" class="oimg h-full w-full object-cover" />
+                </span>
+                <span class="flex min-w-0 flex-col gap-[3px] px-1">
+                  <span class="truncate text-xs font-bold text-cyan">{p.servicioTitulo}</span>
+                  <span class="truncate text-[15px] leading-tight font-bold tracking-[-0.01em]">{p.entry.titulo}</span>
+                  <span class="line-clamp-2 text-[13px] leading-snug text-[#C9D3E3]">{p.entry.descripcionCorta || p.entry.cliente || p.servicioTitulo}</span>
+                </span>
+              </a>
+            ))}
+          </div>
+        </section>
       </div>
     </div>
 
