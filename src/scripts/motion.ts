@@ -9,24 +9,50 @@ gsap.registerPlugin(ScrollTrigger, SplitText);
 const root = document.documentElement;
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-// Mismo selector que el CSS que los oculta hasta animarlos (global.css → .motion …)
-const TEXTOS = 'main :is(h1, h2, h3, p):not(dialog *):not(.svc-body):not(.truncate):not([class*="line-clamp"]):not([data-no-reveal])';
+
+// Como nicocrespo.com:
+// - Títulos: cada palabra sube desde una máscara, una tras otra (el H1 del hero, letra por letra).
+// - Párrafos: cada palabra pasa de casi transparente a opaca, atada al scroll.
+const TITULOS = 'main :is(h1, h2, h3):not(dialog *):not(.svc-body):not(.truncate):not([class*="line-clamp"]):not([data-no-reveal])';
+const PARRAFOS = 'main p:not(dialog *):not(.svc-body):not(.truncate):not([class*="line-clamp"]):not([data-no-reveal])';
+
+function visible(el: HTMLElement) {
+  if (!el.textContent?.trim() || el.offsetParent === null) { el.style.visibility = 'visible'; return false; }
+  return true;
+}
 
 function reveal() {
-  document.querySelectorAll<HTMLElement>(TEXTOS).forEach((el) => {
-    if (!el.textContent?.trim() || el.offsetParent === null) { el.style.visibility = 'visible'; return; }
+  document.querySelectorAll<HTMLElement>(TITULOS).forEach((el) => {
+    if (!visible(el)) return;
+    const porLetra = el.tagName === 'H1';
     SplitText.create(el, {
-      type: 'lines',
-      mask: 'lines',
+      type: porLetra ? 'words,chars' : 'words',
+      mask: porLetra ? 'chars' : 'words',
       autoSplit: true,
       onSplit(self) {
         gsap.set(el, { visibility: 'visible' });
-        return gsap.from(self.lines, {
+        return gsap.from(porLetra ? self.chars : self.words, {
           yPercent: 110,
-          duration: 0.9,
-          ease: 'power4.out',
-          stagger: 0.08,
+          duration: 1,
+          ease: 'expo.out',
+          stagger: porLetra ? 0.025 : 0.1,
           scrollTrigger: { trigger: el, start: 'top 90%', once: true },
+        });
+      },
+    });
+  });
+  document.querySelectorAll<HTMLElement>(PARRAFOS).forEach((el) => {
+    if (!visible(el)) return;
+    SplitText.create(el, {
+      type: 'words',
+      autoSplit: true,
+      onSplit(self) {
+        gsap.set(el, { visibility: 'visible' });
+        return gsap.fromTo(self.words, { opacity: 0.14 }, {
+          opacity: 1,
+          ease: 'none',
+          stagger: 0.1,
+          scrollTrigger: { trigger: el, start: 'top 92%', end: 'bottom 55%', scrub: true },
         });
       },
     });
