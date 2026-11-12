@@ -18,9 +18,16 @@ const props = Astro.props;
     <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
-  </head>
+    <script is:inline>
+    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      document.documentElement.classList.add('motion');
+      setTimeout(function () { document.documentElement.classList.add('motion-ready'); }, 3000);
+    }
+  </script>
+</head>
   <body class="bg-white text-navy antialiased">
     <slot />
     <script>import '../scripts/fx';</script>
+    <script>import '../scripts/motion';</script>
   </body>
 </html>

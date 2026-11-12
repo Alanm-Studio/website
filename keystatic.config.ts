@@ -148,6 +148,7 @@ export default config({
         titulo: fields.slug({ name: { label: 'Título' } }),
         orden: fields.integer({ label: 'Orden', defaultValue: 1 }),
         bajada: fields.text({ label: 'Bajada', description: 'Va entre corchetes, ej.: Donde todo comienza.' }),
+        lema: fields.text({ label: 'Lema en Proyectos', description: 'Título de la sección del servicio en Proyectos, ej.: Marca en acción.' }),
         items: fields.array(fields.text({ label: 'Ítem' }), { label: 'Qué incluye', itemLabel: (p) => p.value }),
         descripcion: fields.text({ label: 'Descripción', multiline: true }),
         seo: seo('servicios'),
