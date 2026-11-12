@@ -11,11 +11,9 @@ const pool = proyectos.flatMap((p) => {
   const imgs = [p.entry.portada, p.entry.miniatura, ...p.entry.galeria.map((g) => g.imagen)].filter(Boolean) as string[];
   return [...new Set(imgs)].map((src) => ({ src, titulo: p.entry.titulo }));
 });
-// Por defecto solo proyectos de Marketing (lista lateral y tarjetas); "Ver todos" muestra todo
+// Lista lateral: solo Marketing. A la derecha, una sección por servicio. "Ver todos" muestra todo.
 const marketing = proyectos.filter((p) => p.servicio === 'marketing' || p.entry.otrosServicios.includes('marketing'));
-const otros = marketing
-  .filter((p) => p.entry.miniatura || p.entry.portada)
-  .slice(0, 20);
+const porServicio = servicios.map((s) => ({ s, items: proyectos.filter((p) => p.servicio === s.slug && (p.entry.miniatura || p.entry.portada)) }));
 const initials = (t: string) => t.split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0]).join('').toUpperCase();
 const site = Astro.site!;
 ---
@@ -81,27 +79,36 @@ const site = Astro.site!;
           </button>
         </div>
 
-        <!-- Otros proyectos: 4 tarjetas fijas con foto -->
-        <section aria-labelledby="otros-t" class="flex flex-none flex-col gap-3 pb-6 md:pb-0">
-          <div class="flex items-baseline justify-between gap-4">
-            <h2 id="otros-t" class="m-0 text-sm font-bold text-[#A9B6CC]">Proyectos de marketing · {otros.length}</h2>
+        <!-- Proyectos por servicio: pastilla naranja (tema), lema, pastilla azul y tarjetas -->
+        <div class="flex flex-none flex-col gap-16 pb-6 md:pb-0">
+          <div class="flex justify-end">
             <button type="button" class="py-2 text-sm font-bold text-[#F3F6FB] underline decoration-cyan underline-offset-4" aria-haspopup="dialog" data-all-open-2>Ver todos los proyectos</button>
           </div>
-          <div class="grid grid-cols-2 gap-x-3 gap-y-4 md:grid-cols-4">
-            {otros.map((p) => (
-              <a href={`/proyectos/${p.slug}`} class="ocard flex min-w-0 flex-col gap-2.5 rounded-[14px] border border-white/8 bg-white/6 px-2 pt-2 pb-3">
-                <span class="block aspect-[4/3] overflow-hidden rounded-[10px] bg-[#15264A]">
-                  <img src={p.entry.miniatura || p.entry.portada} alt={p.entry.galeria[0]?.alt || p.entry.titulo} loading="lazy" decoding="async" class="oimg h-full w-full object-cover" />
-                </span>
-                <span class="flex min-w-0 flex-col gap-[3px] px-1">
-                  <span class="truncate text-xs font-bold text-cyan">{p.servicioTitulo}</span>
-                  <span class="truncate text-[15px] leading-tight font-bold tracking-[-0.01em]">{p.entry.titulo}</span>
-                  <span class="line-clamp-2 text-[13px] leading-snug text-[#C9D3E3]">{p.entry.descripcionCorta || p.entry.cliente || p.servicioTitulo}</span>
-                </span>
-              </a>
-            ))}
-          </div>
-        </section>
+          {porServicio.map(({ s, items }) => (
+            <section aria-labelledby={`sv-${s.slug}`} class="flex flex-col gap-4">
+              <span class="self-start rounded-full bg-orange px-3.5 py-1.5 text-xs font-bold tracking-[.08em] text-white uppercase">{s.entry.titulo}</span>
+              <h2 id={`sv-${s.slug}`} class="m-0 text-[clamp(30px,3.2vw,44px)] leading-[1.02] font-bold tracking-[-0.03em] text-white">{s.entry.lema || s.entry.bajada}</h2>
+              <span class="mt-2 self-start rounded-full bg-[#2A4170] px-3.5 py-1.5 text-xs font-bold text-[#DCE6F5]">Presentación de proyectos</span>
+              {items.length > 0 ? (
+                <div class="grid grid-cols-2 gap-x-3 gap-y-4 md:grid-cols-4">
+                  {items.map((p) => (
+                    <a href={`/proyectos/${p.slug}`} class="ocard flex min-w-0 flex-col gap-2.5 rounded-[14px] border border-white/8 bg-white/6 px-2 pt-2 pb-3">
+                      <span class="block aspect-[4/3] overflow-hidden rounded-[10px] bg-[#15264A]">
+                        <img src={p.entry.miniatura || p.entry.portada} alt={p.entry.galeria[0]?.alt || p.entry.titulo} loading="lazy" decoding="async" class="oimg h-full w-full object-cover" />
+                      </span>
+                      <span class="flex min-w-0 flex-col gap-[3px] px-1">
+                        <span class="truncate text-[15px] leading-tight font-bold tracking-[-0.01em]">{p.entry.titulo}</span>
+                        <span class="line-clamp-2 text-[13px] leading-snug text-[#C9D3E3]">{p.entry.descripcionCorta || p.entry.cliente || p.servicioTitulo}</span>
+                      </span>
+                    </a>
+                  ))}
+                </div>
+              ) : (
+                <p class="m-0 text-[15px] text-[#A9B6CC]">Próximamente.</p>
+              )}
+            </section>
+          ))}
+        </div>
       </div>
     </div>
 
@@ -122,16 +129,16 @@ const site = Astro.site!;
           {servicios.map((s) => <button type="button" class="chip" aria-pressed="false" data-chip={s.slug}>{s.entry.titulo}</button>)}
         </div>
         <p class="my-12 hidden text-[22px] text-[#C9D3E3]" data-empty>No encontramos proyectos. Probá con marca, editorial o un nombre.</p>
-        <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
+        <div class="grid grid-cols-2 gap-x-5 gap-y-8 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
           {proyectos.map((p) => (
             <a href={`/proyectos/${p.slug}`} class="tile flex flex-col gap-3.5"
               data-text={[p.entry.titulo, p.entry.cliente, p.servicioTitulo].join(' ')}
               data-srv={[p.servicio, ...p.entry.otrosServicios].join(' ')}>
-              <span class="block aspect-[4/3] overflow-hidden rounded-[14px] bg-[#15264A]">
-                {(p.entry.portada || p.entry.miniatura) && <img src={p.entry.portada || p.entry.miniatura} alt="" loading="lazy" class="tile-img h-full w-full object-cover" />}
+              <span class="block aspect-square overflow-hidden rounded-[14px] bg-[#15264A]">
+                {(p.entry.miniatura || p.entry.portada) && <img src={p.entry.miniatura || p.entry.portada} alt="" loading="lazy" class="tile-img h-full w-full object-cover" />}
               </span>
               <span class="flex flex-col gap-1">
-                <span class="text-2xl font-bold tracking-[-0.02em]">{p.entry.titulo}</span>
+                <span class="text-xl font-bold tracking-[-0.02em]">{p.entry.titulo}</span>
                 {p.entry.cliente && <span class="text-base text-[#A9B6CC]">{p.entry.cliente}</span>}
                 <span class="mt-0.5 text-[13px] font-bold text-cyan">{p.servicioTitulo}</span>
               </span>
