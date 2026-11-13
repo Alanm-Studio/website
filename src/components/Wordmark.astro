@@ -2,12 +2,13 @@
 // "ALANMARINO" en Bowlby One (la tipografía de HABLEMOS).
 // fit = true: escala al ancho del contenedor sin deformar las letras (footer gigante).
 // short = true: "Alanm", como en el navbar de Inicio.
-interface Props { class?: string; fit?: boolean; short?: boolean; label?: string }
-const { class: className = '', fit = false, short = false, label = 'Alan Marino' } = Astro.props;
+// letters = true: cada letra en su <tspan> para animarla (footer).
+interface Props { class?: string; fit?: boolean; short?: boolean; label?: string; letters?: boolean }
+const { class: className = '', fit = false, short = false, label = 'Alan Marino', letters = false } = Astro.props;
 ---
 {fit ? (
-  <svg class={className} viewBox="-4 -144 1475 150" role="img" aria-label={label}>
-    <text x="0" y="0" fill="currentColor" style="font-family:'Bowlby One','Helvetica Neue',sans-serif;font-size:190px">ALANMARINO</text>
+  <svg class={className} viewBox="-4 -144 1475 150" role="img" aria-label={label} data-letters={letters ? '' : undefined}>
+    <text x="0" y="0" fill="currentColor" style="font-family:'Bowlby One','Helvetica Neue',sans-serif;font-size:190px">{letters ? [...'ALANMARINO'].map((l) => <tspan>{l}</tspan>) : 'ALANMARINO'}</text>
   </svg>
 ) : (
   <span class:list={['font-display leading-none tracking-[0.01em] whitespace-nowrap', className]} role="img" aria-label={label}>{short ? 'Alanm' : 'ALANMARINO'}</span>

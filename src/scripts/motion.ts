@@ -77,6 +77,22 @@ function reveal() {
   });
 }
 
+// ALANMARINO del footer: las letras suben una por una desde abajo cuando aparece.
+function letras() {
+  document.querySelectorAll<SVGSVGElement>('svg[data-letters]').forEach((svg) => {
+    const ts = svg.querySelectorAll('tspan');
+    if (!ts.length) return;
+    gsap.fromTo(ts, { attr: { y: 170 }, opacity: 0 }, {
+      attr: { y: 0 },
+      opacity: 1,
+      duration: 1.1,
+      ease: 'expo.out',
+      stagger: 0.06,
+      scrollTrigger: { trigger: svg, start: 'top bottom', once: true },
+    });
+  });
+}
+
 function zoom() {
   document.querySelectorAll<HTMLElement>('[data-zoom]').forEach((frame) => {
     const img = frame.querySelector('img, [data-zoom-media]');
@@ -92,6 +108,7 @@ function zoom() {
 if (!reduced) {
   (document.fonts?.ready ?? Promise.resolve()).then(() => {
     reveal();
+    letras();
     zoom();
     ScrollTrigger.refresh();
   });
