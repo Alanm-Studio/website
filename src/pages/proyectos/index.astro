@@ -100,7 +100,7 @@ const site = Astro.site!;
           <div class="grid grid-cols-2 gap-x-3 gap-y-4 md:grid-cols-4">
             {otros.map((p) => (
               <a href={`/proyectos/${p.slug}`} class="ocard flex min-w-0 flex-col gap-2.5 rounded-[14px] border border-white/8 bg-white/6 px-2 pt-2 pb-3">
-                <span class="block aspect-[4/3] overflow-hidden rounded-[10px] bg-[#15264A]">
+                <span class="block aspect-[4/5] overflow-hidden rounded-[10px] bg-[#15264A]">
                   <img src={p.entry.miniatura || p.entry.portada} alt={p.entry.galeria[0]?.alt || p.entry.titulo} loading="lazy" decoding="async" class="oimg h-full w-full object-cover" />
                 </span>
                 <span class="flex min-w-0 flex-col gap-[3px] px-1">
