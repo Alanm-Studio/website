@@ -49,6 +49,13 @@ const proyectoSchema = () => ({
         equipo: fields.text({ label: 'Equipo que participó' }),
         portada: imagen('Portada (horizontal)', 'proyectos'),
         miniatura: imagen('Miniatura (vertical, para tarjetas)', 'proyectos'),
+        portadaVideo: fields.file({
+          label: 'Video de apertura (mp4, opcional)',
+          description: 'Si está cargado, reemplaza a la portada arriba de todo. Se reproduce solo, sin sonido.',
+          directory: 'public/videos/proyectos',
+          publicPath: '/videos/proyectos/',
+        }),
+        imagenFicha: imagen('Imagen junto a la ficha (opcional)', 'proyectos', 'Si está cargada, va al lado de Cliente/Año/Servicios en lugar de la bajada, el texto y el PDF.'),
         logo: imagen('Logo del cliente (opcional)', 'proyectos'),
         galeria: fields.array(
           fields.object({

@@ -61,7 +61,11 @@ const imgCls = (f: string) => ['w-full rounded-md', f === 'completo' ? 'mx-auto 
     <div class="flex flex-wrap gap-2">{servicios.map((s) => <span class="rounded-md bg-cyan-tint px-3.5 py-2 text-sm font-bold" data-reveal="title">{s}</span>)}</div>
   </section>
 
-  {portada && (
+  {e.portadaVideo ? (
+    <div class="mx-auto max-w-[1280px] px-6">
+      <video src={e.portadaVideo} class="aspect-[16/9] w-full rounded-md bg-slate-100 object-cover" autoplay muted playsinline preload="auto" aria-label={`Animación de apertura del proyecto ${e.titulo}`} data-apertura></video>
+    </div>
+  ) : portada && (
     <div class="mx-auto max-w-[1280px] px-6">
       <img src={portada} alt={`Portada del proyecto ${e.titulo}`} class="aspect-[16/8] w-full rounded-md object-cover" />
     </div>
@@ -72,13 +76,18 @@ const imgCls = (f: string) => ['w-full rounded-md', f === 'completo' ? 'mx-auto 
       {e.cliente && <div class="border-b border-slate-200 py-4"><dt class="text-sm text-slate-500" data-reveal="title">Cliente</dt><dd class="m-0 mt-1 text-[17px] font-bold" data-reveal="title">{e.cliente}</dd></div>}
       {e.anio && <div class="border-b border-slate-200 py-4"><dt class="text-sm text-slate-500" data-reveal="title">Año</dt><dd class="m-0 mt-1 text-[17px] font-bold" data-reveal="title">{e.anio}</dd></div>}
       <div class="border-b border-slate-200 py-4"><dt class="text-sm text-slate-500" data-reveal="title">Servicios</dt><dd class="m-0 mt-1 text-[17px] font-bold" data-reveal="title">{servicios.join(' · ')}</dd></div>
-      {e.equipo && <div class="border-b border-slate-200 py-4"><dt class="text-sm text-slate-500" data-reveal="title">Equipo</dt><dd class="m-0 mt-1 text-[17px] font-bold" data-reveal="title">{e.equipo}</dd></div>}
     </dl>
+    {e.imagenFicha ? (
+      <div class="flex-[2_1_560px]">
+        <img src={e.imagenFicha} alt={e.bajada || `Piezas del proyecto ${e.titulo}`} loading="lazy" decoding="async" class="w-full rounded-md" />
+      </div>
+    ) : (
     <div class="flex flex-[2_1_560px] flex-col gap-5">
       {e.bajada && <h2 class="m-0 text-[32px] leading-tight font-bold tracking-[-0.02em]">{e.bajada}</h2>}
       <div class="prosa text-lg leading-relaxed text-slate-700" set:html={html} />
       {e.presentacion && <a href={e.presentacion} class="self-start py-2.5 text-[17px] font-bold underline decoration-cyan decoration-2 underline-offset-4">Ver presentación completa (PDF)</a>}
     </div>
+    )}
   </section>
 
   {reels.length > 0 && (
@@ -160,6 +169,12 @@ const imgCls = (f: string) => ['w-full rounded-md', f === 'completo' ? 'mx-auto 
 </style>
 
 <script>
+  // Video de apertura: sin autoplay si el usuario prefiere menos movimiento.
+  const ap = document.querySelector<HTMLVideoElement>('[data-apertura]');
+  if (ap && matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    ap.removeAttribute('autoplay'); ap.pause();
+    ap.addEventListener('loadedmetadata', () => { ap.currentTime = Math.max(0, ap.duration - 0.05); }, { once: true });
+  }
   // Slider de reels: mismas flechas que el carrusel de Inicio.
   const tr = document.querySelector<HTMLElement>('[data-rl-track]');
   const prev = document.querySelector<HTMLButtonElement>('[data-rl-prev]');
