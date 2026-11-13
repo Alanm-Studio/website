@@ -58,3 +58,5 @@ html,body{overflow-x:clip}
 
 /* Reveal de textos (scripts/motion.ts): ocultos hasta que GSAP los anima; a los 3 s se muestran igual. */
 .motion:not(.motion-ready) :is(h1, h2, h3, h4, h5, h6, p, li, blockquote, figcaption, [data-reveal]):not(header *):not(dialog *):not(button *):not(.truncate):not([class*="line-clamp"]):not([data-no-reveal]):not([data-no-reveal] *) { visibility: hidden; }
+/* Máscaras del reveal: aire para acentos y descendentes (g, p, y, ñ) sin cambiar el interlineado. */
+.rvc-mask, .rvw-mask { padding: .12em 0 .22em; margin: -.12em 0 -.22em; }

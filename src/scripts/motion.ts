@@ -33,6 +33,8 @@ function reveal() {
     SplitText.create(el, {
       type: porLetra ? 'words,chars' : 'words',
       mask: porLetra ? 'chars' : 'words',
+      charsClass: 'rvc',
+      wordsClass: 'rvw',
       autoSplit: true,
       onSplit(self) {
         gsap.set(el, { visibility: 'visible' });
