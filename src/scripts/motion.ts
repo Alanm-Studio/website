@@ -20,6 +20,17 @@ const FUERA = ':not(header *):not(dialog *):not(button *):not(.truncate):not([cl
 const TITULOS = `:is(h1, h2, h3, h4, h5, h6, [data-reveal="title"])${FUERA}`;
 const PARRAFOS = `:is(p, li, blockquote, figcaption, [data-reveal="text"])${FUERA}`;
 
+// Contenedor con scroll propio (ej. la columna izquierda de /proyectos en escritorio); si no hay, la ventana.
+function scrollerDe(el: HTMLElement): Element | Window {
+  let a = el.parentElement;
+  while (a && a !== document.body) {
+    const oy = getComputedStyle(a).overflowY;
+    if ((oy === 'auto' || oy === 'scroll') && a.scrollHeight > a.clientHeight + 1) return a;
+    a = a.parentElement;
+  }
+  return window;
+}
+
 function visible(el: HTMLElement) {
   const bloque = el.querySelector('img, svg, picture, video, iframe, h1, h2, h3, h4, p, li, div, [data-reveal]');
   if (!el.textContent?.trim() || el.offsetParent === null || bloque) { el.style.visibility = 'visible'; return false; }
@@ -43,7 +54,7 @@ function reveal() {
           duration: 1,
           ease: 'expo.out',
           stagger: porLetra ? 0.025 : 0.1,
-          scrollTrigger: { trigger: el, start: 'top 90%', once: true },
+          scrollTrigger: { trigger: el, scroller: scrollerDe(el), start: 'top bottom', once: true },
         });
       },
     });
@@ -59,7 +70,7 @@ function reveal() {
           opacity: 1,
           ease: 'none',
           stagger: 0.1,
-          scrollTrigger: { trigger: el, start: 'top 92%', end: 'bottom 55%', scrub: true },
+          scrollTrigger: { trigger: el, scroller: scrollerDe(el), start: 'top 92%', end: 'bottom 55%', scrub: true },
         });
       },
     });
