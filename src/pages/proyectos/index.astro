@@ -54,9 +54,9 @@ const site = Astro.site!;
         <nav aria-label="Proyectos" class="flex flex-col gap-10">
           {grupos.map(({ s, items }) => (
             <section aria-labelledby={`g-${s.slug}`} class="flex flex-col gap-4">
-              <div class="flex flex-col items-start gap-2.5">
-                <span class="rounded-full bg-orange px-3.5 py-1.5 text-xs font-bold tracking-[.08em] text-white uppercase" data-reveal="title">{s.entry.titulo}</span>
-                <h2 id={`g-${s.slug}`} class="m-0 text-[26px] leading-tight font-bold tracking-[-0.02em] text-white">{s.entry.lema || s.entry.bajada}</h2>
+              <div class="flex min-h-[100px] flex-col justify-center gap-1 rounded-[14px] bg-orange px-5 py-[18px]">
+                <h2 id={`g-${s.slug}`} class="m-0 text-[19px] leading-tight font-bold tracking-[.06em] text-white uppercase">{s.entry.titulo}</h2>
+                <p class="m-0 text-[15px] leading-snug font-bold text-navy">{s.entry.lema || s.entry.bajada}</p>
               </div>
               {items.length > 0 ? items.map((p) => (
                 <a href={`/proyectos/${p.slug}`} class="pcard flex items-center gap-[18px] rounded-[14px] bg-[#15264A] px-5 py-[18px]" data-stack>

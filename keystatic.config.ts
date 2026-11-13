@@ -167,7 +167,8 @@ export default config({
         rol: fields.text({ label: 'Rol y formación' }),
         frase: fields.text({ label: 'Frase' }),
         bio: fields.text({ label: 'Bio', multiline: true }),
-        foto: imagen('Retrato (vertical)', 'equipo'),
+        foto: imagen('Retrato (cuadrado)', 'equipo'),
+        linkedin: fields.url({ label: 'LinkedIn' }),
       },
     }),
 
