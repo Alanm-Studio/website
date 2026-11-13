@@ -24,24 +24,24 @@ const redes = [
     )}
 
     <div class="grid grid-cols-1 gap-8 border-t border-[#34507A] pt-8 sm:grid-cols-2 lg:grid-cols-5">
-      <div class="flex flex-col gap-2"><span class="text-sm font-bold text-cyan">Estudio</span><span class="text-[17px] leading-normal text-[#D5DEEA]">Branding, diseño web y comunicación para marcas en crecimiento.</span></div>
-      <nav aria-label="Pie" class="flex flex-col"><span class="mb-1.5 text-sm font-bold text-cyan">Navegación</span>
+      <div class="flex flex-col gap-2"><span class="text-sm font-bold text-cyan" data-reveal="title">Estudio</span><span class="text-[17px] leading-normal text-[#D5DEEA]" data-reveal="text">Branding, diseño web y comunicación para marcas en crecimiento.</span></div>
+      <nav aria-label="Pie" class="flex flex-col"><span class="mb-1.5 text-sm font-bold text-cyan" data-reveal="title">Navegación</span>
         <a href="/proyectos" class="py-1.5 text-[17px] text-white hover:text-cyan">Proyectos</a>
         <a href="/equipo" class="py-1.5 text-[17px] text-white hover:text-cyan">Equipo</a>
         <a href="/contacto" class="py-1.5 text-[17px] text-white hover:text-cyan">Contacto</a>
       </nav>
-      <nav aria-label="Servicios" class="flex flex-col"><span class="mb-1.5 text-sm font-bold text-cyan">Servicios</span>
+      <nav aria-label="Servicios" class="flex flex-col"><span class="mb-1.5 text-sm font-bold text-cyan" data-reveal="title">Servicios</span>
         {servicios.map((s) => <a href={`/servicios/${s.slug}`} class="py-1.5 text-[17px] text-white hover:text-cyan">{s.entry.titulo}</a>)}
       </nav>
-      <div class="flex flex-col"><span class="mb-1.5 text-sm font-bold text-cyan">Contacto</span>
+      <div class="flex flex-col"><span class="mb-1.5 text-sm font-bold text-cyan" data-reveal="title">Contacto</span>
         <div class="flex gap-3 py-1.5">
           {wa && <a href={wa} target="_blank" rel="noreferrer" aria-label="Escribinos por WhatsApp (se abre en otra pestaña)" title="WhatsApp" class="flex h-11 w-11 items-center justify-center rounded-full border border-[#34507A] text-white transition-colors hover:border-cyan hover:bg-cyan hover:text-navy"><Icon name="whatsapp" class="h-5 w-5" /></a>}
           {a?.email && <a href={`mailto:${a.email}`} aria-label="Escribinos por email" title="Email" class="flex h-11 w-11 items-center justify-center rounded-full border border-[#34507A] text-white transition-colors hover:border-cyan hover:bg-cyan hover:text-navy"><Icon name="mail" class="h-5 w-5" /></a>}
         </div>
-        <span class="py-1.5 text-[17px] text-[#D5DEEA]">{a?.ubicacion || 'Trenque Lauquen, Buenos Aires'}</span>
+        <span class="py-1.5 text-[17px] text-[#D5DEEA]" data-reveal="text">{a?.ubicacion || 'Trenque Lauquen, Buenos Aires'}</span>
       </div>
       {redes.length > 0 && (
-        <div class="flex flex-col"><span class="mb-1.5 text-sm font-bold text-cyan">Redes</span>
+        <div class="flex flex-col"><span class="mb-1.5 text-sm font-bold text-cyan" data-reveal="title">Redes</span>
           {redes.map((r) => <a href={r.href} class="py-1.5 text-[17px] text-white hover:text-cyan">{r.label}</a>)}
         </div>
       )}

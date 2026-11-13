@@ -22,8 +22,8 @@ const jsonLd = [
         <li class="border-t border-cyan">
           <a href={`/servicios/${slug}`} class="group grid grid-cols-1 gap-x-8 gap-y-3 py-8 text-navy md:grid-cols-[140px_minmax(0,1fr)_440px]">
             <span class="text-4xl leading-none font-bold tracking-[-0.02em]">{String(i + 1).padStart(2, '0')}</span>
-            <span class="text-[clamp(36px,4vw,56px)] leading-none font-bold tracking-[-0.025em] text-orange group-hover:underline">{entry.titulo}</span>
-            <span class="text-base leading-normal font-bold">{entry.descripcion}</span>
+            <span class="text-[clamp(36px,4vw,56px)] leading-none font-bold tracking-[-0.025em] text-orange group-hover:underline" data-reveal="title">{entry.titulo}</span>
+            <span class="text-base leading-normal font-bold" data-reveal="text">{entry.descripcion}</span>
           </a>
         </li>
       ))}

@@ -57,4 +57,4 @@ html,body{overflow-x:clip}
 @media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
 
 /* Reveal de textos (scripts/motion.ts): ocultos hasta que GSAP los anima; a los 3 s se muestran igual. */
-.motion:not(.motion-ready) main :is(h1, h2, h3, p):not(dialog *):not(.svc-body):not(.truncate):not([class*="line-clamp"]):not([data-no-reveal]) { visibility: hidden; }
+.motion:not(.motion-ready) :is(h1, h2, h3, h4, h5, h6, p, li, blockquote, figcaption, [data-reveal]):not(header *):not(dialog *):not(button *):not(.truncate):not([class*="line-clamp"]):not([data-no-reveal]):not([data-no-reveal] *) { visibility: hidden; }

@@ -58,7 +58,7 @@ const imgCls = (f: string) => ['w-full rounded-md', f === 'completo' ? 'mx-auto 
       <a href="/proyectos" class="py-2 text-navy underline underline-offset-4 hover:text-cyan-text">Proyectos</a><span aria-hidden="true">/</span><span>{p.servicioTitulo}</span>
     </nav>
     <h1 class="m-0 text-[clamp(48px,7vw,96px)] leading-[.98] font-bold tracking-[-0.035em]">{e.titulo}</h1>
-    <div class="flex flex-wrap gap-2">{servicios.map((s) => <span class="rounded-md bg-cyan-tint px-3.5 py-2 text-sm font-bold">{s}</span>)}</div>
+    <div class="flex flex-wrap gap-2">{servicios.map((s) => <span class="rounded-md bg-cyan-tint px-3.5 py-2 text-sm font-bold" data-reveal="title">{s}</span>)}</div>
   </section>
 
   {portada && (
@@ -69,10 +69,10 @@ const imgCls = (f: string) => ['w-full rounded-md', f === 'completo' ? 'mx-auto 
 
   <section class="mx-auto flex max-w-[1280px] flex-wrap gap-12 px-6 py-16">
     <dl class="m-0 flex-[1_1_280px] border-t border-cyan">
-      {e.cliente && <div class="border-b border-slate-200 py-4"><dt class="text-sm text-slate-500">Cliente</dt><dd class="m-0 mt-1 text-[17px] font-bold">{e.cliente}</dd></div>}
-      {e.anio && <div class="border-b border-slate-200 py-4"><dt class="text-sm text-slate-500">Año</dt><dd class="m-0 mt-1 text-[17px] font-bold">{e.anio}</dd></div>}
-      <div class="border-b border-slate-200 py-4"><dt class="text-sm text-slate-500">Servicios</dt><dd class="m-0 mt-1 text-[17px] font-bold">{servicios.join(' · ')}</dd></div>
-      {e.equipo && <div class="border-b border-slate-200 py-4"><dt class="text-sm text-slate-500">Equipo</dt><dd class="m-0 mt-1 text-[17px] font-bold">{e.equipo}</dd></div>}
+      {e.cliente && <div class="border-b border-slate-200 py-4"><dt class="text-sm text-slate-500" data-reveal="title">Cliente</dt><dd class="m-0 mt-1 text-[17px] font-bold" data-reveal="title">{e.cliente}</dd></div>}
+      {e.anio && <div class="border-b border-slate-200 py-4"><dt class="text-sm text-slate-500" data-reveal="title">Año</dt><dd class="m-0 mt-1 text-[17px] font-bold" data-reveal="title">{e.anio}</dd></div>}
+      <div class="border-b border-slate-200 py-4"><dt class="text-sm text-slate-500" data-reveal="title">Servicios</dt><dd class="m-0 mt-1 text-[17px] font-bold" data-reveal="title">{servicios.join(' · ')}</dd></div>
+      {e.equipo && <div class="border-b border-slate-200 py-4"><dt class="text-sm text-slate-500" data-reveal="title">Equipo</dt><dd class="m-0 mt-1 text-[17px] font-bold" data-reveal="title">{e.equipo}</dd></div>}
     </dl>
     <div class="flex flex-[2_1_560px] flex-col gap-5">
       {e.bajada && <h2 class="m-0 text-[32px] leading-tight font-bold tracking-[-0.02em]">{e.bajada}</h2>}
@@ -104,8 +104,8 @@ const imgCls = (f: string) => ['w-full rounded-md', f === 'completo' ? 'mx-auto 
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
                 </span>
               </span>
-              <span class="text-lg font-bold">{r.titulo}</span>
-              <span class="-mt-2 text-sm text-slate-500">Ver reel en Instagram<span class="sr-only"> (se abre en otra pestaña)</span></span>
+              <span class="text-lg font-bold" data-reveal="title">{r.titulo}</span>
+              <span class="-mt-2 text-sm text-slate-500" data-reveal="text">Ver reel en Instagram<span class="sr-only"> (se abre en otra pestaña)</span></span>
             </a>
           </li>
         ))}
@@ -144,9 +144,9 @@ const imgCls = (f: string) => ['w-full rounded-md', f === 'completo' ? 'mx-auto 
   {prev && next && prev.slug !== p.slug && (
     <nav aria-label="Otros proyectos" class="border-t border-slate-200">
       <div class="mx-auto flex max-w-[1280px] flex-wrap items-center justify-between gap-6 px-6 py-10">
-        <a href={`/proyectos/${prev.slug}`} class="flex flex-col gap-1 py-2 text-navy"><span class="text-sm text-slate-500">Anterior</span><span class="text-[22px] font-bold">{prev.entry.titulo}</span></a>
+        <a href={`/proyectos/${prev.slug}`} class="flex flex-col gap-1 py-2 text-navy"><span class="text-sm text-slate-500" data-reveal="title">Anterior</span><span class="text-[22px] font-bold" data-reveal="title">{prev.entry.titulo}</span></a>
         <a href="/proyectos" class="py-3 font-bold text-navy underline underline-offset-4">Todos los proyectos</a>
-        <a href={`/proyectos/${next.slug}`} class="flex flex-col items-end gap-1 py-2 text-navy"><span class="text-sm text-slate-500">Siguiente</span><span class="text-[22px] font-bold">{next.entry.titulo}</span></a>
+        <a href={`/proyectos/${next.slug}`} class="flex flex-col items-end gap-1 py-2 text-navy"><span class="text-sm text-slate-500" data-reveal="title">Siguiente</span><span class="text-[22px] font-bold" data-reveal="title">{next.entry.titulo}</span></a>
       </div>
     </nav>
   )}

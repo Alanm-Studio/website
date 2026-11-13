@@ -26,14 +26,14 @@ const site = Astro.site!;
         </span>
       </a>
       <div class="grid grid-cols-1 gap-8 md:grid-cols-3">
-        <div class="flex flex-col gap-3 md:col-span-2"><span class="text-[13px] font-bold tracking-[.08em] text-slate-500 uppercase">Escribinos</span>
+        <div class="flex flex-col gap-3 md:col-span-2"><span class="text-[13px] font-bold tracking-[.08em] text-slate-500 uppercase" data-reveal="title">Escribinos</span>
           <div class="flex flex-wrap gap-3">
             {wa && <a href={wa} target="_blank" rel="noreferrer" class="flex min-h-12 items-center gap-2.5 rounded-full border border-navy py-2.5 pr-5 pl-4 text-[17px] font-bold text-navy transition-colors hover:border-orange hover:bg-orange hover:text-white"><Icon name="whatsapp" class="h-5 w-5" />WhatsApp<span class="sr-only"> (se abre en otra pestaña)</span></a>}
             {a?.email && <a href={mail} class="flex min-h-12 items-center gap-2.5 rounded-full border border-navy py-2.5 pr-5 pl-4 text-[17px] font-bold text-navy transition-colors hover:border-orange hover:bg-orange hover:text-white"><Icon name="mail" class="h-5 w-5" />Email</a>}
           </div>
         </div>
-        <div class="flex flex-col gap-2.5"><span class="text-[13px] font-bold tracking-[.08em] text-slate-500 uppercase">Estudio</span>
-          <span class="text-[22px] md:text-[26px] leading-tight font-bold tracking-[-0.02em]">{a?.ubicacion || 'Trenque Lauquen, Buenos Aires'}</span></div>
+        <div class="flex flex-col gap-2.5"><span class="text-[13px] font-bold tracking-[.08em] text-slate-500 uppercase" data-reveal="title">Estudio</span>
+          <span class="text-[22px] md:text-[26px] leading-tight font-bold tracking-[-0.02em]" data-reveal="title">{a?.ubicacion || 'Trenque Lauquen, Buenos Aires'}</span></div>
       </div>
     </div>
   </section>

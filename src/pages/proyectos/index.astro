@@ -55,7 +55,7 @@ const site = Astro.site!;
           {grupos.map(({ s, items }) => (
             <section aria-labelledby={`g-${s.slug}`} class="flex flex-col gap-4">
               <div class="flex flex-col items-start gap-2.5">
-                <span class="rounded-full bg-orange px-3.5 py-1.5 text-xs font-bold tracking-[.08em] text-white uppercase">{s.entry.titulo}</span>
+                <span class="rounded-full bg-orange px-3.5 py-1.5 text-xs font-bold tracking-[.08em] text-white uppercase" data-reveal="title">{s.entry.titulo}</span>
                 <h2 id={`g-${s.slug}`} class="m-0 text-[26px] leading-tight font-bold tracking-[-0.02em] text-white">{s.entry.lema || s.entry.bajada}</h2>
               </div>
               {items.length > 0 ? items.map((p) => (
@@ -66,7 +66,7 @@ const site = Astro.site!;
                       : <span class="text-base font-bold">{initials(p.entry.titulo)}</span>}
                   </span>
                   <span class="flex min-w-0 flex-col gap-1">
-                    <span class="text-[19px] font-bold tracking-[-0.01em]">{p.entry.titulo}</span>
+                    <span class="text-[19px] font-bold tracking-[-0.01em]" data-reveal="title">{p.entry.titulo}</span>
                     <span class="truncate text-[15px] text-[#A9B6CC]">{p.entry.descripcionCorta || [p.servicioTitulo, p.entry.cliente].filter(Boolean).join(' · ')}</span>
                   </span>
                 </a>

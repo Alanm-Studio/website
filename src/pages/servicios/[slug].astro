@@ -33,7 +33,7 @@ const jsonLd = [
       <span class="text-4xl leading-none font-bold tracking-[-0.02em]">{String(n).padStart(2, '0')}</span>
       <div class="flex flex-col gap-4">
         <h1 class="m-0 text-[clamp(48px,7vw,96px)] leading-[.98] font-bold tracking-[-0.035em] text-orange">{e.titulo}</h1>
-        {e.bajada && <span class="text-[15px] text-orange-text">[ {e.bajada} ]</span>}
+        {e.bajada && <span class="text-[15px] text-orange-text" data-reveal="title">[ {e.bajada} ]</span>}
         <ul class="m-0 mt-2 flex list-none flex-col gap-2 p-0">
           {e.items.map((it) => <li class="text-xl leading-snug text-slate-700">{it}</li>)}
         </ul>
@@ -55,8 +55,8 @@ const jsonLd = [
               <span class="block overflow-hidden rounded-md bg-slate-100">
                 <img src={p.entry.miniatura || p.entry.portada} alt="" loading="lazy" decoding="async" class="aspect-[4/5] w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
               </span>
-              <span class="text-[22px] leading-tight font-bold tracking-[-0.01em] group-hover:underline">{p.entry.titulo}</span>
-              {p.entry.descripcionCorta && <span class="text-base text-slate-600">{p.entry.descripcionCorta}</span>}
+              <span class="text-[22px] leading-tight font-bold tracking-[-0.01em] group-hover:underline" data-reveal="title">{p.entry.titulo}</span>
+              {p.entry.descripcionCorta && <span class="text-base text-slate-600" data-reveal="text">{p.entry.descripcionCorta}</span>}
             </a>
           </li>
         ))}
@@ -66,7 +66,7 @@ const jsonLd = [
 
   <nav aria-label="Otros servicios" class="border-t border-slate-200">
     <div class="mx-auto flex max-w-[1280px] flex-wrap items-center gap-x-8 gap-y-3 px-6 py-10">
-      <span class="text-sm font-bold text-slate-500">Otros servicios</span>
+      <span class="text-sm font-bold text-slate-500" data-reveal="title">Otros servicios</span>
       {todos.filter((t) => t.slug !== s.slug).map((t) => <a href={`/servicios/${t.slug}`} class="py-2 text-[20px] font-bold text-navy hover:text-orange">{t.entry.titulo}</a>)}
       <a href="/contacto" data-fx="fill" data-fx-arrow class="ml-auto rounded-md bg-orange px-6 py-3.5 text-lg font-bold text-white" style="--fx-fill:#183057;--fx-text:#FFFFFF">Hablemos<Arrow /></a>
     </div>

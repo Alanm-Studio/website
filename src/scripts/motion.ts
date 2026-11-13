@@ -13,11 +13,16 @@ const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 // Como nicocrespo.com:
 // - Títulos: cada palabra sube desde una máscara, una tras otra (el H1 del hero, letra por letra).
 // - Párrafos: cada palabra pasa de casi transparente a opaca, atada al scroll.
-const TITULOS = 'main :is(h1, h2, h3):not(dialog *):not(.svc-body):not(.truncate):not([class*="line-clamp"]):not([data-no-reveal])';
-const PARRAFOS = 'main p:not(dialog *):not(.svc-body):not(.truncate):not([class*="line-clamp"]):not([data-no-reveal])';
+// Todo el sitio (no solo <main>): títulos, subtítulos y etiquetas suben palabra por palabra;
+// párrafos, ítems y descripciones se encienden palabra por palabra con el scroll.
+// Quedan afuera el menú, el buscador de "Ver todos" y los textos recortados con "…".
+const FUERA = ':not(header *):not(dialog *):not(button *):not(.truncate):not([class*="line-clamp"]):not([data-no-reveal]):not([data-no-reveal] *)';
+const TITULOS = `:is(h1, h2, h3, h4, h5, h6, [data-reveal="title"])${FUERA}`;
+const PARRAFOS = `:is(p, li, blockquote, figcaption, [data-reveal="text"])${FUERA}`;
 
 function visible(el: HTMLElement) {
-  if (!el.textContent?.trim() || el.offsetParent === null) { el.style.visibility = 'visible'; return false; }
+  const bloque = el.querySelector('img, svg, picture, video, iframe, h1, h2, h3, h4, p, li, div, [data-reveal]');
+  if (!el.textContent?.trim() || el.offsetParent === null || bloque) { el.style.visibility = 'visible'; return false; }
   return true;
 }
 

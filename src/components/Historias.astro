@@ -32,7 +32,7 @@ const TIPO = { reel: 'Reel', post: 'Post', historia: 'Destacada' } as const;
             )}
           </span>
           <span class="flex flex-col gap-1.5 px-1">
-            <span class="text-[19px] leading-tight font-bold tracking-[-0.01em]">{entry.titulo}</span>
+            <span class="text-[19px] leading-tight font-bold tracking-[-0.01em]" data-reveal="title">{entry.titulo}</span>
             {entry.texto && <span class="line-clamp-2 text-base text-slate-700">{entry.texto}</span>}
             <span class="mt-1 inline-flex items-center gap-1.5 text-sm font-bold underline decoration-cyan decoration-2 underline-offset-4">Ver en Instagram<span class="sr-only"> (se abre en otra pestaña)</span></span>
           </span>

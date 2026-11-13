@@ -13,8 +13,8 @@ const proyectos = (await getProyectos()).filter((p) => p.entry.destacado && (p.e
           <img src={p.entry.miniatura || p.entry.portada} alt={p.entry.galeria[0]?.alt || p.entry.titulo} width="640" height="800" loading="lazy" decoding="async"
             class="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.02] motion-reduce:transition-none" />
         </div>
-        <span class="text-lg font-bold">{p.entry.titulo}</span>
-        <span class="-mt-2 text-sm text-slate-500">{p.servicioTitulo}</span>
+        <span class="text-lg font-bold" data-reveal="title">{p.entry.titulo}</span>
+        <span class="-mt-2 text-sm text-slate-500" data-reveal="text">{p.servicioTitulo}</span>
       </a>
     ))}
   </div>
