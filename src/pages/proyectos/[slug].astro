@@ -75,7 +75,7 @@ const imgCls = (f: string) => ['w-full rounded-md', f === 'completo' ? 'mx-auto 
     <dl class="m-0 flex-[1_1_280px] border-t border-cyan">
       {e.cliente && <div class="border-b border-slate-200 py-4"><dt class="text-sm text-slate-500" data-reveal="title">Cliente</dt><dd class="m-0 mt-1 text-[17px] font-bold" data-reveal="title">{e.cliente}</dd></div>}
       {e.anio && <div class="border-b border-slate-200 py-4"><dt class="text-sm text-slate-500" data-reveal="title">Año</dt><dd class="m-0 mt-1 text-[17px] font-bold" data-reveal="title">{e.anio}</dd></div>}
-      <div class="border-b border-slate-200 py-4"><dt class="text-sm text-slate-500" data-reveal="title">Servicios</dt><dd class="m-0 mt-1 text-[17px] font-bold" data-reveal="title">{servicios.join(' · ')}</dd></div>
+      <div class="border-b border-slate-200 py-4"><dt class="text-sm text-slate-500" data-reveal="title">Servicios</dt><dd class="m-0 mt-1 text-[17px] font-bold" data-reveal="title">{e.serviciosFicha || servicios.join(' · ')}</dd></div>
     </dl>
     {e.imagenFicha ? (
       <div class="flex-[2_1_560px]">
@@ -89,6 +89,34 @@ const imgCls = (f: string) => ['w-full rounded-md', f === 'completo' ? 'mx-auto 
     </div>
     )}
   </section>
+
+  {galeriaA.length > 0 && (
+    <section aria-label="Galería" class="mx-auto max-w-[1280px] px-6 pb-16">
+      <div class="grid grid-cols-1 gap-5 md:grid-cols-3">
+        {galeriaA.map((g) => <img src={g.imagen} alt={g.alt || ''} loading="lazy" decoding="async" class:list={imgCls(g.formato)} />)}
+      </div>
+    </section>
+  )}
+
+  {video && (
+    <section aria-label="Video" class="mx-auto max-w-[1280px] px-6 pb-16">
+      {esReel ? (
+        <div class="flex justify-center rounded-md bg-navy px-4 py-10">
+          <iframe src={video} title={`Reel del proyecto ${e.titulo}`} class="h-[720px] w-full max-w-[400px] rounded-md bg-white" loading="lazy" allowfullscreen></iframe>
+        </div>
+      ) : (
+        <iframe src={video} title={`Video del proyecto ${e.titulo}`} class="aspect-video w-full rounded-md" loading="lazy" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+      )}
+    </section>
+  )}
+
+  {galeriaB.length > 0 && (
+    <section aria-label="Más imágenes" class="mx-auto max-w-[1280px] px-6 pb-24">
+      <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
+        {galeriaB.map((g) => <img src={g.imagen} alt={g.alt || ''} loading="lazy" decoding="async" class:list={imgCls(g.formato)} />)}
+      </div>
+    </section>
+  )}
 
   {reels.length > 0 && (
     <section aria-labelledby="reels-t" class="pb-16">
@@ -119,34 +147,6 @@ const imgCls = (f: string) => ['w-full rounded-md', f === 'completo' ? 'mx-auto 
           </li>
         ))}
       </ul>
-    </section>
-  )}
-
-  {galeriaA.length > 0 && (
-    <section aria-label="Galería" class="mx-auto max-w-[1280px] px-6 pb-16">
-      <div class="grid grid-cols-1 gap-5 md:grid-cols-3">
-        {galeriaA.map((g) => <img src={g.imagen} alt={g.alt || ''} loading="lazy" decoding="async" class:list={imgCls(g.formato)} />)}
-      </div>
-    </section>
-  )}
-
-  {video && (
-    <section aria-label="Video" class="mx-auto max-w-[1280px] px-6 pb-16">
-      {esReel ? (
-        <div class="flex justify-center rounded-md bg-navy px-4 py-10">
-          <iframe src={video} title={`Reel del proyecto ${e.titulo}`} class="h-[720px] w-full max-w-[400px] rounded-md bg-white" loading="lazy" allowfullscreen></iframe>
-        </div>
-      ) : (
-        <iframe src={video} title={`Video del proyecto ${e.titulo}`} class="aspect-video w-full rounded-md" loading="lazy" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
-      )}
-    </section>
-  )}
-
-  {galeriaB.length > 0 && (
-    <section aria-label="Más imágenes" class="mx-auto max-w-[1280px] px-6 pb-24">
-      <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
-        {galeriaB.map((g) => <img src={g.imagen} alt={g.alt || ''} loading="lazy" decoding="async" class:list={imgCls(g.formato)} />)}
-      </div>
     </section>
   )}
 

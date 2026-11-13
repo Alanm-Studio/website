@@ -43,6 +43,7 @@ const proyectoSchema = () => ({
         orden: fields.integer({ label: 'Orden', description: 'Menor número = aparece primero.', defaultValue: 100 }),
         cliente: fields.text({ label: 'Cliente' }),
         anio: fields.integer({ label: 'Año' }),
+        serviciosFicha: fields.text({ label: 'Servicios en la ficha (opcional)', description: 'Texto libre, por ejemplo: Marca · Redes sociales · Merchandising. Si está vacío se usan los servicios del proyecto.' }),
         otrosServicios: fields.multiselect({ label: 'También aparece en', description: 'Otros servicios que se trabajaron en este proyecto (además de esta sección).', options: SERVICIOS }),
         descripcionCorta: fields.text({ label: 'Descripción corta', description: 'Una línea para las tarjetas (ej.: Sistema visual y piezas gráficas). Máx. 80 caracteres.', validation: { length: { max: 80 } } }),
         bajada: fields.text({ label: 'Bajada', description: 'El desafío en una frase.', multiline: true }),
