@@ -137,7 +137,7 @@ const site = Astro.site!;
             <a href={`/proyectos/${p.slug}`} class="tile flex flex-col gap-3.5"
               data-text={[p.entry.titulo, p.entry.cliente, p.servicioTitulo].join(' ')}
               data-srv={[p.servicio, ...p.entry.otrosServicios].join(' ')}>
-              <span class="block aspect-square overflow-hidden rounded-[14px] bg-[#15264A]">
+              <span class="block aspect-[4/5] overflow-hidden rounded-[14px] bg-[#15264A]">
                 {(p.entry.miniatura || p.entry.portada) && <img src={p.entry.miniatura || p.entry.portada} alt="" loading="lazy" class="tile-img h-full w-full object-cover" />}
               </span>
               <span class="flex flex-col gap-1">
