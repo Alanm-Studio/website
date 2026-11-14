@@ -5,6 +5,9 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SplitText } from 'gsap/SplitText';
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
+// En iPhone la barra de Safari cambia el alto de la ventana al empezar a scrollear: sin esto,
+// ScrollTrigger recalcula a mitad del gesto y el zoom de la primera foto visible se frena.
+ScrollTrigger.config({ ignoreMobileResize: true });
 
 const root = document.documentElement;
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -101,7 +104,8 @@ function zoom() {
     gsap.fromTo(img, { scale: 1.3 }, {
       scale: 1,
       ease: 'none',
-      scrollTrigger: { trigger: frame, start: 'top bottom', end: 'bottom 40%', scrub: true },
+      // scrub con un poco de suavizado: el zoom sigue al scroll sin saltos aunque el gesto sea brusco.
+      scrollTrigger: { trigger: frame, start: 'top bottom', end: 'bottom 40%', scrub: 0.6, invalidateOnRefresh: true },
     });
   });
 }
