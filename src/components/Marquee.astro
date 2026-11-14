@@ -9,11 +9,11 @@ const loop = [...marcas, ...marcas, ...marcas, ...marcas];
     <h2 id="marcas-t" class="m-0 text-[28px] font-bold tracking-[-0.02em]">Marcas que confían en nosotros</h2>
     <span class="text-[15px] font-bold text-cyan" data-reveal="title">Más de 15 años de experiencia</span>
   </div>
-  <div class="mq-wrap overflow-hidden border-y border-[#34507A] py-9">
-    <ul class="mq m-0 flex w-max list-none items-center gap-[120px] p-0 pr-[120px]" aria-label="Logos de marcas">
+  <div class="mq-wrap overflow-hidden border-y border-[#34507A] py-7 md:py-9">
+    <ul class="mq m-0 flex w-max list-none items-center gap-12 p-0 pr-12 md:gap-[120px] md:pr-[120px]" aria-label="Logos de marcas">
       {loop.map((m, i) => (
         <li aria-hidden={i >= marcas.length ? 'true' : undefined}>
-          <img src={m.entry.logo} alt={i < marcas.length ? m.entry.nombre : ''} class="h-12 w-auto max-w-[200px] object-contain" loading="lazy" />
+          <img src={m.entry.logo} alt={i < marcas.length ? m.entry.nombre : ''} class="h-10 w-auto max-w-[150px] object-contain md:h-12 md:max-w-[200px]" loading="lazy" />
         </li>
       ))}
     </ul>

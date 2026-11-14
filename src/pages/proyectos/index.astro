@@ -1,7 +1,6 @@
 ---
 // Proyectos: pantalla dividida. Izquierda: lista que scrollea; derecha: carrusel ambiental fijo.
-import Base from '../../layouts/Base.astro';
-import Wordmark from '../../components/Wordmark.astro';
+import Site from '../../layouts/Site.astro';
 import { getProyectos, getServicios } from '../../lib/cms';
 import { breadcrumbJsonLd } from '../../lib/seo';
 
@@ -21,12 +20,11 @@ const otros = marketing
 const initials = (t: string) => t.split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0]).join('').toUpperCase();
 const site = Astro.site!;
 ---
-<Base title="Proyectos" description="Proyectos de branding, diseño web, editorial, sistema visual y marketing de Alan Marino Studio."
+<Site title="Proyectos" footerTone="light" description="Proyectos de branding, diseño web, editorial, sistema visual y marketing de Alan Marino Studio."
   jsonLd={breadcrumbJsonLd(site, [{ nombre: 'Inicio', path: '/' }, { nombre: 'Proyectos', path: '/proyectos' }])}>
   <a href="#lista" class="skip-link">Saltar a la lista de proyectos</a>
   <div class="min-h-screen bg-[#0D1830] text-[#F3F6FB]">
-    <div class="flex items-center justify-between gap-4 px-5 pt-4 pb-1 md:hidden">
-      <a href="/" aria-label="Alan Marino, inicio" class="flex py-2 text-white"><Wordmark short class="text-[25px]" /></a>
+    <div class="flex items-center justify-end gap-4 px-5 pt-4 pb-1 md:hidden">
       <button type="button" class="pi-btn flex min-h-11 flex-none items-center gap-3 whitespace-nowrap rounded-full border border-[#2A4170] bg-[#15264A] py-2.5 pr-3 pl-[18px] text-[15px] font-bold" aria-haspopup="dialog" data-all-open-2>
         Ver todos<span class="sr-only"> los proyectos</span>
         <span aria-hidden="true" class="relative inline-block h-5 w-[34px] rounded-full bg-[#2A4170]"><span class="absolute top-[3px] left-[3px] h-3.5 w-3.5 rounded-full bg-cyan"></span></span>
@@ -34,9 +32,8 @@ const site = Astro.site!;
     </div>
     <div class="flex flex-col md:flex-row">
       <!-- Izquierda -->
-      <div class="left-col order-2 min-w-0 px-5 pt-8 pb-24 md:sticky md:top-0 md:order-1 md:h-screen md:max-h-[1000px] md:min-h-[640px] md:basis-[40%] lg:basis-[30%] md:self-start md:overflow-y-auto md:px-8 md:pb-12" data-left data-no-reveal>
-        <div class="mb-14 hidden items-center justify-between gap-4 md:flex">
-          <a href="/" aria-label="Alan Marino, inicio" class="flex py-2 text-white"><Wordmark short class="text-[26px]" /></a>
+      <div class="left-col order-2 min-w-0 px-5 pt-8 pb-24 md:sticky md:top-[var(--hdr,88px)] md:order-1 md:h-[calc(100vh-var(--hdr,88px))] md:max-h-[1000px] md:min-h-[640px] md:basis-[40%] lg:basis-[30%] md:self-start md:overflow-y-auto md:px-8 md:pb-12" data-left data-no-reveal>
+        <div class="mb-10 hidden items-center justify-end gap-4 md:flex">
           <button type="button" class="pi-btn flex min-h-11 flex-none items-center gap-3 whitespace-nowrap rounded-full border border-[#2A4170] bg-[#15264A] py-2.5 pr-3 pl-[18px] text-[15px] font-bold" aria-haspopup="dialog" data-all-open>
             Ver todos<span class="sr-only"> los proyectos</span>
             <span aria-hidden="true" class="relative inline-block h-5 w-[34px] rounded-full bg-[#2A4170]"><span class="absolute top-[3px] left-[3px] h-3.5 w-3.5 rounded-full bg-cyan"></span></span>
@@ -150,7 +147,7 @@ const site = Astro.site!;
       </div>
     </dialog>
   </div>
-</Base>
+</Site>
 
 <style>
   .left-col { scrollbar-width: thin; scrollbar-color: #2A4170 transparent; }

@@ -4,7 +4,17 @@ import Arrow from './Arrow.astro';
 import { getAjustes } from '../lib/seo';
 import Icon from './Icon.astro';
 import { getServicios } from '../lib/cms';
-const { cta = true } = Astro.props as { cta?: boolean };
+const { cta = true, tone = 'dark' } = Astro.props as { cta?: boolean; tone?: 'dark' | 'light' };
+// tone light: footer blanco (solo /proyectos), mismos elementos con colores invertidos.
+const L = tone === 'light';
+const c = {
+  link: L ? 'text-navy hover:text-cyan-text' : 'text-white hover:text-cyan',
+  label: L ? 'text-cyan-text' : 'text-cyan',
+  muted: L ? 'text-slate-700' : 'text-[#D5DEEA]',
+  line: L ? 'border-slate-200' : 'border-[#34507A]',
+  small: L ? 'text-slate-500' : 'text-[#C9D3E0]',
+  icon: L ? 'border-slate-300 text-navy' : 'border-[#34507A] text-white',
+};
 const a = await getAjustes();
 const servicios = await getServicios();
 const wa = a?.whatsapp ? `https://wa.me/${a.whatsapp.replace(/\D/g, '')}` : null;
@@ -14,7 +24,7 @@ const redes = [
   { label: 'LinkedIn', href: a?.linkedin },
 ].filter((r) => r.href);
 ---
-<footer class="bg-navy text-white">
+<footer class:list={[L ? 'ft-light border-t border-slate-200 bg-white text-navy' : 'bg-navy text-white']}>
   <div class:list={['mx-auto flex max-w-[1280px] flex-col justify-between gap-16 px-6 pb-10', cta ? 'min-h-[680px] pt-16 md:min-h-[860px] md:pt-24' : 'min-h-[520px] pt-16']}>
     {cta && (
     <div class="flex flex-wrap items-end justify-between gap-12">
@@ -23,35 +33,35 @@ const redes = [
       </div>
     )}
 
-    <div data-no-reveal class="grid grid-cols-1 gap-8 border-t border-[#34507A] pt-8 sm:grid-cols-2 lg:grid-cols-5">
-      <div class="flex flex-col gap-2"><span class="text-sm font-bold text-cyan" data-reveal="title">Estudio</span><span class="text-[17px] leading-normal text-[#D5DEEA]" data-reveal="text">Branding, diseño web y comunicación para marcas en crecimiento.</span></div>
-      <nav aria-label="Pie" class="flex flex-col"><span class="mb-1.5 text-sm font-bold text-cyan" data-reveal="title">Navegación</span>
-        <a href="/proyectos" class="py-1.5 text-[17px] text-white hover:text-cyan">Proyectos</a>
-        <a href="/equipo" class="py-1.5 text-[17px] text-white hover:text-cyan">Equipo</a>
-        <a href="/contacto" class="py-1.5 text-[17px] text-white hover:text-cyan">Contacto</a>
+    <div data-no-reveal class={`grid grid-cols-1 gap-8 border-t ${c.line} pt-8 sm:grid-cols-2 lg:grid-cols-5`}>
+      <div class="flex flex-col gap-2"><span class={`text-sm font-bold ${c.label}`}>Estudio</span><span class={`text-[17px] leading-normal ${c.muted}`}>Branding, diseño web y comunicación para marcas en crecimiento.</span></div>
+      <nav aria-label="Pie" class="flex flex-col"><span class={`mb-1.5 text-sm font-bold ${c.label}`}>Navegación</span>
+        <a href="/proyectos" class={`py-1.5 text-[17px] ${c.link}`}>Proyectos</a>
+        <a href="/equipo" class={`py-1.5 text-[17px] ${c.link}`}>Equipo</a>
+        <a href="/contacto" class={`py-1.5 text-[17px] ${c.link}`}>Contacto</a>
       </nav>
-      <nav aria-label="Servicios" class="flex flex-col"><span class="mb-1.5 text-sm font-bold text-cyan" data-reveal="title">Servicios</span>
-        {servicios.map((s) => <a href={`/servicios/${s.slug}`} class="py-1.5 text-[17px] text-white hover:text-cyan">{s.entry.titulo}</a>)}
+      <nav aria-label="Servicios" class="flex flex-col"><span class={`mb-1.5 text-sm font-bold ${c.label}`}>Servicios</span>
+        {servicios.map((s) => <a href={`/servicios/${s.slug}`} class={`py-1.5 text-[17px] ${c.link}`}>{s.entry.titulo}</a>)}
       </nav>
-      <div class="flex flex-col"><span class="mb-1.5 text-sm font-bold text-cyan" data-reveal="title">Contacto</span>
+      <div class="flex flex-col"><span class={`mb-1.5 text-sm font-bold ${c.label}`}>Contacto</span>
         <div class="flex gap-3 py-1.5">
-          {wa && <a href={wa} target="_blank" rel="noreferrer" aria-label="Escribinos por WhatsApp (se abre en otra pestaña)" title="WhatsApp" class="flex h-11 w-11 items-center justify-center rounded-full border border-[#34507A] text-white transition-colors hover:border-cyan hover:bg-cyan hover:text-navy"><Icon name="whatsapp" class="h-5 w-5" /></a>}
-          {a?.email && <a href={`mailto:${a.email}`} aria-label="Escribinos por email" title="Email" class="flex h-11 w-11 items-center justify-center rounded-full border border-[#34507A] text-white transition-colors hover:border-cyan hover:bg-cyan hover:text-navy"><Icon name="mail" class="h-5 w-5" /></a>}
+          {wa && <a href={wa} target="_blank" rel="noreferrer" aria-label="Escribinos por WhatsApp (se abre en otra pestaña)" title="WhatsApp" class={`flex h-11 w-11 items-center justify-center rounded-full border ${c.icon} transition-colors hover:border-cyan hover:bg-cyan hover:text-navy`}><Icon name="whatsapp" class="h-5 w-5" /></a>}
+          {a?.email && <a href={`mailto:${a.email}`} aria-label="Escribinos por email" title="Email" class={`flex h-11 w-11 items-center justify-center rounded-full border ${c.icon} transition-colors hover:border-cyan hover:bg-cyan hover:text-navy`}><Icon name="mail" class="h-5 w-5" /></a>}
         </div>
-        <span class="py-1.5 text-[17px] text-[#D5DEEA]" data-reveal="text">{a?.ubicacion || 'Trenque Lauquen, Buenos Aires'}</span>
+        <span class={`py-1.5 text-[17px] ${c.muted}`}>{a?.ubicacion || 'Trenque Lauquen, Buenos Aires'}</span>
       </div>
       {redes.length > 0 && (
-        <div class="flex flex-col"><span class="mb-1.5 text-sm font-bold text-cyan" data-reveal="title">Redes</span>
-          {redes.map((r) => <a href={r.href} class="py-1.5 text-[17px] text-white hover:text-cyan">{r.label}</a>)}
+        <div class="flex flex-col"><span class={`mb-1.5 text-sm font-bold ${c.label}`}>Redes</span>
+          {redes.map((r) => <a href={r.href} class={`py-1.5 text-[17px] ${c.link}`}>{r.label}</a>)}
         </div>
       )}
     </div>
 
     <div class="flex flex-col gap-5">
       <Wordmark fit letters class="block h-auto w-full text-cyan" />
-      <div class="flex flex-wrap justify-between gap-3 text-sm text-[#C9D3E0]">
+      <div class={`flex flex-wrap justify-between gap-3 text-sm ${c.small}`}>
         <span>© {new Date().getFullYear()} Alan Marino — Un pequeño estudio, con grandes ideas.</span>
-        <a href="#top" class="py-1 text-[#C9D3E0] hover:text-cyan">Volver arriba</a>
+        <a href="#top" class={`py-1 ${c.small} ${L ? "hover:text-cyan-text" : "hover:text-cyan"}`}>Volver arriba</a>
       </div>
     </div>
   </div>
