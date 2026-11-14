@@ -1,7 +1,8 @@
 ---
 import { getMarcas } from '../lib/cms';
 const marcas = (await getMarcas()).filter((m) => m.entry.logo);
-const loop = [...marcas, ...marcas, ...marcas, ...marcas];
+// Dos copias alcanzan (cada tanda es más ancha que la pantalla) y la animación corre -50%.
+const loop = [...marcas, ...marcas];
 ---
 {marcas.length > 0 && (
 <section aria-labelledby="marcas-t" class="flex flex-col gap-8 overflow-hidden bg-navy py-10 text-white md:gap-12 md:py-14">
@@ -13,7 +14,7 @@ const loop = [...marcas, ...marcas, ...marcas, ...marcas];
     <ul class="mq m-0 flex w-max list-none items-center gap-12 p-0 pr-12 md:gap-[120px] md:pr-[120px]" aria-label="Logos de marcas">
       {loop.map((m, i) => (
         <li aria-hidden={i >= marcas.length ? 'true' : undefined}>
-          <img src={m.entry.logo} alt={i < marcas.length ? m.entry.nombre : ''} class="h-10 w-auto max-w-[150px] object-contain md:h-12 md:max-w-[200px]" loading="lazy" />
+          <img src={m.entry.logo} alt={i < marcas.length ? m.entry.nombre : ''} class="h-10 w-auto max-w-[150px] object-contain md:h-12 md:max-w-[200px]" loading="eager" decoding="async" />
         </li>
       ))}
     </ul>
@@ -21,8 +22,8 @@ const loop = [...marcas, ...marcas, ...marcas, ...marcas];
 </section>
 )}
 <style>
-  @keyframes mqL { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-  .mq { animation: mqL 40s linear infinite; }
+  @keyframes mqL { from { transform: translate3d(0,0,0); } to { transform: translate3d(-50%,0,0); } }
+  .mq { animation: mqL 30s linear infinite; will-change: transform; backface-visibility: hidden; }
   .mq-wrap:hover .mq { animation-play-state: paused; }
   @media (prefers-reduced-motion: reduce) { .mq { animation: none; flex-wrap: wrap; justify-content: center; width: auto; } }
 </style>
