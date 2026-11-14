@@ -76,6 +76,7 @@ const imgCls = (f: string) => ['w-full rounded-md', f === 'completo' ? 'mx-auto 
       {e.cliente && <div class="border-b border-slate-200 py-4"><dt class="text-sm text-slate-500" data-reveal="title">Cliente</dt><dd class="m-0 mt-1 text-[17px] font-bold" data-reveal="title">{e.cliente}</dd></div>}
       {e.anio && <div class="border-b border-slate-200 py-4"><dt class="text-sm text-slate-500" data-reveal="title">Año</dt><dd class="m-0 mt-1 text-[17px] font-bold" data-reveal="title">{e.anio}</dd></div>}
       <div class="border-b border-slate-200 py-4"><dt class="text-sm text-slate-500" data-reveal="title">Servicios</dt><dd class="m-0 mt-1 text-[17px] font-bold" data-reveal="title">{e.serviciosFicha || servicios.join(' · ')}</dd></div>
+      {e.sitioWeb && <div class="border-b border-slate-200 py-4"><dt class="text-sm text-slate-500">Sitio web</dt><dd class="m-0 mt-1 text-[17px] font-bold"><a href={e.sitioWeb} target="_blank" rel="noreferrer" class="inline-flex items-center gap-1.5 underline decoration-cyan decoration-2 underline-offset-4 hover:text-cyan-text">{e.sitioWeb.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '')}<svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M8 7h9v9"/></svg><span class="sr-only"> (se abre en otra pestaña)</span></a></dd></div>}
     </dl>
     {e.imagenFicha ? (
       <div class="flex-[2_1_560px]">
