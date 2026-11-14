@@ -94,6 +94,7 @@ const isCurrent = (href: string) => !href.includes('#') && (path === href || pat
     isOpen = open;
     openBtn.setAttribute('aria-expanded', String(open));
     document.documentElement.style.overflow = open ? 'hidden' : '';
+    if (open) window.__lenis?.stop(); else window.__lenis?.start();
     if (open) {
       menu.classList.remove('hidden');
       menu.classList.add('flex');
