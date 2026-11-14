@@ -8,7 +8,7 @@ const TIPO = { reel: 'Reel', post: 'Post', historia: 'Destacada' } as const;
 ---
 {historias.length > 0 && (
 <section class="overflow-x-clip border-t border-slate-200 bg-white pt-16 pb-16 md:pt-26 md:pb-24" aria-labelledby="ig-t">
-  <div class="mx-auto flex max-w-[1280px] flex-wrap items-end justify-between gap-12 px-6">
+  <div class="mx-auto flex max-w-[1280px] flex-wrap items-end justify-between gap-x-12 gap-y-4 px-6">
     <div>
       <p class="m-0 mb-4 text-[15px] font-bold text-cyan-text">Lo último en Instagram</p>
       <h2 id="ig-t" class="m-0 text-[clamp(36px,4vw,56px)] leading-[1.02] font-bold tracking-[-0.03em]">Historias</h2>
@@ -18,7 +18,7 @@ const TIPO = { reel: 'Reel', post: 'Post', historia: 'Destacada' } as const;
       <a href={ig} target="_blank" rel="noreferrer" class="inline-flex items-center gap-2.5 rounded-md bg-orange px-6 py-[15px] text-lg font-bold text-white hover:bg-orange-hover">Seguinos en Instagram<span class="sr-only"> (se abre en otra pestaña)</span><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M8 7h9v9"/></svg></a>
     </div>
   </div>
-  <div class="relative mx-auto mt-12 max-w-[1280px]" data-ig-wrap>
+  <div class="relative mx-auto mt-8 max-w-[1280px] md:mt-12" data-ig-wrap>
   <ul class="no-scrollbar relative mx-auto flex max-w-[1280px] list-none snap-x snap-mandatory gap-6 overflow-x-auto scroll-px-6 px-6 pt-2.5 pb-1.5" data-ig-track tabindex="0" aria-label="Publicaciones de Instagram">
     {historias.map(({ entry }) => (
       <li class="ig-slide flex-[0_0_72%] snap-start sm:flex-[0_0_330px]">
