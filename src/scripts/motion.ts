@@ -80,7 +80,7 @@ function reveal() {
 
 // ALANMARINO del footer: las letras suben una por una desde abajo cuando aparece.
 function letras() {
-  document.querySelectorAll<SVGSVGElement>('svg[data-letters]').forEach((svg) => {
+  document.querySelectorAll<SVGSVGElement>('svg[data-letters]:not([data-menu] svg)').forEach((svg) => {
     const ts = svg.querySelectorAll('tspan');
     if (!ts.length) return;
     gsap.fromTo(ts, { attr: { y: 170 }, opacity: 0 }, {

@@ -25,7 +25,7 @@ const jsonLd = [
 ---
 <Site title={e.seo?.titulo || e.titulo} description={e.seo?.descripcion || e.descripcion} image={e.seo?.imagen || proyectos[0]?.entry.portada}
   noindex={e.seo?.noindex} jsonLd={jsonLd}>
-  <section class="mx-auto flex max-w-[1280px] flex-col gap-10 px-6 pt-12 pb-16">
+  <section class="mx-auto flex max-w-[1280px] flex-col gap-8 px-6 pt-10 pb-10 md:gap-10 md:pt-12 md:pb-16">
     <nav aria-label="Ruta" class="flex items-center gap-2 text-[15px] text-slate-500">
       <a href="/servicios" class="py-2 text-navy underline underline-offset-4 hover:text-cyan-text">Servicios</a><span aria-hidden="true">/</span><span>{e.titulo}</span>
     </nav>
