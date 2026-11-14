@@ -24,7 +24,7 @@ const TIPO = { reel: 'Reel', post: 'Post', historia: 'Destacada' } as const;
       <li class="flex-[0_0_72%] snap-start sm:flex-[0_0_330px]">
         <a class="ig-card flex flex-col gap-4 text-navy" href={entry.link} target="_blank" rel="noreferrer">
           <span class="ig-media relative block aspect-[9/16] overflow-hidden rounded-[18px] bg-slate-100">
-            <img class="ig-img absolute inset-0 h-full w-full object-cover" src={entry.portada} alt={entry.alt || entry.titulo} width="600" height="1066" loading="lazy" decoding="async" />
+            <img class="ig-img absolute inset-0 h-full w-full object-cover" src={entry.portada} alt={entry.alt || entry.titulo} width="600" height="1066" decoding="async" />
             <span class="absolute top-3.5 left-3.5 rounded-full bg-white px-2.5 py-1.5 text-xs font-bold shadow">{TIPO[entry.tipo]}</span>
             {entry.tipo !== 'post' && (
               <span class="ig-play absolute right-3.5 bottom-3.5 flex h-[52px] w-[52px] items-center justify-center rounded-full bg-white pl-[3px] text-navy shadow-lg" aria-hidden="true">
@@ -33,7 +33,7 @@ const TIPO = { reel: 'Reel', post: 'Post', historia: 'Destacada' } as const;
             )}
           </span>
           <span class="flex flex-col gap-1.5 px-1">
-            <span class="text-[19px] leading-tight font-bold tracking-[-0.01em]" data-reveal="title">{entry.titulo}</span>
+            <span class="text-[19px] leading-tight font-bold tracking-[-0.01em]" data-no-reveal>{entry.titulo}</span>
             <span class="mt-1 inline-flex items-center gap-1.5 text-sm font-bold underline decoration-cyan decoration-2 underline-offset-4">Ver en Instagram<span class="sr-only"> (se abre en otra pestaña)</span></span>
           </span>
         </a>

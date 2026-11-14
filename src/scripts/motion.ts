@@ -25,7 +25,8 @@ function scrollerDe(el: HTMLElement): Element | Window {
   let a = el.parentElement;
   while (a && a !== document.body) {
     const oy = getComputedStyle(a).overflowY;
-    if ((oy === 'auto' || oy === 'scroll') && a.scrollHeight > a.clientHeight + 1) return a;
+    // Solo cuenta un scroll vertical real (un slider horizontal no es scroller vertical).
+    if ((oy === 'auto' || oy === 'scroll') && a.scrollHeight > a.clientHeight + 40) return a;
     a = a.parentElement;
   }
   return window;
