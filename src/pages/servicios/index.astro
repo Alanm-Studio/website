@@ -16,7 +16,7 @@ const jsonLd = [
     <h1 class="m-0 max-w-[11.5em] text-[clamp(48px,7vw,96px)] leading-[.98] font-bold tracking-[-0.035em] text-balance">{inicio?.serviciosTitulo || 'Servicios'}</h1>
     {inicio?.serviciosIntro && <p class="m-0 max-w-[400px] text-xl leading-normal text-slate-700">{inicio.serviciosIntro}</p>}
   </section>
-  <section aria-label="Servicios" class="mx-auto max-w-[1280px] px-6 pb-24">
+  <section aria-label="Servicios" class="mx-auto max-w-[1280px] px-6 pb-16 md:pb-24">
     <ul class="m-0 list-none p-0">
       {servicios.map(({ slug, entry }, i) => (
         <li class="border-t border-cyan">

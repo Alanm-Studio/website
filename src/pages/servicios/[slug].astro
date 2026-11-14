@@ -43,7 +43,7 @@ const jsonLd = [
   </section>
 
   {proyectos.length > 0 && (
-    <section aria-labelledby="pj-t" class="mx-auto max-w-[1280px] px-6 pb-24">
+    <section aria-labelledby="pj-t" class="mx-auto max-w-[1280px] px-6 pb-16 md:pb-24">
       <div class="mb-8 flex flex-wrap items-end justify-between gap-4">
         <h2 id="pj-t" class="m-0 text-[clamp(28px,3vw,40px)] font-bold tracking-[-0.02em]">Proyectos de {e.titulo.toLowerCase()}</h2>
         <a href={`/proyectos?servicio=${s.slug}`} class="py-2 font-bold text-navy underline underline-offset-4">Ver en Proyectos</a>

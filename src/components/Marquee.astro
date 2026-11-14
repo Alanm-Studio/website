@@ -4,7 +4,7 @@ const marcas = (await getMarcas()).filter((m) => m.entry.logo);
 const loop = [...marcas, ...marcas, ...marcas, ...marcas];
 ---
 {marcas.length > 0 && (
-<section aria-labelledby="marcas-t" class="flex flex-col gap-12 overflow-hidden bg-navy py-14 text-white">
+<section aria-labelledby="marcas-t" class="flex flex-col gap-8 overflow-hidden bg-navy py-10 text-white md:gap-12 md:py-14">
   <div class="mx-auto flex w-full max-w-[1280px] flex-wrap items-baseline justify-between gap-4 px-6">
     <h2 id="marcas-t" class="m-0 text-[28px] font-bold tracking-[-0.02em]">Marcas que confían en nosotros</h2>
     <span class="text-[15px] font-bold text-cyan" data-reveal="title">Más de 15 años de experiencia</span>

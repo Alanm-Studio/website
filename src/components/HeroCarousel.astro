@@ -4,7 +4,7 @@ import { getProyectos } from '../lib/cms';
 const proyectos = (await getProyectos()).filter((p) => p.entry.destacado && (p.entry.miniatura || p.entry.portada));
 ---
 {proyectos.length > 0 && (
-<section aria-label="Proyectos destacados" class="pt-2 pb-24">
+<section aria-label="Proyectos destacados" class="pt-2 pb-16 md:pb-24">
   <div class="no-scrollbar relative mx-auto flex max-w-[1280px] snap-x snap-mandatory gap-5 overflow-x-auto scroll-smooth scroll-px-6 px-6 focus-visible:outline-3 focus-visible:outline-orange"
     tabindex="0" aria-label="Proyectos destacados, desplazable" data-hc-track>
     {proyectos.map((p) => (
