@@ -33,7 +33,14 @@ export async function organizationJsonLd(site: URL) {
       addressRegion: 'Buenos Aires',
       addressCountry: 'AR',
     },
-    areaServed: 'AR',
+    // Zona que atiende el estudio: base en Trenque Lauquen, clientes del oeste bonaerense y de todo el país.
+    areaServed: [
+      ...['Trenque Lauquen', 'Pehuajó', '9 de Julio', 'Bolívar', 'Chivilcoy', 'Carlos Casares'].map((name) => ({ '@type': 'City', name })),
+      { '@type': 'State', name: 'Provincia de Buenos Aires' },
+      { '@type': 'Country', name: 'Argentina' },
+    ],
+    geo: { '@type': 'GeoCoordinates', latitude: -35.9705, longitude: -62.7339 },
+    priceRange: '$$',
     founder: { '@type': 'Person', name: 'Alan Marino', jobTitle: 'Diseñador gráfico' },
     knowsAbout: servicios,
     sameAs: sameAs.length ? sameAs : undefined,

@@ -8,7 +8,7 @@ const wa = a?.whatsapp ? `https://wa.me/${a.whatsapp.replace(/\D/g, '')}?text=${
 const hablar = wa ?? mail;
 const site = Astro.site!;
 ---
-<Site title="Contacto" description="¿Tenés un proyecto en mente? Escribinos y armamos la propuesta a medida." footerCta={false}
+<Site title="Contacto y presupuesto" description="¿Tenés un proyecto en mente? Escribinos por WhatsApp o mail y armamos una propuesta a medida. Estudio de diseño en Trenque Lauquen, para todo el país." footerCta={false}
   jsonLd={breadcrumbJsonLd(site, [{ nombre: 'Inicio', path: '/' }, { nombre: 'Contacto', path: '/contacto' }])}>
   <section class="bg-white text-navy">
     <div class="mx-auto flex max-w-[1280px] flex-col gap-8 px-6 pt-10 pb-12 md:gap-12 md:pt-24 md:pb-20">
