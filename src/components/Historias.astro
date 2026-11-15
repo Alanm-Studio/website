@@ -1,6 +1,7 @@
 ---
 import { getHistorias } from '../lib/cms';
 import { getAjustes } from '../lib/seo';
+import ReelSlider from './ReelSlider.astro';
 const historias = (await getHistorias()).filter((h) => h.entry.portada);
 const a = await getAjustes();
 // Sin Instagram del estudio cargado en Ajustes, el botón no se muestra (antes iba a instagram.com genérico).
@@ -8,91 +9,19 @@ const ig = a?.instagram || '';
 const TIPO = { reel: 'Reel', post: 'Post', historia: 'Destacada' } as const;
 ---
 {historias.length > 0 && (
-<section class="overflow-x-clip border-t border-slate-200 bg-white pt-16 pb-16 md:pt-26 md:pb-24" aria-labelledby="ig-t">
+<section class="overflow-x-clip border-t border-slate-200 bg-white pt-16 pb-16 md:pt-26 md:pb-24" aria-labelledby="ig-t" id="reels">
   <div class="mx-auto flex max-w-[1280px] flex-wrap items-end justify-between gap-x-12 gap-y-4 px-6">
     <div>
       <p class="m-0 mb-4 text-[15px] font-bold text-cyan-text">Lo último en Instagram</p>
-      <h2 id="ig-t" class="m-0 text-[clamp(36px,4vw,56px)] leading-[1.02] font-bold tracking-[-0.03em]">Historias</h2>
+      <h2 id="ig-t" class="m-0 text-[clamp(36px,4vw,56px)] leading-[1.02] font-bold tracking-[-0.03em]">Reels</h2>
     </div>
     <div class="flex max-w-[380px] flex-col items-start gap-5 md:items-end md:text-right">
       <p class="m-0 text-lg leading-normal text-slate-700">Procesos, lanzamientos y el día a día del estudio, en formato corto.</p>
       {ig && <a href={ig} target="_blank" rel="noreferrer" class="inline-flex items-center gap-2.5 rounded-md bg-orange px-6 py-[15px] text-lg font-bold text-white hover:bg-orange-hover">Seguinos en Instagram<span class="sr-only"> (se abre en otra pestaña)</span><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M8 7h9v9"/></svg></a>}
     </div>
   </div>
-  <div class="relative mx-auto mt-8 max-w-[1280px] md:mt-12" data-ig-wrap>
-  <ul class="no-scrollbar relative mx-auto flex max-w-[1280px] list-none snap-x snap-mandatory gap-6 overflow-x-auto scroll-px-6 px-6 pt-2.5 pb-1.5" data-ig-track tabindex="0" aria-label="Publicaciones de Instagram">
-    {historias.map(({ entry }) => (
-      <li class="ig-slide flex-[0_0_72%] snap-start sm:flex-[0_0_330px]">
-        <a class="ig-card flex flex-col gap-4 text-navy" href={entry.link} target="_blank" rel="noreferrer">
-          <span class="ig-media relative block aspect-[9/16] overflow-hidden rounded-[18px] bg-slate-100">
-            <img class="ig-img absolute inset-0 h-full w-full object-cover" src={entry.portada} alt={entry.alt || entry.titulo} width="600" height="1066" decoding="async" />
-            <span class="absolute top-3.5 left-3.5 rounded-full bg-white px-2.5 py-1.5 text-xs font-bold shadow">{TIPO[entry.tipo]}</span>
-            {entry.tipo !== 'post' && (
-              <span class="ig-play absolute right-3.5 bottom-3.5 flex h-[52px] w-[52px] items-center justify-center rounded-full bg-white pl-[3px] text-navy shadow-lg" aria-hidden="true">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-              </span>
-            )}
-          </span>
-          <span class="flex flex-col gap-1.5 px-1">
-            <span class="text-[19px] leading-tight font-bold tracking-[-0.01em]" data-no-reveal>{entry.titulo}</span>
-            <span class="mt-1 inline-flex items-center gap-1.5 text-sm font-bold underline decoration-cyan decoration-2 underline-offset-4">Ver en Instagram<span class="sr-only"> (se abre en otra pestaña)</span></span>
-          </span>
-        </a>
-      </li>
-    ))}
-  </ul>
-    <button type="button" data-ig-prev aria-label="Publicaciones anteriores" class="ig-btn left-2 md:-left-2"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
-    <button type="button" data-ig-next aria-label="Más publicaciones" class="ig-btn right-2 md:-right-2"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
+  <div class="mt-8 md:mt-12">
+    <ReelSlider items={historias.map(({ entry }) => ({ titulo: entry.titulo, portada: entry.portada!, link: entry.link, alt: entry.alt, chip: TIPO[entry.tipo], play: entry.tipo !== 'post' }))} label="Reels de Instagram, desplazable" />
   </div>
 </section>
 )}
-<style>
-  [data-ig-track] { -webkit-overflow-scrolling: touch; }
-  .ig-slide { transform: translateZ(0); -webkit-backface-visibility: hidden; backface-visibility: hidden; }
-  .ig-media { box-shadow: 0 1px 2px rgba(14,34,64,.08), 0 12px 28px rgba(14,34,64,.10); transition: transform .35s cubic-bezier(.23,1,.32,1), box-shadow .35s cubic-bezier(.23,1,.32,1); }
-  .ig-card:hover .ig-media { transform: translateY(-6px); box-shadow: 0 0 0 3px #00C0E8, 0 22px 40px rgba(14,34,64,.18); }
-  .ig-img { transition: transform .6s cubic-bezier(.23,1,.32,1); }
-  .ig-card:hover .ig-img { transform: scale(1.04); }
-  .ig-play { transition: transform .3s cubic-bezier(.23,1,.32,1), background .2s ease, color .2s ease; }
-  .ig-card:hover .ig-play { transform: scale(1.1); background: #F43A01; color: #fff; }
-  .ig-card:focus-visible { outline: none; }
-  .ig-card:focus-visible .ig-media { outline: 3px solid #F43A01; outline-offset: 4px; }
-  .ig-btn { position: absolute; top: var(--ig-mid, 45%); z-index: 2; translate: 0 -50%; width: 52px; height: 52px; border-radius: 999px; background: #fff; color: #183057; box-shadow: 0 6px 18px rgba(14,34,64,.22); display: flex; align-items: center; justify-content: center; transition: background .2s ease, color .2s ease, opacity .2s ease; }
-  .ig-btn:hover:not(:disabled) { background: #183057; color: #fff; }
-  .ig-btn:focus-visible { outline: 3px solid #F43A01; outline-offset: 3px; }
-  .ig-btn:disabled { opacity: 0; pointer-events: none; }
-  @media (prefers-reduced-motion: reduce) { .ig-media, .ig-img, .ig-play { transition: none; } .ig-card:hover .ig-media, .ig-card:hover .ig-img { transform: none; } }
-</style>
-<script>
-  const tr = document.querySelector<HTMLElement>('[data-ig-track]');
-  if (tr) {
-    const prev = document.querySelector<HTMLButtonElement>('[data-ig-prev]');
-    const next = document.querySelector<HTMLButtonElement>('[data-ig-next]');
-    const wrap = document.querySelector<HTMLElement>('[data-ig-wrap]');
-    const slides = () => Array.from(tr.querySelectorAll<HTMLElement>('.ig-slide'));
-    const max = () => tr.scrollWidth - tr.clientWidth;
-    // Avanza a la tarjeta siguiente/anterior (de a una en mobile, de a dos en desktop), sin pasarse del final.
-    const go = (dir: number) => {
-      const ls = slides();
-      if (!ls.length) return;
-      const pad = ls[0].offsetLeft;
-      const pos = ls.map((l) => Math.min(max(), l.offsetLeft - pad));
-      const cur = pos.reduce((b, p, i) => (Math.abs(p - tr.scrollLeft) < Math.abs(pos[b] - tr.scrollLeft) ? i : b), 0);
-      const n = tr.clientWidth < 640 ? 1 : 2;
-      const i = Math.max(0, Math.min(ls.length - 1, cur + dir * n));
-      tr.scrollTo({ left: pos[i], behavior: 'smooth' });
-    };
-    const upd = () => {
-      // Flechas a media altura de las portadas.
-      const m = tr.querySelector<HTMLElement>('.ig-media');
-      if (wrap && m) wrap.style.setProperty('--ig-mid', `${m.offsetTop + m.offsetHeight / 2}px`);
-      if (prev) prev.disabled = tr.scrollLeft <= 2;
-      if (next) next.disabled = tr.scrollLeft >= max() - 2;
-    };
-    prev?.addEventListener('click', () => go(-1));
-    next?.addEventListener('click', () => go(1));
-    tr.addEventListener('scroll', upd, { passive: true });
-    window.addEventListener('resize', upd);
-    upd();
-  }
-</script>

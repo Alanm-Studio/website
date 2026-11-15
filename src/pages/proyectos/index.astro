@@ -51,11 +51,14 @@ const site = Astro.site!;
 
         <h1 id="lista" class="m-0 mb-6 text-sm font-bold text-[#A9B6CC]">Proyectos · {proyectos.length}</h1>
         <nav aria-label="Proyectos" class="flex flex-col gap-10">
-          {grupos.map(({ s, items }) => (
+          {grupos.map(({ s, items }, gi) => (
             <section aria-labelledby={`g-${s.slug}`} class="flex flex-col gap-4">
-              <div class="flex min-h-[100px] flex-col justify-center gap-1 rounded-[14px] bg-orange px-5 py-[18px]">
-                <h2 id={`g-${s.slug}`} class="m-0 text-[19px] leading-tight font-bold tracking-[.06em] text-white uppercase">{s.entry.titulo}</h2>
-                <p class="m-0 text-[15px] leading-snug font-bold text-navy">{s.entry.lema || s.entry.bajada}</p>
+              <div class="flex items-center gap-[18px] rounded-[14px] bg-orange px-5 py-[18px]">
+                <span aria-hidden="true" class="flex h-16 w-16 flex-none items-center justify-center rounded-[10px] bg-navy text-[22px] font-bold tracking-[-0.02em] text-white">{String(gi + 1).padStart(2, '0')}</span>
+                <span class="flex min-w-0 flex-col gap-1">
+                  <h2 id={`g-${s.slug}`} class="m-0 text-[19px] leading-tight font-bold tracking-[.06em] text-white uppercase">{s.entry.titulo}</h2>
+                  <p class="m-0 text-[15px] leading-snug font-bold text-navy">{s.entry.lema || s.entry.bajada}</p>
+                </span>
               </div>
               {items.length > 0 ? items.map((p) => (
                 <a href={`/proyectos/${p.slug}`} class="pcard flex items-center gap-[18px] rounded-[14px] bg-[#15264A] px-5 py-[18px]" data-stack>
@@ -77,7 +80,7 @@ const site = Astro.site!;
 
       <!-- Derecha -->
       <div class="order-1 flex min-w-0 flex-col gap-6 px-5 pt-5 md:order-2 md:basis-[60%] lg:basis-[70%] md:pt-6 md:pr-6 md:pb-24 md:pl-0">
-        <div class="relative h-[70vw] min-h-[260px] flex-none overflow-hidden rounded-[18px] bg-[#15264A] md:h-[640px]"
+        <div class="relative h-[62vw] min-h-[240px] flex-none overflow-hidden rounded-[18px] bg-[#15264A] md:h-[440px]"
           role="region" aria-roledescription="carrusel" aria-label="Trabajos del estudio" data-pool>
           {pool.map((s, i) => (
             <img src={s.src} alt="" loading={i < 2 ? 'eager' : 'lazy'} decoding="async"

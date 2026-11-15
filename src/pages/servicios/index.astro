@@ -12,9 +12,9 @@ const jsonLd = [
 ];
 ---
 <Site title="Servicios de diseño y comunicación" description="Diseño de marca, redes sociales y marketing, manual de marca, diseño editorial y sitios web. Estudio de diseño en Trenque Lauquen, Buenos Aires." jsonLd={jsonLd}>
-  <section class="mx-auto flex max-w-[1280px] flex-wrap items-end justify-between gap-x-16 gap-y-6 px-6 pt-10 pb-8 md:gap-y-8 md:pt-22 md:pb-12">
-    <h1 class="m-0 max-w-[11.5em] text-[clamp(48px,7vw,96px)] leading-[.98] font-bold tracking-[-0.035em] text-balance">{inicio?.serviciosTitulo || 'Servicios'}</h1>
-    {inicio?.serviciosIntro && <p class="m-0 max-w-[400px] text-xl leading-normal text-slate-700">{inicio.serviciosIntro}</p>}
+  <section class="mx-auto flex max-w-[1280px] flex-wrap items-start justify-between gap-x-12 gap-y-4 px-6 pt-10 pb-10 md:pt-22 md:pb-16">
+    <h1 class="m-0 max-w-[11em] text-[clamp(30px,4vw,56px)] text-balance leading-[1.02] font-bold tracking-[-0.03em]">{inicio?.serviciosTitulo || 'Servicios'}</h1>
+    {inicio?.serviciosIntro && <p class="m-0 max-w-[400px] text-[17px] leading-normal font-bold text-orange-text md:mt-2">{inicio.serviciosIntro}</p>}
   </section>
   <section aria-label="Servicios" class="mx-auto max-w-[1280px] px-6 pb-16 md:pb-24">
     <ul class="m-0 list-none p-0">

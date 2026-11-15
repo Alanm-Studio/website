@@ -1,0 +1,79 @@
+---
+// Slider de reels en formato vertical (9:16): portada completa, flechas a los costados.
+// Lo usan la sección Reels de la home y el cierre de cada proyecto.
+type Item = { titulo: string; portada: string; link?: string | null; alt?: string | null; chip?: string | null; play?: boolean };
+const { items, label = 'Reels, desplazable' } = Astro.props as { items: Item[]; label?: string };
+---
+<div class="relative mx-auto max-w-[1280px]" data-rs>
+  <ul class="no-scrollbar relative mx-auto flex max-w-[1280px] list-none snap-x snap-mandatory gap-5 overflow-x-auto scroll-px-6 px-6 pt-2.5 pb-1.5" data-rs-track tabindex="0" aria-label={label}>
+    {items.map((it) => (
+      <li class="rs-slide flex-[0_0_62%] snap-start sm:flex-[0_0_260px]">
+        <a class="rs-card flex flex-col gap-4 text-navy" href={it.link || undefined} target="_blank" rel="noreferrer">
+          <span class="rs-media relative block aspect-[9/16] overflow-hidden rounded-[18px] bg-slate-100">
+            <img class="rs-img absolute inset-0 h-full w-full object-cover" src={it.portada} alt={it.alt || it.titulo} width="600" height="1066" decoding="async" />
+            {it.chip && <span class="absolute top-3 left-3 rounded-full bg-white px-2.5 py-1.5 text-xs font-bold shadow">{it.chip}</span>}
+            {it.play !== false && (
+              <span class="rs-play absolute right-3 bottom-3 flex h-12 w-12 items-center justify-center rounded-full bg-white pl-[3px] text-navy shadow-lg" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+              </span>
+            )}
+          </span>
+          <span class="flex flex-col gap-1.5 px-1">
+            <span class="text-lg leading-tight font-bold tracking-[-0.01em]" data-no-reveal>{it.titulo}</span>
+            {it.link && <span class="mt-0.5 inline-flex items-center gap-1.5 text-sm font-bold underline decoration-cyan decoration-2 underline-offset-4">Ver en Instagram<span class="sr-only"> (se abre en otra pestaña)</span></span>}
+          </span>
+        </a>
+      </li>
+    ))}
+  </ul>
+  <button type="button" data-rs-prev aria-label="Reel anterior" class="rs-btn left-2 md:-left-2"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+  <button type="button" data-rs-next aria-label="Reel siguiente" class="rs-btn right-2 md:-right-2"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
+</div>
+<style>
+  [data-rs-track] { -webkit-overflow-scrolling: touch; }
+  .rs-slide { transform: translateZ(0); -webkit-backface-visibility: hidden; backface-visibility: hidden; }
+  .rs-media { box-shadow: 0 1px 2px rgba(14,34,64,.08), 0 12px 28px rgba(14,34,64,.10); transition: transform .35s cubic-bezier(.23,1,.32,1), box-shadow .35s cubic-bezier(.23,1,.32,1); }
+  .rs-card:hover .rs-media { transform: translateY(-6px); box-shadow: 0 0 0 3px #00C0E8, 0 22px 40px rgba(14,34,64,.18); }
+  .rs-img { transition: transform .6s cubic-bezier(.23,1,.32,1); }
+  .rs-card:hover .rs-img { transform: scale(1.04); }
+  .rs-play { transition: transform .3s cubic-bezier(.23,1,.32,1), background .2s ease, color .2s ease; }
+  .rs-card:hover .rs-play { transform: scale(1.1); background: #F43A01; color: #fff; }
+  .rs-card:focus-visible { outline: none; }
+  .rs-card:focus-visible .rs-media { outline: 3px solid #F43A01; outline-offset: 4px; }
+  .rs-btn { position: absolute; top: var(--rs-mid, 45%); z-index: 2; translate: 0 -50%; width: 52px; height: 52px; border-radius: 999px; background: #fff; color: #183057; box-shadow: 0 6px 18px rgba(14,34,64,.22); display: flex; align-items: center; justify-content: center; transition: background .2s ease, color .2s ease, opacity .2s ease; }
+  .rs-btn:hover:not(:disabled) { background: #183057; color: #fff; }
+  .rs-btn:focus-visible { outline: 3px solid #F43A01; outline-offset: 3px; }
+  .rs-btn:disabled { opacity: 0; pointer-events: none; }
+  @media (prefers-reduced-motion: reduce) { .rs-media, .rs-img, .rs-play { transition: none; } .rs-card:hover .rs-media, .rs-card:hover .rs-img { transform: none; } }
+</style>
+<script>
+  document.querySelectorAll<HTMLElement>('[data-rs]').forEach((wrap) => {
+    const tr = wrap.querySelector<HTMLElement>('[data-rs-track]');
+    if (!tr) return;
+    const prev = wrap.querySelector<HTMLButtonElement>('[data-rs-prev]');
+    const next = wrap.querySelector<HTMLButtonElement>('[data-rs-next]');
+    const slides = () => Array.from(tr.querySelectorAll<HTMLElement>('.rs-slide'));
+    const max = () => tr.scrollWidth - tr.clientWidth;
+    // Avanza de a una tarjeta en mobile y de a dos en desktop, sin pasarse del final.
+    const go = (dir: number) => {
+      const ls = slides();
+      if (!ls.length) return;
+      const pad = ls[0].offsetLeft;
+      const pos = ls.map((l) => Math.min(max(), l.offsetLeft - pad));
+      const cur = pos.reduce((b, p, i) => (Math.abs(p - tr.scrollLeft) < Math.abs(pos[b] - tr.scrollLeft) ? i : b), 0);
+      const n = tr.clientWidth < 640 ? 1 : 2;
+      tr.scrollTo({ left: pos[Math.max(0, Math.min(ls.length - 1, cur + dir * n))], behavior: 'smooth' });
+    };
+    const upd = () => {
+      const m = tr.querySelector<HTMLElement>('.rs-media');
+      if (m) wrap.style.setProperty('--rs-mid', `${m.offsetTop + m.offsetHeight / 2}px`);
+      if (prev) prev.disabled = tr.scrollLeft <= 2;
+      if (next) next.disabled = tr.scrollLeft >= max() - 2;
+    };
+    prev?.addEventListener('click', () => go(-1));
+    next?.addEventListener('click', () => go(1));
+    tr.addEventListener('scroll', upd, { passive: true });
+    window.addEventListener('resize', upd);
+    upd();
+  });
+</script>
