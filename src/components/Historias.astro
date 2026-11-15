@@ -3,7 +3,8 @@ import { getHistorias } from '../lib/cms';
 import { getAjustes } from '../lib/seo';
 const historias = (await getHistorias()).filter((h) => h.entry.portada);
 const a = await getAjustes();
-const ig = a?.instagram || 'https://www.instagram.com/';
+// Sin Instagram del estudio cargado en Ajustes, el botón no se muestra (antes iba a instagram.com genérico).
+const ig = a?.instagram || '';
 const TIPO = { reel: 'Reel', post: 'Post', historia: 'Destacada' } as const;
 ---
 {historias.length > 0 && (
@@ -15,7 +16,7 @@ const TIPO = { reel: 'Reel', post: 'Post', historia: 'Destacada' } as const;
     </div>
     <div class="flex max-w-[380px] flex-col items-start gap-5 md:items-end md:text-right">
       <p class="m-0 text-lg leading-normal text-slate-700">Procesos, lanzamientos y el día a día del estudio, en formato corto.</p>
-      <a href={ig} target="_blank" rel="noreferrer" class="inline-flex items-center gap-2.5 rounded-md bg-orange px-6 py-[15px] text-lg font-bold text-white hover:bg-orange-hover">Seguinos en Instagram<span class="sr-only"> (se abre en otra pestaña)</span><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M8 7h9v9"/></svg></a>
+      {ig && <a href={ig} target="_blank" rel="noreferrer" class="inline-flex items-center gap-2.5 rounded-md bg-orange px-6 py-[15px] text-lg font-bold text-white hover:bg-orange-hover">Seguinos en Instagram<span class="sr-only"> (se abre en otra pestaña)</span><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M8 7h9v9"/></svg></a>}
     </div>
   </div>
   <div class="relative mx-auto mt-8 max-w-[1280px] md:mt-12" data-ig-wrap>
