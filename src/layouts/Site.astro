@@ -3,15 +3,17 @@ import Base from './Base.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import type { ComponentProps } from 'astro/types';
-type Props = ComponentProps<typeof Base> & { footer?: boolean; footerCta?: boolean; footerTone?: 'dark' | 'light' };
-const { footer = true, footerCta = true, footerTone = 'dark', ...seo } = Astro.props;
+type Props = ComponentProps<typeof Base> & { footer?: boolean; footerCta?: boolean; footerTone?: 'dark' | 'light'; mobileOnlyChrome?: boolean };
+const { footer = true, footerCta = true, footerTone = 'dark', mobileOnlyChrome = false, ...seo } = Astro.props;
+// mobileOnlyChrome: navbar y footer solo en mobile (en desktop la página tiene su propio layout).
+const chrome = mobileOnlyChrome ? 'md:hidden' : '';
 ---
 <Base {...seo}>
   <a href="#contenido" class="skip-link">Saltar al contenido</a>
   <div id="top"></div>
-  <Header />
+  <Header class={chrome} />
   <main id="contenido">
     <slot />
   </main>
-  {footer && <Footer cta={footerCta} tone={footerTone} />}
+  {footer && <div class={chrome}><Footer cta={footerCta} tone={footerTone} /></div>}
 </Base>
