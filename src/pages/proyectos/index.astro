@@ -25,27 +25,17 @@ const site = Astro.site!;
   jsonLd={breadcrumbJsonLd(site, [{ nombre: 'Inicio', path: '/' }, { nombre: 'Proyectos', path: '/proyectos' }])}>
   <a href="#lista" class="skip-link">Saltar a la lista de proyectos</a>
   <div class="min-h-screen bg-[#0D1830] text-[#F3F6FB]">
-    <div class="flex items-center justify-end gap-4 px-5 pt-4 pb-1 md:hidden">
-      <button type="button" class="pi-btn flex min-h-11 flex-none items-center gap-3 whitespace-nowrap rounded-full border border-[#2A4170] bg-[#15264A] py-2.5 pr-3 pl-[18px] text-[15px] font-bold" aria-haspopup="dialog" data-all-open-2>
-        Ver todos<span class="sr-only"> los proyectos</span>
-        <span aria-hidden="true" class="relative inline-block h-5 w-[34px] rounded-full bg-[#2A4170]"><span class="absolute top-[3px] left-[3px] h-3.5 w-3.5 rounded-full bg-cyan"></span></span>
-      </button>
-    </div>
     <div class="flex flex-col md:flex-row">
       <!-- Izquierda -->
       <div class="left-col order-2 min-w-0 px-5 pt-8 pb-24 md:sticky md:top-0 md:order-1 md:h-screen md:max-h-[1000px] md:min-h-[640px] md:basis-[40%] lg:basis-[30%] md:self-start md:overflow-y-auto md:px-8 md:pb-12" data-left data-no-reveal>
         <div class="mb-14 hidden items-center justify-between gap-4 md:flex">
           <a href="/" aria-label="Alan Marino, inicio" class="flex py-2 text-white"><Wordmark short class="text-[26px]" /></a>
-          <button type="button" class="pi-btn flex min-h-11 flex-none items-center gap-3 whitespace-nowrap rounded-full border border-[#2A4170] bg-[#15264A] py-2.5 pr-3 pl-[18px] text-[15px] font-bold" aria-haspopup="dialog" data-all-open>
-            Ver todos<span class="sr-only"> los proyectos</span>
-            <span aria-hidden="true" class="relative inline-block h-5 w-[34px] rounded-full bg-[#2A4170]"><span class="absolute top-[3px] left-[3px] h-3.5 w-3.5 rounded-full bg-cyan"></span></span>
-          </button>
         </div>
         <p class="m-0 mb-10 text-[15px] text-[#A9B6CC]"><span class="font-bold text-cyan" data-city>Trenque Lauquen</span> · <span data-clock>--:--</span></p>
 
         <section aria-labelledby="about-t" data-stack class="mb-10 rounded-[14px] bg-[#15264A] p-6">
           <h2 id="about-t" class="m-0 mb-2.5 text-sm font-bold text-cyan">Sobre nosotros</h2>
-          <p class="m-0 mb-3.5 text-[26px] leading-tight font-bold tracking-[-0.02em]">Un pequeño estudio, con grandes ideas.</p>
+          <p class="m-0 mb-3.5 text-[26px] leading-tight font-bold tracking-[-0.02em]">Un estudio con grandes ideas.</p>
           <p class="m-0 text-base leading-relaxed text-[#C9D3E3]">Branding, diseño web y comunicación para marcas en crecimiento. Una estructura con equipo base y una red de profesionales que se suman según las necesidades de cada proyecto.</p>
         </section>
 

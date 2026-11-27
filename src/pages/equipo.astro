@@ -12,24 +12,24 @@ const tint = ['bg-[#DDF4FA]', 'bg-slate-100'];
 ---
 <Site title="Equipo" description="Diseño, estrategia, desarrollo web y audiovisual: conocé al equipo de Alan Marino Studio, estudio de branding en Trenque Lauquen, Buenos Aires." jsonLd={jsonLd}>
   <section class="mx-auto flex max-w-[1280px] flex-wrap items-start justify-between gap-x-12 gap-y-4 px-6 pt-10 pb-10 md:pt-22 md:pb-16">
-    <h1 class="m-0 max-w-[11em] text-[clamp(30px,4vw,56px)] text-balance leading-[1.02] font-bold tracking-[-0.03em]">Un pequeño estudio, con grandes ideas.</h1>
-    <p class="m-0 max-w-[400px] text-[17px] leading-normal font-bold text-orange-text md:mt-2">Una estructura con equipo base y una red de profesionales que se suman según las necesidades de cada proyecto.</p>
+    <h1 class="m-0 max-w-[11em] text-[clamp(30px,4vw,56px)] text-balance leading-[1.02] font-bold tracking-[-0.03em]">Un estudio con grandes ideas.</h1>
+    <p class="m-0 max-w-[400px] text-[17px] leading-normal font-bold text-orange-text md:mt-2">Combinamos un equipo base sólido con una red de especialistas que se suman según lo que pida cada proyecto.</p>
   </section>
   <section aria-label="Integrantes" class="mx-auto max-w-[1280px] px-6 pb-16 md:pb-24">
-    <div class="grid grid-cols-1 gap-x-8 gap-y-18 md:grid-cols-2">
+    <div class="grid grid-cols-1 gap-x-6 gap-y-14 sm:grid-cols-2 lg:grid-cols-4">
       {equipo.map(({ entry }, i) => (
         <article class="flex flex-col gap-4">
           {entry.foto
             ? <div class="overflow-hidden rounded-md" data-zoom><img src={entry.foto} alt={`Retrato de ${entry.nombre}`} loading={i < 2 ? 'eager' : 'lazy'} decoding="async" class="aspect-square w-full object-cover object-center origin-top will-change-transform" /></div>
             : <div class:list={['aspect-square rounded-md', tint[i % 2]]} aria-hidden="true"></div>}
           <div class="flex flex-col gap-1">
-            <h2 class="m-0 text-2xl font-bold tracking-[-0.01em]">{entry.linkedin
+            <h2 class="m-0 text-xl font-bold tracking-[-0.01em]">{entry.linkedin
               ? <a href={entry.linkedin} target="_blank" rel="noreferrer" class="group inline-flex items-center gap-2 hover:text-cyan-text">{entry.nombre}<svg aria-hidden="true" class="h-[18px] w-[18px] flex-none" viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.45zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg><span class="sr-only"> en LinkedIn (se abre en otra pestaña)</span></a>
               : entry.nombre}</h2>
             <span class="text-[15px] font-bold text-cyan-text" data-reveal="title">{entry.rol}</span>
           </div>
-          <p class="m-0 text-lg leading-snug font-bold">{entry.frase}</p>
-          <p class="m-0 text-base leading-relaxed text-slate-700">{entry.bio}</p>
+          <p class="m-0 text-[17px] leading-snug font-bold">{entry.frase}</p>
+          <p class="m-0 text-[15px] leading-relaxed text-slate-700">{entry.bio}</p>
         </article>
       ))}
     </div>
