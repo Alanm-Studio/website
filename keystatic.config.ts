@@ -85,7 +85,8 @@ const proyectoSchema = () => ({
           }),
           { label: 'Reels (slider, mismo formato que el de Inicio)', itemLabel: (p) => p.fields.titulo.value || 'Reel' }
         ),
-        presentacion: fields.url({ label: 'Presentación completa (PDF, opcional)' }),
+        presentacion: fields.text({ label: 'Presentación completa (PDF, opcional)', description: 'Link al PDF. Puede ser una URL o una ruta del sitio, por ejemplo /docs/catalogo.pdf.' }),
+        presentacionTexto: fields.text({ label: 'Texto del link al PDF (opcional)', description: 'Por defecto: "Ver presentación completa (PDF)".' }),
         seo: seo('proyectos'),
         contenido: fields.markdoc({ label: 'Descripción del proyecto' }),
 });
