@@ -25,6 +25,7 @@ export default defineConfig({
   adapter: vercel(),
   redirects: {
     "/proyectos/monograma-m": "/proyectos/mariano-martorano/",
+    "/proyectos/pos-foro": "/proyectos/foro-de-inversion-2016/",
   },
   vite: {
     plugins: [tailwindcss()],
