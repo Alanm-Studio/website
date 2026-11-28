@@ -26,6 +26,7 @@ export default defineConfig({
   redirects: {
     "/proyectos/monograma-m": "/proyectos/mariano-martorano/",
     "/proyectos/pos-foro": "/proyectos/foro-de-inversion-2016/",
+    "/proyectos/meridiano": "/proyectos/informe-actividades-icbc/",
   },
   vite: {
     plugins: [tailwindcss()],
