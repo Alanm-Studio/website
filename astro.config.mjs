@@ -23,6 +23,9 @@ export default defineConfig({
     }),
   ],
   adapter: vercel(),
+  redirects: {
+    "/proyectos/monograma-m": "/proyectos/mariano-martorano/",
+  },
   vite: {
     plugins: [tailwindcss()],
   },
