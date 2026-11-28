@@ -70,7 +70,7 @@ const site = Astro.site!;
 
       <!-- Derecha -->
       <div class="order-1 flex min-w-0 flex-col gap-6 px-5 pt-5 md:order-2 md:basis-[60%] lg:basis-[70%] md:pt-6 md:pr-6 md:pb-24 md:pl-0">
-        <div class="relative h-[62vw] min-h-[240px] flex-none overflow-hidden rounded-[18px] bg-[#15264A] md:h-[440px]"
+        <div class="relative h-[62vw] min-h-[240px] flex-none overflow-hidden rounded-[18px] bg-[#15264A] md:h-[clamp(440px,calc(100svh-180px),760px)]"
           role="region" aria-roledescription="carrusel" aria-label="Trabajos del estudio" data-pool>
           {pool.map((s, i) => (
             <img src={s.src} alt="" loading={i < 2 ? 'eager' : 'lazy'} decoding="async"
