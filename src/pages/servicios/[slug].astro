@@ -1,7 +1,6 @@
 ---
 // Página propia por servicio: URL, título y descripción únicos para que Google pueda mostrarlos como enlaces del sitio.
 import Site from '../../layouts/Site.astro';
-import Arrow from '../../components/Arrow.astro';
 import { getServicios, getProyectosDe } from '../../lib/cms';
 import { breadcrumbJsonLd } from '../../lib/seo';
 
@@ -68,7 +67,6 @@ const jsonLd = [
     <div class="mx-auto flex max-w-[1280px] flex-wrap items-center gap-x-8 gap-y-3 px-6 py-10">
       <span class="text-sm font-bold text-slate-500" data-reveal="title">Otros servicios</span>
       {todos.filter((t) => t.slug !== s.slug).map((t) => <a href={`/servicios/${t.slug}`} class="py-2 text-[20px] font-bold text-navy hover:text-orange">{t.entry.titulo}</a>)}
-      <a href="/contacto" data-fx="fill" data-fx-arrow class="ml-auto rounded-md bg-orange px-6 py-3.5 text-lg font-bold text-white" style="--fx-fill:#183057;--fx-text:#FFFFFF">Hablemos<Arrow /></a>
     </div>
   </nav>
 </Site>
