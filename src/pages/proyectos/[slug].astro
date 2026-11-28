@@ -87,7 +87,7 @@ const imgCls = (f: string) => ['w-full rounded-md', f === 'completo' ? 'mx-auto 
     <div class="flex flex-[2_1_560px] flex-col gap-5">
       {e.bajada && <h2 class="m-0 text-[32px] leading-tight font-bold tracking-[-0.02em]">{e.bajada}</h2>}
       <div class="prosa text-lg leading-relaxed text-slate-700" set:html={html} />
-      {e.presentacion && <a href={e.presentacion} class="self-start py-2.5 text-[17px] font-bold underline decoration-cyan decoration-2 underline-offset-4">{e.presentacionTexto || 'Ver presentación completa (PDF)'}</a>}
+      {e.presentacion && <a href={e.presentacion} {.../^https?:/.test(e.presentacion) ? { target: '_blank', rel: 'noreferrer' } : {}} class="self-start py-2.5 text-[17px] font-bold underline decoration-cyan decoration-2 underline-offset-4">{e.presentacionTexto || 'Ver presentación completa (PDF)'}</a>}
     </div>
     )}
   </section>
