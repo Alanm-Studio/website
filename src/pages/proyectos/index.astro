@@ -21,26 +21,23 @@ const otros = marketing
 const initials = (t: string) => t.split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0]).join('').toUpperCase();
 const site = Astro.site!;
 ---
-<Site title="Proyectos de diseño y branding" footerTone="light" mobileOnlyChrome description="Proyectos de marca, redes sociales, diseño editorial, sistema visual y web para LENS, Cencosud, PromArgentina, ICBC y más. Alan Marino Studio, Trenque Lauquen."
+<Site title="Proyectos de diseño y branding" footerTone="light" mobileOnlyChrome headerDark description="Proyectos de marca, redes sociales, diseño editorial, sistema visual y web para LENS, Cencosud, PromArgentina, ICBC y más. Alan Marino Studio, Trenque Lauquen."
   jsonLd={breadcrumbJsonLd(site, [{ nombre: 'Inicio', path: '/' }, { nombre: 'Proyectos', path: '/proyectos' }])}>
   <a href="#lista" class="skip-link">Saltar a la lista de proyectos</a>
   <div class="min-h-screen bg-[#0D1830] text-[#F3F6FB]">
-    <div class="flex flex-col md:flex-row">
+    <div class="flex flex-col md:flex-row md:gap-10 md:pr-12">
       <!-- Izquierda -->
-      <div class="left-col order-2 min-w-0 px-5 pt-8 pb-24 md:sticky md:top-0 md:order-1 md:h-screen md:max-h-[1000px] md:min-h-[640px] md:basis-[40%] lg:basis-[30%] md:self-start md:overflow-y-auto md:px-8 md:pb-12" data-left data-no-reveal>
-        <div class="mb-14 hidden items-center justify-between gap-4 md:flex">
-          <a href="/" aria-label="Alan Marino, inicio" class="flex py-2 text-white"><Wordmark short class="text-[26px]" /></a>
-        </div>
-        <p class="m-0 mb-10 text-[15px] text-[#A9B6CC]"><span class="font-bold text-cyan" data-city>Trenque Lauquen</span> · <span data-clock>--:--</span></p>
+      <div class="left-col order-2 min-w-0 px-5 pt-8 pb-24 md:sticky md:top-20 md:order-1 md:h-[calc(100vh-5rem)] md:max-h-[920px] md:min-h-[560px] md:basis-[40%] lg:basis-[30%] md:self-start md:overflow-y-auto md:pt-12 md:pr-0 md:pl-12 md:pb-16" data-left data-no-reveal>
+        <p class="m-0 mb-10 text-[15px] text-[#A9B6CC] md:mb-12"><span class="font-bold text-cyan" data-city>Trenque Lauquen</span> · <span data-clock>--:--</span></p>
 
-        <section aria-labelledby="about-t" data-stack class="mb-10 rounded-[14px] bg-[#15264A] p-6">
+        <section aria-labelledby="about-t" data-stack class="mb-10 rounded-[14px] bg-[#15264A] p-6 md:mb-14 md:p-7">
           <h2 id="about-t" class="m-0 mb-2.5 text-sm font-bold text-cyan">Sobre nosotros</h2>
           <p class="m-0 mb-3.5 text-[26px] leading-tight font-bold tracking-[-0.02em]">Un estudio con grandes ideas.</p>
           <p class="m-0 text-base leading-relaxed text-[#C9D3E3]">Branding, diseño web y comunicación para marcas en crecimiento. Una estructura con equipo base y una red de profesionales que se suman según las necesidades de cada proyecto.</p>
         </section>
 
         <h1 id="lista" class="m-0 mb-6 text-sm font-bold text-[#A9B6CC]">Proyectos · {proyectos.length}</h1>
-        <nav aria-label="Proyectos" class="flex flex-col gap-10">
+        <nav aria-label="Proyectos" class="flex flex-col gap-10 md:gap-14">
           {grupos.map(({ s, items }, gi) => (
             <section aria-labelledby={`g-${s.slug}`} class="flex flex-col gap-4">
               <div class="flex items-center gap-3 rounded-[12px] bg-orange py-2 pr-4 pl-2">
@@ -69,8 +66,8 @@ const site = Astro.site!;
       </div>
 
       <!-- Derecha -->
-      <div class="order-1 flex min-w-0 flex-col gap-6 px-5 pt-5 md:order-2 md:basis-[60%] lg:basis-[70%] md:pt-6 md:pr-6 md:pb-24 md:pl-0">
-        <div class="relative h-[62vw] min-h-[240px] flex-none overflow-hidden rounded-[18px] bg-[#15264A] md:h-[clamp(440px,calc(100svh-180px),760px)]"
+      <div class="order-1 flex min-w-0 flex-col gap-6 px-5 pt-5 md:order-2 md:flex-1 md:basis-0 md:gap-10 md:px-0 md:pt-12 md:pb-28">
+        <div class="relative h-[62vw] min-h-[240px] flex-none overflow-hidden rounded-[18px] bg-[#15264A] md:h-[clamp(440px,calc(100svh-260px),720px)]"
           role="region" aria-roledescription="carrusel" aria-label="Trabajos del estudio" data-pool>
           {pool.map((s, i) => (
             <img src={s.src} alt="" loading={i < 2 ? 'eager' : 'lazy'} decoding="async"
@@ -89,7 +86,7 @@ const site = Astro.site!;
             <h2 id="otros-t" class="m-0 text-sm font-bold text-[#A9B6CC]">Proyectos de marketing · {otros.length}</h2>
             <button type="button" class="py-2 text-sm font-bold text-[#F3F6FB] underline decoration-cyan underline-offset-4" aria-haspopup="dialog" data-all-open-2>Ver todos los proyectos</button>
           </div>
-          <div class="grid grid-cols-2 gap-x-3 gap-y-4 md:grid-cols-4">
+          <div class="grid grid-cols-2 gap-x-3 gap-y-4 md:grid-cols-4 md:gap-x-5 md:gap-y-6">
             {otros.map((p) => (
               <a href={`/proyectos/${p.slug}`} class="ocard flex min-w-0 flex-col gap-2.5 rounded-[14px] border border-white/8 bg-white/6 px-2 pt-2 pb-3">
                 <span class="block aspect-[4/5] overflow-hidden rounded-[10px] bg-[#15264A]">
